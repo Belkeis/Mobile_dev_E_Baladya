@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'screens/home_page.dart'; 
 import 'screens/tracking_requests.dart';
 import 'screens/online_request_page.dart';
-import 'screens/required_documents_page.dart';
+import 'screens/MyRequiredDocumentsPage.dart'; 
 import 'screens/booking_page.dart';
 import 'screens/digital_versions_page.dart';
+import 'screens/MyOnlineRequestsPage.dart'; 
 
 void main() {
   runApp(const MyApp());
@@ -25,12 +26,12 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: '/home',
       routes: {
-        '/home': (context) => const HomePage(), // Your home page
+       '/home': (context) => const HomePage(), 
         '/tracking': (context) => const RequestTrackingScreen(),
-        '/required-documents': (context) => const RequiredDocumentsPage(),
+        '/required-documents': (context) => const MyRequiredDocumentsPage(),
         '/booking': (context) => const BookingPage(),
         '/digital-versions': (context) => const DigitalVersionsPage(),
-        '/online-requests': (context) => const OnlineRequestsPage(),
+        '/online-requests': (context) => const MyOnlineRequestsPage(),
       },
     );
   }
