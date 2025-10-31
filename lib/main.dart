@@ -7,6 +7,7 @@ import 'screens/MyRequiredDocumentsPage.dart';
 import 'screens/booking_page.dart';
 import 'screens/digital_versions_page.dart';
 import 'screens/MyOnlineRequestsPage.dart';
+import 'screens/booking_calendar_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -35,6 +36,7 @@ class MyApp extends StatelessWidget {
         '/booking': (context) => const BookingPage(),
         '/digital-versions': (context) => const DigitalVersionsPage(),
         '/online-requests': (context) => const MyOnlineRequestsPage(),
+        '/boocking-cal':(context) =>const BookingCalendarScreen()
       },
     );
   }
