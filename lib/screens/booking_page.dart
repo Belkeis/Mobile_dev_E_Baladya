@@ -11,26 +11,11 @@ class BookingPage extends StatelessWidget {
       textDirection: TextDirection.rtl,
       child: Scaffold(
         //  CustomAppBar
-        appBar: PreferredSize(
-          preferredSize: const Size.fromHeight(76),
-          child: Directionality(
-            textDirection: TextDirection.ltr, 
-            child: CustomAppBar(
-              onProfileTap: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('الملف الشخصي')),
-                );
-              },
-              onNotificationTap: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('الإشعارات')),
-                );
-              },
-              onArrowTap: () {
-                Navigator.pop(context);
-              },
-            ),
-          ),
+        appBar: CustomAppBar(
+          onArrowTap: () {
+            // Navigate back or to home
+            Navigator.pop(context);
+          },
         ),
 
         body: SingleChildScrollView(

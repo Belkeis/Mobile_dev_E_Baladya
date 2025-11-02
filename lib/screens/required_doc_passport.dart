@@ -14,16 +14,6 @@ class _State extends State<RequiredDocumentsPassportPage> {
     return Scaffold(
       backgroundColor: Colors.grey[50],
       appBar: CustomAppBar(
-        onNotificationTap: () {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text('Notifications tapped')));
-        },
-        onProfileTap: () {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text('Profile tapped')));
-        },
         onArrowTap: () {
           Navigator.pop(context);
         },
