@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import '../widgets/generic_list_page.dart';
 import '../widgets/custom_app_bar.dart';
-import 'required_doc_passport.dart'; // Add this import
+import 'passport_requirement.dart';
+import 'id_card_requirement.dart';
 
 class MyRequiredDocumentsPage extends StatelessWidget {
   const MyRequiredDocumentsPage({super.key});
@@ -39,13 +40,13 @@ class MyRequiredDocumentsPage extends StatelessWidget {
 
       items: [
         ListItem(
-          title: 'شهادة الميلاد',
+          title: 'بطاقة التعريف الوطنية',
           subtitle: 'الحصول على البطاقة الوطنية',
           onTap: () {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => const RequiredDocumentsPage(),
+                builder: (context) => const IdRequirements(),
               ),
             );
           },

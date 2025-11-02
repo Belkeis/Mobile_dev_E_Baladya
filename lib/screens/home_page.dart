@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'MyRequiredDocumentsPage.dart';
-import 'MyOnlineRequestsPage.dart';
-import 'profile.dart'; // Add this import
-import 'notifications_page.dart'; // Add this import
+import 'package:flutter_svg/flutter_svg.dart';
+import 'required_documents.dart';
+import 'online_requests.dart';
+import 'profile.dart';
+import 'notifications_page.dart';
 import 'tracking_requests.dart';
 
 class HomePage extends StatelessWidget {
@@ -35,7 +36,7 @@ class HomePage extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          // Profile icon
+                          // Profile icon (SVG)
                           GestureDetector(
                             onTap: () {
                               Navigator.push(
@@ -51,15 +52,19 @@ class HomePage extends StatelessWidget {
                                 color: Colors.white.withOpacity(0.2),
                                 shape: BoxShape.circle,
                               ),
-                              child: const Icon(
-                                Icons.person_outline,
-                                color: Colors.white,
-                                size: 24,
+                              child: SvgPicture.asset(
+                                'assets/icons/profile.svg',
+                                width: 26,
+                                height: 26,
+                                colorFilter: const ColorFilter.mode(
+                                  Colors.white,
+                                  BlendMode.srcIn,
+                                ),
                               ),
                             ),
                           ),
                           const SizedBox(width: 12),
-                          // Notification icon
+                          // Notification icon (SVG)
                           GestureDetector(
                             onTap: () {
                               Navigator.push(
@@ -77,11 +82,16 @@ class HomePage extends StatelessWidget {
                                 shape: BoxShape.circle,
                               ),
                               child: Stack(
+                                clipBehavior: Clip.none,
                                 children: [
-                                  const Icon(
-                                    Icons.notifications_outlined,
-                                    color: Colors.white,
-                                    size: 24,
+                                  SvgPicture.asset(
+                                    'assets/icons/notification.svg',
+                                    width: 17,
+                                    height: 20,
+                                    colorFilter: const ColorFilter.mode(
+                                      Colors.white,
+                                      BlendMode.srcIn,
+                                    ),
                                   ),
                                   Positioned(
                                     top: 0,
@@ -103,7 +113,7 @@ class HomePage extends StatelessWidget {
                       ),
                       const SizedBox(height: 20),
                       const Text(
-                        'مرحباً أحمد',
+                        'مرحبا بك في البلدية الرقمية ',
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 26,

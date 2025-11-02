@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../widgets/generic_list_page.dart';
 import '../widgets/custom_app_bar.dart';
-import 'online_request_page.dart';
+import 'passport_online_request.dart';
+import 'id_card_online_request.dart';
 
 class MyOnlineRequestsPage extends StatelessWidget {
   const MyOnlineRequestsPage({super.key});
@@ -47,7 +48,7 @@ class MyOnlineRequestsPage extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => const onlineRequestPassport(),
+                builder: (context) => const IdRequest(),
               ),
             );
           },

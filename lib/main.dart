@@ -3,18 +3,20 @@ import 'package:flutter/material.dart';
 // Screens
 import 'screens/home_page.dart';
 import 'screens/tracking_requests.dart';
-import 'screens/required_doc_passport.dart';
-import 'screens/MyRequiredDocumentsPage.dart';
+import 'screens/passport_requirement.dart';
+import 'screens/required_documents.dart';
 import 'screens/booking_page.dart';
 import 'screens/digital_versions_page.dart';
-import 'screens/MyOnlineRequestsPage.dart';
+import 'screens/online_requests.dart';
 import 'screens/booking_calendar_screen.dart';
 import 'screens/entering.dart';
 import 'screens/sign_up.dart';
 import 'screens/after_req.dart';
 import 'screens/notifications_page.dart';
 import 'screens/profile.dart';
-import 'screens/online_request_page.dart';
+import 'screens/passport_online_request.dart';
+import 'screens/id_card_online_request.dart';
+import 'screens/id_card_requirement.dart';
 
 void main() {
   runApp(const MyApp());
@@ -51,6 +53,9 @@ class MyApp extends StatelessWidget {
         '/notifications': (context) => const NotificationsPage(),
         '/profile': (context) => const ProfilePage(),
         '/online_request_page': (context) => const onlineRequestPassport(),
+        '/id_card_online_request' : (context) => const IdRequest(),
+        '/id_card_requirement' : (context) => const IdRequirements(),
+  
       },
     );
   }
