@@ -11,6 +11,7 @@ import 'screens/booking_calendar_screen.dart';
 import 'screens/entering.dart';
 import 'screens/sign_up.dart';
 import 'screens/after_req.dart';
+import 'screens/notifications_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -43,7 +44,8 @@ class MyApp extends StatelessWidget {
         '/entering' :(context) =>const Entering(),
         '/sign_up' :(context) =>const SignUpPage(),
         '/after_req' :(context) =>const AfterReq(),
-        
+        '/notifications' :(context) =>const NotificationsPage(),
+
       },
     );
   }
