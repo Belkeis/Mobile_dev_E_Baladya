@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'sign_up.dart';
+import 'home_page.dart'; // updated import
 
 class Entering extends StatefulWidget {
   const Entering({super.key});
@@ -17,12 +17,12 @@ class _EnteringState extends State<Entering> {
       backgroundColor: Colors.white,
       body: SafeArea(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween, // 👈 pushes logo up and button down
+          mainAxisAlignment: MainAxisAlignment.spaceBetween, 
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const SizedBox(height: 80), // small top padding
 
-            // ✅ Centered logo
+            // Centered logo
             Center(
               child: Image.asset(
                 'assets/images/logo.png',
@@ -32,9 +32,9 @@ class _EnteringState extends State<Entering> {
               ),
             ),
 
-            // ✅ Bottom button
+            // Bottom button
             Padding(
-              padding: const EdgeInsets.only(bottom: 40.0), // space from bottom
+              padding: const EdgeInsets.only(bottom: 40.0),
               child: MouseRegion(
                 onEnter: (_) => setState(() => _isHovered = true),
                 onExit: (_) => setState(() => _isHovered = false),
@@ -43,7 +43,7 @@ class _EnteringState extends State<Entering> {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => SignUpPage()),
+                      MaterialPageRoute(builder: (context) => const HomePage()),
                     );
                   },
                   child: AnimatedContainer(
