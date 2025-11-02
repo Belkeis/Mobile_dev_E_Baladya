@@ -25,10 +25,10 @@ class BookingPage extends StatelessWidget {
             children: [
               // 🟦 Circle Icon
               Container(
-                width: 65,
-                height: 65,
+               width: 80,
+                height: 80,
                 decoration: const BoxDecoration(
-                  color: Color(0xFF2563EB),
+                  color: Color(0xFF3B82F6),
                   shape: BoxShape.circle,
                 ),
                 child: const Center(
@@ -172,7 +172,7 @@ class ServiceCard extends StatelessWidget {
                       subtitle,
                       style: const TextStyle(
                         fontFamily: 'Cairo',
-                        fontSize: 13,
+                        fontSize: 14,
                         color: Colors.grey,
                       ),
                     ),
