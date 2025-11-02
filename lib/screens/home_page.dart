@@ -5,6 +5,7 @@ import 'online_requests.dart';
 import 'profile.dart';
 import 'notifications_page.dart';
 import 'tracking_requests.dart';
+import 'booking_page.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -235,11 +236,13 @@ class HomePage extends StatelessWidget {
                           Icons.calendar_today_rounded,
                           const Color(0xFF2563EB),
                           const Color(0xFFDBEAFE),
-                          () {
-                            ScaffoldMessenger.of(
+                          () => Navigator.push(
                               context,
-                            ).showSnackBar(_buildSnackBar('حجز موعد'));
-                          },
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    const BookingPage(),
+                              ),
+                            ),
                         ),
                       ),
                     ),

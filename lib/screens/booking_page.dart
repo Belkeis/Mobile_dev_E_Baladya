@@ -12,13 +12,11 @@ class BookingPage extends StatelessWidget {
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
-        appBar: PreferredSize(
-          preferredSize: const Size.fromHeight(kToolbarHeight),
-          child: CustomAppBar(
-            title: 'احجز موعدك',
-            onArrowTap: () => Navigator.pop(context),
-            
-          ),
+        appBar: CustomAppBar(
+          onArrowTap: () {
+            // Navigate back or to home
+            Navigator.pop(context);
+          },
         ),
         body: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
@@ -83,7 +81,9 @@ class BookingPage extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (_) => const MyRequiredDocumentsPage(),
+                      builder: (_) => const BookingCalendarScreen(
+                        serviceTitle: 'الحالة المدنية',
+                      ),
                     ),
                   );
                 },
@@ -95,7 +95,14 @@ class BookingPage extends StatelessWidget {
                 title: 'المصالح البيومترية',
                 subtitle: 'خدمات البصمة والبيانات البيومترية',
                 onTap: () {
-                  //
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const BookingCalendarScreen(
+                        serviceTitle: 'المصالح البيومترية',
+                      ),
+                    ),
+                  );
                 },
               ),
               const SizedBox(height: 10),
@@ -112,7 +119,9 @@ class BookingPage extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (_) => const BookingCalendarScreen(),
+                      builder: (_) => const BookingCalendarScreen(
+                        serviceTitle: 'الاستلام',
+                      ),
                     ),
                   );
                 },

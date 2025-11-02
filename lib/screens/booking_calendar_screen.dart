@@ -2,7 +2,12 @@ import 'package:flutter/material.dart';
 import '../widgets/custom_app_bar.dart';
 
 class BookingCalendarScreen extends StatefulWidget {
-  const BookingCalendarScreen({super.key});
+  final String serviceTitle;
+  
+  const BookingCalendarScreen({
+    super.key,
+    this.serviceTitle = 'الحالة المدنية',
+  });
 
   @override
   State<BookingCalendarScreen> createState() => _BookingCalendarScreenState();
@@ -23,7 +28,9 @@ class _BookingCalendarScreenState extends State<BookingCalendarScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF9FAFB),
-      appBar: const CustomAppBar(title: 'حجز في الحالة المدنية'),
+      appBar: CustomAppBar(
+        title: 'حجز في ${widget.serviceTitle}',
+      ),
       body: Column(
         children: [
           Expanded(
@@ -113,26 +120,30 @@ class _BookingCalendarScreenState extends State<BookingCalendarScreen> {
                           ? () {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
-                                  content: Text('حجز للتاريخ: $selectedDate'),
+                                  content: Text('حجز للتاريخ: $selectedDate في ${widget.serviceTitle}'),
                                 ),
                               );
                             }
                           : null,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFE5E7EB),
+                        backgroundColor: selectedDate != null 
+                            ? const Color(0xFF2563EB) 
+                            : const Color(0xFFE5E7EB),
                         disabledBackgroundColor: const Color(0xFFE5E7EB),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
                         elevation: 0,
                       ),
-                      child: const Text(
+                      child: Text(
                         'احجز',
                         style: TextStyle(
                           fontFamily: 'Cairo',
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
-                          color: Color(0xFF9CA3AF),
+                          color: selectedDate != null 
+                              ? Colors.white 
+                              : const Color(0xFF9CA3AF),
                         ),
                       ),
                     ),
