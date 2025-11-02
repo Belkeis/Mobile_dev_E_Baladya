@@ -91,7 +91,7 @@ class ProfilePage extends StatelessWidget {
               ),
               const SizedBox(height: 24),
 
-              // ✅ Personal Details Section
+              //  Personal Details Section
               const Align(
                 alignment: Alignment.centerRight,
                 child: Text(
@@ -129,7 +129,7 @@ class ProfilePage extends StatelessWidget {
               ),
               const SizedBox(height: 24),
 
-              // ✅ Contact Information Section
+              //  Contact Information Section
               const Align(
                 alignment: Alignment.centerRight,
                 child: Text(
@@ -169,7 +169,7 @@ class ProfilePage extends StatelessWidget {
               ),
               const SizedBox(height: 24),
 
-              // ✅ Address Section
+              //  Address Section
               const Align(
                 alignment: Alignment.centerRight,
                 child: Text(

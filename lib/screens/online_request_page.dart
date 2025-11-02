@@ -382,14 +382,10 @@ class _ActionButton extends StatelessWidget {
 /*import 'package:flutter/material.dart';
 import '../widgets/custom_app_bar.dart';
 
-class OnlineRequestPage extends StatefulWidget {
+
+class OnlineRequestPage extends StatelessWidget {
   const OnlineRequestPage({Key? key}) : super(key: key);
 
-  @override
-  State<OnlineRequestPage> createState() => _OnlineRequestPageState();
-}
-
-class _OnlineRequestPageState extends State<OnlineRequestPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -415,27 +411,14 @@ class _OnlineRequestPageState extends State<OnlineRequestPage> {
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(30),
-              child: Column(
-                children: [
-                  const Text(
-                    'جواز السفر',
-                    style: TextStyle(
-                      fontSize: 32,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFF2563EB),
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  Text(
-                    'تقدم بطلب الحصول على جواز السفر أو تجديده\nبسهولة وسرعة من خلال هذه الصفحة.',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey[600],
-                      height: 1.5,
-                    ),
-                  ),
-                ],
+              child: const Text(
+                'ملف تصحيح الخطأ',
+                style: TextStyle(
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF2563EB),
+                ),
+                textAlign: TextAlign.center,
               ),
             ),
 
@@ -468,7 +451,10 @@ class _OnlineRequestPageState extends State<OnlineRequestPage> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: const [
-                          Icon(Icons.description, color: Color(0xFF2563EB)),
+                          Icon(
+                            Icons.description_outlined,
+                            color: Color(0xFF2563EB),
+                          ),
                           SizedBox(width: 8),
                           Text(
                             'الوثائق المطلوبة',
@@ -484,69 +470,28 @@ class _OnlineRequestPageState extends State<OnlineRequestPage> {
                     Padding(
                       padding: const EdgeInsets.all(20),
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          _buildRequirement('جواز السفر منتهي الصلاحية'),
-                          _buildRequirement(
-                            'بطاقة التسجيل الفصلي سارية المفعول',
+                          _buildSection('في شهادة الميلاد وعقد الزواج :'),
+                          _buildDocItem('شهادة ميلاد للمعني'),
+                          _buildDocItem('شهادة ميلاد الأب'),
+                          _buildDocItem('شهادة ميلاد الأم'),
+                          _buildDocItem('عقد الزواج للأبوين'),
+                          _buildDocItem('شهادة عائلية .'),
+                          _buildDocItem(
+                            'طلب مصادق عليه (يسلم من مكتب الأرشيف )',
                           ),
-                          _buildRequirement('استمارة طلب مملوءة وموقعة'),
-                          _buildRequirement('شهادة ميلاد خاصة أصلية ( 12S )'),
-                          _buildRequirement(
-                            'إثبات الإقامة القانونية في الجزائر (حال شهادة\nالعمل أو بطاقة الطالب)',
+
+                          const SizedBox(height: 24),
+                          _buildSection('في شهادة الوفاة :'),
+                          _buildDocItem(
+                            'نشر الملف المطلوب في تصحيح شهادة الميلاد',
                           ),
-                          _buildRequirement(
-                            'أربع صور فوتوغرافية حديثة بحجم 35 × 45 مم',
-                          ),
-                          _buildRequirement(
-                            'نسخة من بطاقة التعريف الوطنية (إذا كانت\nمتوفرة)',
-                          ),
-                          _buildRequirement(
-                            'إيصال دفع رسوم الجواز (حوالي 6000 دج)',
-                          ),
+                          _buildDocItem('شهادة الوفاة'),
                         ],
                       ),
                     ),
                   ],
-                ),
-              ),
-            ),
-
-            Padding(
-              padding: const EdgeInsets.all(20),
-              child: SizedBox(
-                width: double.infinity,
-                height: 56,
-                child: ElevatedButton(
-                  onPressed: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('تم إرسال الطلب بنجاح'),
-                        backgroundColor: Colors.green,
-                      ),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF00D26A),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    elevation: 0,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      Text(
-                        'طلب تجديد',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                      SizedBox(width: 8),
-                      Icon(Icons.send, color: Colors.white),
-                    ],
-                  ),
                 ),
               ),
             ),
@@ -557,9 +502,24 @@ class _OnlineRequestPageState extends State<OnlineRequestPage> {
     );
   }
 
-  Widget _buildRequirement(String text) {
+  Widget _buildSection(String title) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.only(bottom: 12, top: 8),
+      child: Text(
+        title,
+        style: const TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.bold,
+          color: Colors.black87,
+        ),
+        textAlign: TextAlign.right,
+      ),
+    );
+  }
+
+  Widget _buildDocItem(String text) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -578,7 +538,7 @@ class _OnlineRequestPageState extends State<OnlineRequestPage> {
               textAlign: TextAlign.right,
               style: TextStyle(
                 fontSize: 14,
-                color: Colors.grey[800],
+                color: Colors.grey[700],
                 height: 1.5,
               ),
             ),
