@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../widgets/custom_app_bar.dart';
+import 'required_documents.dart';
+import 'booking_calendar_screen.dart';
 
 class BookingPage extends StatelessWidget {
   const BookingPage({super.key});
@@ -8,19 +10,23 @@ class BookingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Directionality(
-      textDirection: TextDirection.rtl, // Page stays RTL
+      textDirection: TextDirection.rtl,
       child: Scaffold(
-        // CustomAppBar 
         appBar: PreferredSize(
           preferredSize: const Size.fromHeight(kToolbarHeight),
-          child: Directionality(
-            textDirection:
-                TextDirection.ltr, 
-            child: CustomAppBar(
-              onArrowTap: () {
-                Navigator.pop(context);
-              },
-            ),
+          child: CustomAppBar(
+            title: 'احجز موعدك',
+            onArrowTap: () => Navigator.pop(context),
+            onProfileTap: () {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Profile tapped')),
+              );
+            },
+            onNotificationTap: () {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Notifications tapped')),
+              );
+            },
           ),
         ),
         body: SingleChildScrollView(
@@ -28,7 +34,7 @@ class BookingPage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              //  Circle Icon
+              // Circle Icon
               Container(
                 width: 80,
                 height: 80,
@@ -44,9 +50,7 @@ class BookingPage extends StatelessWidget {
                   ),
                 ),
               ),
-
               const SizedBox(height: 15),
-
               const Text(
                 'احجز موعدك',
                 style: TextStyle(
@@ -55,9 +59,7 @@ class BookingPage extends StatelessWidget {
                   fontFamily: 'Cairo',
                 ),
               ),
-
               const SizedBox(height: 5),
-
               Text(
                 'اختر نوع الخدمة المطلوبة',
                 style: TextStyle(
@@ -66,9 +68,7 @@ class BookingPage extends StatelessWidget {
                   fontFamily: 'Cairo',
                 ),
               ),
-
               const SizedBox(height: 30),
-
               const Align(
                 alignment: Alignment.centerRight,
                 child: Text(
@@ -80,22 +80,32 @@ class BookingPage extends StatelessWidget {
                   ),
                 ),
               ),
-
               const SizedBox(height: 20),
 
-              // 🧾 Service Cards
-              const ServiceCard(
+              // Service Cards
+              ServiceCard(
                 icon: Icons.credit_card,
-                iconColor: Color(0xFF4CAF50),
+                iconColor: const Color(0xFF4CAF50),
                 title: 'الحالة المدنية',
                 subtitle: 'استخراج وثائق الحالة المدنية',
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const MyRequiredDocumentsPage(),
+                    ),
+                  );
+                },
               ),
               const SizedBox(height: 10),
-              const ServiceCard(
+              ServiceCard(
                 icon: Icons.fingerprint,
-                iconColor: Color(0xFF3F51B5),
+                iconColor: const Color(0xFF3F51B5),
                 title: 'المصالح البيومترية',
                 subtitle: 'خدمات البصمة والبيانات البيومترية',
+                onTap: () {
+                  //
+                },
               ),
               const SizedBox(height: 10),
               ServiceCard(
@@ -107,6 +117,14 @@ class BookingPage extends StatelessWidget {
                 iconColor: const Color(0xFFFF9800),
                 title: 'الاستلام',
                 subtitle: 'استلام الوثائق الجاهزة',
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const BookingCalendarScreen(),
+                    ),
+                  );
+                },
               ),
             ],
           ),
@@ -122,6 +140,7 @@ class ServiceCard extends StatelessWidget {
   final Color iconColor;
   final String title;
   final String subtitle;
+  final VoidCallback? onTap;
 
   const ServiceCard({
     super.key,
@@ -130,64 +149,68 @@ class ServiceCard extends StatelessWidget {
     required this.iconColor,
     required this.title,
     required this.subtitle,
+    this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey.shade300),
-        borderRadius: BorderRadius.circular(12),
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.shade100,
-            blurRadius: 4,
-            spreadRadius: 1,
-          ),
-        ],
-      ),
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-      child: Row(
-        children: [
-          Expanded(
-            child: Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: iconColor.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: iconWidget ?? Icon(icon, color: iconColor, size: 24),
-                ),
-                const SizedBox(width: 10),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: const TextStyle(
-                        fontFamily: 'Cairo',
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Text(
-                      subtitle,
-                      style: const TextStyle(
-                        fontFamily: 'Cairo',
-                        fontSize: 14,
-                        color: Colors.grey,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.grey.shade300),
+          borderRadius: BorderRadius.circular(12),
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.shade100,
+              blurRadius: 4,
+              spreadRadius: 1,
             ),
-          ),
-          Radio(value: false, groupValue: true, onChanged: (_) {}),
-        ],
+          ],
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        child: Row(
+          children: [
+            Expanded(
+              child: Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: iconColor.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: iconWidget ?? Icon(icon, color: iconColor, size: 24),
+                  ),
+                  const SizedBox(width: 10),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        title,
+                        style: const TextStyle(
+                          fontFamily: 'Cairo',
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        subtitle,
+                        style: const TextStyle(
+                          fontFamily: 'Cairo',
+                          fontSize: 14,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            Radio(value: false, groupValue: true, onChanged: (_) {}),
+          ],
+        ),
       ),
     );
   }

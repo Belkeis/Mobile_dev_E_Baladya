@@ -9,96 +9,81 @@ class MyRequiredDocumentsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GenericListPage(
-      title: 'الوثائق المطلوبة',
-      subtitle:
-          'تعرّف على الوثائق المطلوبة لإتمام مختلف \nالمعاملات الإدارية بسهولة.',
-      showTrailingArrow: true,
-
-      // CUSTOM APP BAR
-      customAppBar: PreferredSize(
-        preferredSize: const Size.fromHeight(76),
-        child: Directionality(
-          textDirection: TextDirection.ltr,
-          child: CustomAppBar(
-            onProfileTap: () {
-              ScaffoldMessenger.of(
+    return Scaffold(
+      backgroundColor: Color(0xFFF9FAFB),
+      appBar: CustomAppBar(
+        onArrowTap: () {
+          // Navigate back or to home
+          Navigator.pop(context);
+        },
+      ),
+      body: GenericListPage(
+        title: 'الوثائق المطلوبة',
+        subtitle:
+            'تعرّف على الوثائق المطلوبة لإتمام مختلف \nالمعاملات الإدارية بسهولة.',
+        showTrailingArrow: true,
+        items: [
+          ListItem(
+            title: 'شهادة الميلاد',
+            subtitle: 'الحصول على البطاقة الوطنية',
+            onTap: () {
+              Navigator.push(
                 context,
-              ).showSnackBar(const SnackBar(content: Text('الملف الشخصي')));
-            },
-            onNotificationTap: () {
-              ScaffoldMessenger.of(
-                context,
-              ).showSnackBar(const SnackBar(content: Text('الإشعارات')));
-            },
-            onArrowTap: () {
-              Navigator.pop(context);
+                MaterialPageRoute(
+                  builder: (context) => const RequiredDocumentsPage(),
+                ),
+              );
             },
           ),
-        ),
+          ListItem(
+            title: 'جواز السفر',
+            subtitle: 'صالح حتى 2028',
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const RequiredDocumentsPage(),
+                ),
+              );
+            },
+          ),
+          ListItem(
+            title: 'رخصة السياقة',
+            subtitle: 'فئة B - 2026',
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const RequiredDocumentsPage(),
+                ),
+              );
+            },
+          ),
+          ListItem(
+            title: 'شهادة الزواج',
+            subtitle: '2020',
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const RequiredDocumentsPage(),
+                ),
+              );
+            },
+          ),
+          ListItem(
+            title: 'شهادة الإقامة',
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const RequiredDocumentsPage(),
+                ),
+              );
+            },
+          ),
+        ],
       ),
-
-      items: [
-        ListItem(
-          title: 'بطاقة التعريف الوطنية',
-          subtitle: 'الحصول على البطاقة الوطنية',
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const IdRequirements(),
-              ),
-            );
-          },
-        ),
-        ListItem(
-          title: 'جواز السفر',
-          subtitle: 'صالح حتى 2028',
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const RequiredDocumentsPage(),
-              ),
-            );
-          },
-        ),
-        ListItem(
-          title: 'رخصة السياقة',
-          subtitle: 'فئة B - 2026',
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const RequiredDocumentsPage(),
-              ),
-            );
-          },
-        ),
-        ListItem(
-          title: 'شهادة الزواج',
-          subtitle: '2020',
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const RequiredDocumentsPage(),
-              ),
-            );
-          },
-        ),
-        ListItem(
-          title: 'شهادة الإقامة',
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const RequiredDocumentsPage(),
-              ),
-            );
-          },
-        ),
-      ],
     );
   }
 }

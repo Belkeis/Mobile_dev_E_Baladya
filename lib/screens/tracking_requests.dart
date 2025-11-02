@@ -99,35 +99,7 @@ class RequestTrackingScreen extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 12),
-                SizedBox(
-                  width: double.infinity,
-                  height: 56,
-                  child: OutlinedButton(
-                    onPressed: () {
-                      // Navigate to all requests screen
-                      // Navigator.pushNamed(context, '/all-requests');
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('View all requests tapped')),
-                      );
-                    },
-                    style: OutlinedButton.styleFrom(
-                      side: BorderSide(color: Color(0xFFE5E7EB)),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      backgroundColor: Colors.white,
-                    ),
-                    child: Text(
-                      'عرض جميع الطلبات',
-                      style: TextStyle(
-                        fontFamily: 'Cairo',
-                        fontSize: 18,
-                        fontWeight: FontWeight.w400,
-                        color: Color(0xFF374151),
-                      ),
-                    ),
-                  ),
-                ),
+                
               ],
             ),
           ),

@@ -32,8 +32,12 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           Row(
             children: [
               // Profile icon (SVG)
-              InkWell(
-                onTap: onProfileTap ?? () {},
+              InkWell( 
+                onTap:
+                    onNotificationTap ??
+                    () {
+                      Navigator.pushNamed(context, '/profile');
+                    },
                 child: SvgPicture.asset(
                   'assets/icons/profile.svg',
                   width: 26,
