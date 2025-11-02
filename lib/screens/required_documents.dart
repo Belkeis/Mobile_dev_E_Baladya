@@ -24,13 +24,13 @@ class MyRequiredDocumentsPage extends StatelessWidget {
         showTrailingArrow: true,
         items: [
           ListItem(
-            title: 'شهادة الميلاد',
+            title: 'بطاقة تعريف وطنية',
             subtitle: 'الحصول على البطاقة الوطنية',
             onTap: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const RequiredDocumentsPage(),
+                  builder: (context) => const IdRequirements(),
                 ),
               );
             },

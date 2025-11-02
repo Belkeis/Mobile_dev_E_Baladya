@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'home_page.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -11,7 +10,7 @@ class ProfilePage extends StatelessWidget {
       textDirection: TextDirection.rtl,
       child: Scaffold(
         backgroundColor: Color(0xFFF9FAFB),
-        //  AppBar 
+        //  AppBar
         appBar: PreferredSize(
           preferredSize: const Size.fromHeight(76),
           child: Container(
@@ -54,18 +53,12 @@ class ProfilePage extends StatelessWidget {
                   ),
                 ),
 
-                  // Arrow on RIGHT pointing right
+                // Arrow on RIGHT pointing right - goes back to previous page
                 Align(
                   alignment: Alignment.centerRight,
                   child: InkWell(
                     onTap: () {
-                      // Navigate to HomePage 
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const HomePage(),
-                        ),
-                      );
+                      Navigator.pop(context);
                     },
                     child: const Icon(
                       Icons.arrow_back,
@@ -78,7 +71,6 @@ class ProfilePage extends StatelessWidget {
             ),
           ),
         ),
-
 
         body: SingleChildScrollView(
           padding: const EdgeInsets.all(25),
@@ -118,7 +110,7 @@ class ProfilePage extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 12),
-              
+
               Container(
                 padding: EdgeInsets.all(20),
                 decoration: BoxDecoration(
@@ -183,7 +175,6 @@ class ProfilePage extends StatelessWidget {
                     _buildInfoRow(
                       icon: Icons.email,
                       label: 'البريد الإلكتروني',
-                      // 🔧 EDITED: Changed to Gmail
                       value: 'example@gmail.com',
                       hasVerification: true,
                     ),
@@ -191,7 +182,6 @@ class ProfilePage extends StatelessWidget {
                     _buildInfoRow(
                       icon: Icons.phone,
                       label: 'الهاتف',
-                      // 🔧 EDITED: Changed to Algerian number format (reversed for RTL)
                       value: '456 123 555 213+',
                       hasVerification: true,
                     ),
