@@ -106,6 +106,7 @@ class GenericListPage extends StatelessWidget {
                     ],
                   ),
                   child: ListTile(
+                    onTap: item.onTap,
                     contentPadding: const EdgeInsets.symmetric(
                       horizontal: 16,
                       vertical: 4,
@@ -177,11 +178,13 @@ class ListItem {
   final String? subtitle;
   final IconData? icon;
   final Color? iconColor;
+  final VoidCallback? onTap;
 
   const ListItem({
     required this.title,
     this.subtitle,
     this.icon,
     this.iconColor,
+    this.onTap, 
   });
 }

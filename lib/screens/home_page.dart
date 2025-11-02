@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
-import 'online_request_page.dart';
 import 'MyRequiredDocumentsPage.dart';
+<<<<<<< Updated upstream
 import 'tracking_requests.dart';
+=======
+import 'MyOnlineRequestsPage.dart';
+import 'profile.dart'; // Add this import
+import 'notifications_page.dart'; // Add this import
+>>>>>>> Stashed changes
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -33,45 +38,68 @@ class HomePage extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          Container(
-                            padding: const EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.2),
-                              shape: BoxShape.circle,
-                            ),
-                            child: const Icon(
-                              Icons.person_outline,
-                              color: Colors.white,
-                              size: 24,
+                          // Profile icon
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const ProfilePage(),
+                                ),
+                              );
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                color: Colors.white.withOpacity(0.2),
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Icon(
+                                Icons.person_outline,
+                                color: Colors.white,
+                                size: 24,
+                              ),
                             ),
                           ),
                           const SizedBox(width: 12),
-                          Container(
-                            padding: const EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.2),
-                              shape: BoxShape.circle,
-                            ),
-                            child: Stack(
-                              children: [
-                                const Icon(
-                                  Icons.notifications_outlined,
-                                  color: Colors.white,
-                                  size: 24,
+                          // Notification icon
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      const NotificationsPage(),
                                 ),
-                                Positioned(
-                                  top: 0,
-                                  right: 0,
-                                  child: Container(
-                                    width: 8,
-                                    height: 8,
-                                    decoration: const BoxDecoration(
-                                      color: Colors.red,
-                                      shape: BoxShape.circle,
+                              );
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                color: Colors.white.withOpacity(0.2),
+                                shape: BoxShape.circle,
+                              ),
+                              child: Stack(
+                                children: [
+                                  const Icon(
+                                    Icons.notifications_outlined,
+                                    color: Colors.white,
+                                    size: 24,
+                                  ),
+                                  Positioned(
+                                    top: 0,
+                                    right: 0,
+                                    child: Container(
+                                      width: 8,
+                                      height: 8,
+                                      decoration: const BoxDecoration(
+                                        color: Color(0xFFEF4444),
+                                        shape: BoxShape.circle,
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
                         ],
@@ -83,6 +111,7 @@ class HomePage extends StatelessWidget {
                           color: Colors.white,
                           fontSize: 26,
                           fontWeight: FontWeight.bold,
+                          fontFamily: 'Cairo',
                         ),
                       ),
                     ],
@@ -138,7 +167,8 @@ class HomePage extends StatelessWidget {
                             () => Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => const OnlineRequestPage(),
+                                builder: (context) =>
+                                    const MyOnlineRequestsPage(),
                               ),
                             ),
                           ),
@@ -262,6 +292,7 @@ class HomePage extends StatelessWidget {
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
                 color: Color(0xFF1F2937),
+                fontFamily: 'Cairo',
               ),
             ),
           ],
@@ -275,7 +306,7 @@ class HomePage extends StatelessWidget {
       content: Text(
         message,
         textAlign: TextAlign.center,
-        style: const TextStyle(fontSize: 16),
+        style: const TextStyle(fontSize: 16, fontFamily: 'Cairo'),
       ),
       backgroundColor: const Color(0xFF2563EB),
       behavior: SnackBarBehavior.floating,
@@ -306,7 +337,7 @@ class TopWaveClipper extends CustomClipper<Path> {
   bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 }
 
-// 🔵 Bottom smooth wave curve from Belkeis code
+// 🔵 Bottom smooth wave curve
 class FooterClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {

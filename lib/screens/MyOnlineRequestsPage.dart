@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../widgets/generic_list_page.dart';
 import '../widgets/custom_app_bar.dart';
+import 'required_doc_passport.dart';
 
 class MyOnlineRequestsPage extends StatelessWidget {
   const MyOnlineRequestsPage({super.key});
@@ -13,7 +14,7 @@ class MyOnlineRequestsPage extends StatelessWidget {
       customAppBar: PreferredSize(
         preferredSize: const Size.fromHeight(76),
         child: Directionality(
-          textDirection: TextDirection.ltr, // icons left-to-right
+          textDirection: TextDirection.ltr,
           child: CustomAppBar(
             onNotificationTap: () {
               ScaffoldMessenger.of(context).showSnackBar(
@@ -37,31 +38,71 @@ class MyOnlineRequestsPage extends StatelessWidget {
           'اختر نوع الطلب وأكمل تأكيد معلوماتك \nلتقديمه إلكترونيًا بسهولة.',
       showTrailingArrow: true,
 
-      items: const [
+      items: [
         ListItem(
           title: 'بطاقة تعريف وطنية',
           icon: FontAwesomeIcons.idCard,
-          iconColor: Color.fromARGB(255, 3, 129, 255),
+          iconColor: const Color.fromARGB(255, 3, 129, 255),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const RequiredDocumentsPassportPage(),
+              ),
+            );
+          },
         ),
         ListItem(
           title: 'جواز سفر',
           icon: FontAwesomeIcons.passport,
-          iconColor: Color.fromARGB(255, 13, 168, 57),
+          iconColor: const Color.fromARGB(255, 13, 168, 57),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const RequiredDocumentsPassportPage(),
+              ),
+            );
+          },
         ),
         ListItem(
           title: 'شهادة ميلاد',
           icon: FontAwesomeIcons.certificate,
-          iconColor: Color(0xFF9C27B0),
+          iconColor: const Color(0xFF9C27B0),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const RequiredDocumentsPassportPage(),
+              ),
+            );
+          },
         ),
         ListItem(
           title: 'عقد زواج',
           icon: FontAwesomeIcons.heart,
-          iconColor: Color.fromARGB(255, 224, 60, 188),
+          iconColor: const Color.fromARGB(255, 224, 60, 188),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const RequiredDocumentsPassportPage(),
+              ),
+            );
+          },
         ),
         ListItem(
           title: 'شهادة إقامة',
           icon: FontAwesomeIcons.home,
-          iconColor: Color.fromARGB(255, 223, 111, 26),
+          iconColor: const Color.fromARGB(255, 223, 111, 26),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const RequiredDocumentsPassportPage(),
+              ),
+            );
+          },
         ),
       ],
     );

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../widgets/generic_list_page.dart';
 import '../widgets/custom_app_bar.dart';
+import 'online_request_page.dart'; // Add this import
 
 class MyRequiredDocumentsPage extends StatelessWidget {
   const MyRequiredDocumentsPage({super.key});
@@ -17,7 +18,7 @@ class MyRequiredDocumentsPage extends StatelessWidget {
       customAppBar: PreferredSize(
         preferredSize: const Size.fromHeight(76),
         child: Directionality(
-          textDirection: TextDirection.ltr, // keep icons left-to-right
+          textDirection: TextDirection.ltr,
           child: CustomAppBar(
             onProfileTap: () {
               ScaffoldMessenger.of(
@@ -36,15 +37,66 @@ class MyRequiredDocumentsPage extends StatelessWidget {
         ),
       ),
 
-      items: const [
+      items: [
         ListItem(
           title: 'شهادة الميلاد',
           subtitle: 'الحصول على البطاقة الوطنية',
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const OnlineRequestPage(),
+              ),
+            );
+          },
         ),
-        ListItem(title: 'جواز السفر', subtitle: 'صالح حتى 2028'),
-        ListItem(title: 'رخصة السياقة', subtitle: 'فئة B - 2026'),
-        ListItem(title: 'شهادة الزواج', subtitle: '2020'),
-        ListItem(title: 'شهادة الإقامة'),
+        ListItem(
+          title: 'جواز السفر',
+          subtitle: 'صالح حتى 2028',
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const OnlineRequestPage(),
+              ),
+            );
+          },
+        ),
+        ListItem(
+          title: 'رخصة السياقة',
+          subtitle: 'فئة B - 2026',
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const OnlineRequestPage(),
+              ),
+            );
+          },
+        ),
+        ListItem(
+          title: 'شهادة الزواج',
+          subtitle: '2020',
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const OnlineRequestPage(),
+              ),
+            );
+          },
+        ),
+        ListItem(
+          title: 'شهادة الإقامة',
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const OnlineRequestPage(),
+              ),
+            );
+          },
+        ),
       ],
     );
   }
