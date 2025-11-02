@@ -18,9 +18,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(
-        color: Color(0xFF2563EB),
-      ),
+      decoration: const BoxDecoration(color: Color(0xFF2563EB)),
       padding: EdgeInsets.only(
         top: MediaQuery.of(context).padding.top + 16,
         left: 20,
@@ -47,10 +45,14 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 ),
               ),
               const SizedBox(width: 16),
-              
+
               // Notification icon with red dot badge (SVG)
               InkWell(
-                onTap: onNotificationTap ?? () {},
+                onTap:
+                    onNotificationTap ??
+                    () {
+                      Navigator.pushNamed(context, '/notifications');
+                    },
                 child: Stack(
                   clipBehavior: Clip.none,
                   children: [
@@ -80,7 +82,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               ),
             ],
           ),
-          
+
           // Right side: Title and Arrow icon
           Row(
             children: [
@@ -96,9 +98,11 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 const SizedBox(width: 12),
               ],
               InkWell(
-                onTap: onArrowTap ?? () {
-                  Navigator.pop(context);
-                },
+                onTap:
+                    onArrowTap ??
+                    () {
+                      Navigator.pop(context);
+                    },
                 child: SvgPicture.asset(
                   'assets/icons/arrow.svg',
                   width: 28,
