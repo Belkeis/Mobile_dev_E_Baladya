@@ -7,7 +7,7 @@ class GenericListPage extends StatelessWidget {
   final List<ListItem> items;
   final bool showDownloadIcon;
   final bool showTrailingArrow;
-  final PreferredSizeWidget? customAppBar; // <-- optional
+  final PreferredSizeWidget? customAppBar;
 
   const GenericListPage({
     super.key,
@@ -25,8 +25,7 @@ class GenericListPage extends StatelessWidget {
       textDirection: TextDirection.rtl,
       child: Scaffold(
         backgroundColor: const Color(0xFFF9F9F9),
-        appBar: customAppBar, // use the optional app bar
-
+        appBar: customAppBar,
         body: Padding(
           padding: const EdgeInsets.fromLTRB(20, 20, 20, 25),
           child: ListView(
@@ -88,12 +87,11 @@ class GenericListPage extends StatelessWidget {
                   ),
                 ),
               ),
-
               const SizedBox(height: 40),
 
               // List of items
-              ...items.map((item) {
-                return Container(
+              ...items.map(
+                (item) => Container(
                   height: 70,
                   margin: const EdgeInsets.only(bottom: 12),
                   decoration: BoxDecoration(
@@ -164,8 +162,8 @@ class GenericListPage extends StatelessWidget {
                           )
                         : null,
                   ),
-                );
-              }),
+                ),
+              ),
             ],
           ),
         ),

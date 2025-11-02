@@ -5,12 +5,14 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback? onNotificationTap;
   final VoidCallback? onProfileTap;
   final VoidCallback? onArrowTap;
+  final String? title;
 
   const CustomAppBar({
     super.key,
     this.onNotificationTap,
     this.onProfileTap,
     this.onArrowTap,
+    this.title,
   });
 
   @override
@@ -79,20 +81,35 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             ],
           ),
           
-          // Right side: Arrow icon (SVG)
-          InkWell(
-            onTap: onArrowTap ?? () {
-              Navigator.pop(context);
-            },
-            child: SvgPicture.asset(
-              'assets/icons/arrow.svg',
-              width: 28,
-              height: 28,
-              colorFilter: const ColorFilter.mode(
-                Colors.white,
-                BlendMode.srcIn,
+          // Right side: Title and Arrow icon
+          Row(
+            children: [
+              if (title != null) ...[
+                Text(
+                  title!,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+                const SizedBox(width: 12),
+              ],
+              InkWell(
+                onTap: onArrowTap ?? () {
+                  Navigator.pop(context);
+                },
+                child: SvgPicture.asset(
+                  'assets/icons/arrow.svg',
+                  width: 28,
+                  height: 28,
+                  colorFilter: const ColorFilter.mode(
+                    Colors.white,
+                    BlendMode.srcIn,
+                  ),
+                ),
               ),
-            ),
+            ],
           ),
         ],
       ),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'online_request_page.dart';
-import 'required_documents_page.dart';
+import 'MyRequiredDocumentsPage.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -160,7 +160,7 @@ class HomePage extends StatelessWidget {
                               context,
                               MaterialPageRoute(
                                 builder: (context) =>
-                                    const RequiredDocumentsPage(),
+                                    const MyRequiredDocumentsPage(),
                               ),
                             ),
                           ),
