@@ -38,7 +38,7 @@ class MyApp extends StatelessWidget {
         '/home': (context) => const HomePage(),
         '/tracking': (context) => const RequestTrackingScreen(),
         '/required-documents-passport': (context) =>
-            const RequiredDocumentsPassportPage(),
+            const RequiredDocumentsPage(),
         '/required-documents': (context) => const MyRequiredDocumentsPage(),
         '/booking': (context) => const BookingPage(),
         '/digital-versions': (context) => const DigitalVersionsPage(),
@@ -50,7 +50,7 @@ class MyApp extends StatelessWidget {
         '/after_req': (context) => const AfterReq(),
         '/notifications': (context) => const NotificationsPage(),
         '/profile': (context) => const ProfilePage(),
-        '/online_request_page': (context) => const OnlineRequestPage(),
+        '/online_request_page': (context) => const onlineRequestPassport(),
       },
     );
   }
