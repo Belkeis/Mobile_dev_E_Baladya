@@ -1,12 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
+import '../../logic/cubit/booking_cubit.dart';
+import '../../logic/cubit/auth_cubit.dart';
+import '../../logic/cubit/service_cubit.dart';
+import '../../data/models/booking_model.dart';
 import '../widgets/custom_app_bar.dart';
 
 class BookingCalendarScreen extends StatefulWidget {
   final String serviceTitle;
+  final int? serviceId;
   
   const BookingCalendarScreen({
     super.key,
     this.serviceTitle = 'الحالة المدنية',
+    this.serviceId,
   });
 
   @override
@@ -21,8 +29,81 @@ class _BookingCalendarScreenState extends State<BookingCalendarScreen> {
   final List<int> unavailableDates = [2, 4, 10, 16, 17, 24, 30];
 
   int? selectedDate;
+  int? selectedMonth = DateTime.now().month;
+  int? selectedYear = DateTime.now().year;
+  bool _isSubmitting = false;
 
-  final List<String> weekDays = [ 'خ', 'ج', 'س','ح', 'إ', 'ث', 'أ'];
+  final List<String> weekDays = ['خ', 'ج', 'س', 'ح', 'إ', 'ث', 'أ'];
+  
+  int? _getServiceId() {
+    if (widget.serviceId != null) return widget.serviceId;
+    
+    // Try to find service by title from service cubit
+    final serviceState = context.read<ServiceCubit>().state;
+    if (serviceState is ServiceLoaded) {
+      final service = serviceState.services.firstWhere(
+        (s) => s.name.contains(widget.serviceTitle) || widget.serviceTitle.contains(s.name),
+        orElse: () => serviceState.services.first,
+      );
+      return service.id;
+    }
+    return 1; // Default to first service
+  }
+  
+  Future<void> _submitBooking() async {
+    if (selectedDate == null) return;
+    
+    final authState = context.read<AuthCubit>().state;
+    if (authState is! AuthAuthenticated) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('يجب تسجيل الدخول أولاً')),
+      );
+      return;
+    }
+    
+    setState(() => _isSubmitting = true);
+    
+    try {
+      final serviceId = _getServiceId();
+      if (serviceId == null) {
+        throw Exception('Service not found');
+      }
+      
+      // Create booking date
+      final bookingDate = DateTime(selectedYear!, selectedMonth!, selectedDate!);
+      final booking = BookingModel(
+        userId: authState.user.id!,
+        serviceId: serviceId,
+        date: bookingDate.toIso8601String(),
+        status: 'pending',
+      );
+      
+      await context.read<BookingCubit>().createBooking(booking);
+      
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('تم حجز الموعد بنجاح'),
+            backgroundColor: Colors.green,
+          ),
+        );
+        Navigator.pop(context);
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('حدث خطأ: ${e.toString()}'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isSubmitting = false);
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,12 +140,21 @@ class _BookingCalendarScreenState extends State<BookingCalendarScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             IconButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                setState(() {
+                                  if (selectedMonth == 1) {
+                                    selectedMonth = 12;
+                                    selectedYear = selectedYear! - 1;
+                                  } else {
+                                    selectedMonth = selectedMonth! - 1;
+                                  }
+                                });
+                              },
                               icon: const Icon(Icons.chevron_left, size: 24),
                             ),
-                            const Text(
-                              'يناير 2026',
-                              style: TextStyle(
+                            Text(
+                              _getMonthYearText(),
+                              style: const TextStyle(
                                 fontFamily: 'Cairo',
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
@@ -72,7 +162,16 @@ class _BookingCalendarScreenState extends State<BookingCalendarScreen> {
                               ),
                             ),
                             IconButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                setState(() {
+                                  if (selectedMonth == 12) {
+                                    selectedMonth = 1;
+                                    selectedYear = selectedYear! + 1;
+                                  } else {
+                                    selectedMonth = selectedMonth! + 1;
+                                  }
+                                });
+                              },
                               icon: const Icon(Icons.chevron_right, size: 24),
                             ),
                           ],
@@ -116,17 +215,11 @@ class _BookingCalendarScreenState extends State<BookingCalendarScreen> {
                     width: double.infinity,
                     height: 56,
                     child: ElevatedButton(
-                      onPressed: selectedDate != null
-                          ? () {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text('حجز للتاريخ: $selectedDate في ${widget.serviceTitle}'),
-                                ),
-                              );
-                            }
+                      onPressed: (selectedDate != null && !_isSubmitting)
+                          ? _submitBooking
                           : null,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: selectedDate != null 
+                        backgroundColor: (selectedDate != null && !_isSubmitting)
                             ? const Color(0xFF2563EB) 
                             : const Color(0xFFE5E7EB),
                         disabledBackgroundColor: const Color(0xFFE5E7EB),
@@ -135,17 +228,26 @@ class _BookingCalendarScreenState extends State<BookingCalendarScreen> {
                         ),
                         elevation: 0,
                       ),
-                      child: Text(
-                        'احجز',
-                        style: TextStyle(
-                          fontFamily: 'Cairo',
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: selectedDate != null 
-                              ? Colors.white 
-                              : const Color(0xFF9CA3AF),
-                        ),
-                      ),
+                      child: _isSubmitting
+                          ? const SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                              ),
+                            )
+                          : Text(
+                              'احجز',
+                              style: TextStyle(
+                                fontFamily: 'Cairo',
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                color: (selectedDate != null && !_isSubmitting)
+                                    ? Colors.white 
+                                    : const Color(0xFF9CA3AF),
+                              ),
+                            ),
                     ),
                   ),
 
@@ -180,18 +282,53 @@ class _BookingCalendarScreenState extends State<BookingCalendarScreen> {
     );
   }
 
-  Widget _buildCalendarGrid() {
-
-    //List<Widget> dayWidgets = [];
-
-
-    List<List<int?>> weeks = [
-      [1, 2, 3, 4, 5, 6, 7],
-      [8, 9, 10, 11, 12, 13, 14],
-      [15, 16, 17, 18, 19, 20, 21],
-      [22, 23, 24, 25, 26, 27, 28],
-      [29, 30, 31, null, null, null, null],
+  String _getMonthYearText() {
+    final months = [
+      'يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو',
+      'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'
     ];
+    return '${months[selectedMonth! - 1]} $selectedYear';
+  }
+  
+  int _getDaysInMonth(int year, int month) {
+    return DateTime(year, month + 1, 0).day;
+  }
+  
+  int _getFirstDayOfMonth(int year, int month) {
+    return DateTime(year, month, 1).weekday;
+  }
+
+  Widget _buildCalendarGrid() {
+    final daysInMonth = _getDaysInMonth(selectedYear!, selectedMonth!);
+    final firstDay = _getFirstDayOfMonth(selectedYear!, selectedMonth!);
+    
+    // Adjust for Arabic week (starts with Saturday = 6)
+    int adjustedFirstDay = (firstDay + 1) % 7;
+    
+    List<List<int?>> weeks = [];
+    List<int?> currentWeek = [];
+    
+    // Add empty cells for days before the first day of month
+    for (int i = 0; i < adjustedFirstDay; i++) {
+      currentWeek.add(null);
+    }
+    
+    // Add days of the month
+    for (int day = 1; day <= daysInMonth; day++) {
+      currentWeek.add(day);
+      if (currentWeek.length == 7) {
+        weeks.add(List.from(currentWeek));
+        currentWeek.clear();
+      }
+    }
+    
+    // Add remaining empty cells
+    if (currentWeek.isNotEmpty) {
+      while (currentWeek.length < 7) {
+        currentWeek.add(null);
+      }
+      weeks.add(currentWeek);
+    }
 
     return Column(
       children: weeks.map((week) {
@@ -213,8 +350,13 @@ class _BookingCalendarScreenState extends State<BookingCalendarScreen> {
       return const SizedBox(width: 40, height: 40);
     }
 
-    bool isAvailable = availableDates.contains(day);
-    bool isUnavailable = unavailableDates.contains(day);
+    // Check if date is in the past
+    final currentDate = DateTime.now();
+    final checkDate = DateTime(selectedYear!, selectedMonth!, day);
+    final isPast = checkDate.isBefore(DateTime(currentDate.year, currentDate.month, currentDate.day));
+    
+    bool isAvailable = availableDates.contains(day) && !isPast;
+    bool isUnavailable = unavailableDates.contains(day) || isPast;
     bool isSelected = selectedDate == day;
 
     Color backgroundColor;
@@ -267,7 +409,6 @@ class _BookingCalendarScreenState extends State<BookingCalendarScreen> {
   Widget _buildLegendItem(String text, Color color) {
     return Row(
       mainAxisSize: MainAxisSize.min,
-      textDirection: TextDirection.rtl,
       children: [
         Container(
           width: 16,

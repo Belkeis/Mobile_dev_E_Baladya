@@ -16,6 +16,9 @@ import '../views/screens/passport_requirement.dart';
 import '../views/screens/id_card_online_request.dart';
 import '../views/screens/id_card_requirement.dart';
 import '../views/screens/after_req.dart';
+import '../views/screens/service_details_screen.dart';
+import '../views/screens/service_requirements_screen.dart';
+import '../views/screens/my_bookings_page.dart';
 
 class AppRoutes {
   static const String entering = '/entering';
@@ -34,6 +37,7 @@ class AppRoutes {
   static const String idCardOnlineRequest = '/id-card-online-request';
   static const String idCardRequirement = '/id-card-requirement';
   static const String afterRequest = '/after-request';
+  static const String myBookings = '/my-bookings';
 
   static Map<String, WidgetBuilder> get routes => {
         entering: (context) => const Entering(),
@@ -52,6 +56,7 @@ class AppRoutes {
         idCardOnlineRequest: (context) => const IdRequest(),
         idCardRequirement: (context) => const IdRequirements(),
         afterRequest: (context) => const AfterReq(),
+        myBookings: (context) => const MyBookingsPage(),
       };
 
   static String get initialRoute => entering;

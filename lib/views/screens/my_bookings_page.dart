@@ -1,23 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import '../../logic/cubit/request_cubit.dart';
+import '../../logic/cubit/booking_cubit.dart';
 import '../../logic/cubit/auth_cubit.dart';
-import '../../data/models/request_model.dart';
+import '../../data/models/booking_model.dart';
 import '../../data/models/service_model.dart';
 import '../widgets/custom_app_bar.dart';
 
-class RequestTrackingScreen extends StatelessWidget {
-  const RequestTrackingScreen({super.key});
+class MyBookingsPage extends StatelessWidget {
+  const MyBookingsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<AuthCubit, AuthState>(
       builder: (context, authState) {
         if (authState is AuthAuthenticated) {
-          context.read<RequestCubit>().loadRequests(authState.user.id!);
+          context.read<BookingCubit>().loadBookings(authState.user.id!);
         } else if (authState is AuthInitial || authState is AuthLoading) {
-          // Auto-login if not authenticated
           WidgetsBinding.instance.addPostFrameCallback((_) {
             context.read<AuthCubit>().login('ahmed@example.com', 'password123');
           });
@@ -44,13 +43,13 @@ class RequestTrackingScreen extends StatelessWidget {
               Navigator.pop(context);
             },
           ),
-          body: BlocBuilder<RequestCubit, RequestState>(
+          body: BlocBuilder<BookingCubit, BookingState>(
             builder: (context, state) {
-              if (state is RequestLoading) {
+              if (state is BookingLoading) {
                 return const Center(child: CircularProgressIndicator());
               }
 
-              if (state is RequestError) {
+              if (state is BookingError) {
                 return Center(
                   child: Text(
                     state.message,
@@ -63,91 +62,63 @@ class RequestTrackingScreen extends StatelessWidget {
                 );
               }
 
-              List<Map<String, dynamic>> requestsWithService = [];
-              if (state is RequestsLoaded) {
-                requestsWithService = state.requestsWithService;
+              List<Map<String, dynamic>> bookingsWithService = [];
+              if (state is BookingsLoaded) {
+                bookingsWithService = state.bookingsWithService;
               }
 
-              return Column(
-                children: [
-                  Expanded(
-                    child: SingleChildScrollView(
-                      padding: const EdgeInsets.all(25),
-                      child: Column(
-                        children: [
-                          const Text(
-                            'تتبع الطلب',
+              return SingleChildScrollView(
+                padding: const EdgeInsets.all(25),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'حجوزاتي',
+                      style: TextStyle(
+                        fontFamily: 'Cairo',
+                        fontSize: 24,
+                        fontWeight: FontWeight.normal,
+                        color: Color(0xFF2563EB),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'عرض جميع حجوزاتك والمواعيد المحددة',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.grey.shade600,
+                        fontFamily: 'Cairo',
+                      ),
+                    ),
+                    const SizedBox(height: 40),
+                    if (bookingsWithService.isEmpty)
+                      const Padding(
+                        padding: EdgeInsets.all(40.0),
+                        child: Center(
+                          child: Text(
+                            'لا توجد حجوزات',
                             style: TextStyle(
                               fontFamily: 'Cairo',
-                              fontSize: 24,
-                              fontWeight: FontWeight.normal,
-                              color: Color(0xFF2563EB),
+                              fontSize: 16,
+                              color: Color(0xFF6B7280),
                             ),
                           ),
-                          const SizedBox(height: 40),
-                          if (requestsWithService.isEmpty)
-                            const Padding(
-                              padding: EdgeInsets.all(40.0),
-                              child: Text(
-                                'لا توجد طلبات',
-                                style: TextStyle(
-                                  fontFamily: 'Cairo',
-                                  fontSize: 16,
-                                  color: Color(0xFF6B7280),
-                                ),
-                              ),
-                            )
-                          else
-                            ...requestsWithService.map((item) {
-                              final request = item['request'] as RequestModel;
-                              final service = item['service'] as ServiceModel?;
-                              return Padding(
-                                padding: const EdgeInsets.only(bottom: 20),
-                                child: _buildRequestCard(
-                                  request: request,
-                                  service: service,
-                                ),
-                              );
-                            }),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.only(
-                      left: 20,
-                      right: 20,
-                      top: 20,
-                      bottom: MediaQuery.of(context).padding.bottom + 20,
-                    ),
-                    color: Colors.transparent,
-                    child: SizedBox(
-                      width: double.infinity,
-                      height: 56,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.pushNamed(context, '/online-requests');
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF2563EB),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          elevation: 0,
                         ),
-                        child: const Text(
-                          'طلب جديد',
-                          style: TextStyle(
-                            fontFamily: 'Cairo',
-                            fontSize: 18,
-                            fontWeight: FontWeight.w400,
-                            color: Colors.white,
+                      )
+                    else
+                      ...bookingsWithService.map((item) {
+                        final booking = item['booking'] as BookingModel;
+                        final service = item['service'] as ServiceModel?;
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 16),
+                          child: _buildBookingCard(
+                            booking: booking,
+                            service: service,
                           ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+                        );
+                      }),
+                  ],
+                ),
               );
             },
           ),
@@ -156,8 +127,8 @@ class RequestTrackingScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildRequestCard({
-    required RequestModel request,
+  Widget _buildBookingCard({
+    required BookingModel booking,
     ServiceModel? service,
   }) {
     // Determine status colors
@@ -168,35 +139,27 @@ class RequestTrackingScreen extends StatelessWidget {
     Color iconColor;
     Color iconBgColor;
 
-    switch (request.status) {
+    switch (booking.status) {
       case 'pending':
         statusColor = const Color(0xFFFEF3C7);
         statusTextColor = const Color(0xFF92400E);
-        statusText = 'قيد المراجعة';
+        statusText = 'قيد الانتظار';
         icon = Icons.pending;
         iconColor = const Color(0xFFF59E0B);
         iconBgColor = const Color(0xFFFEF3C7);
         break;
-      case 'approved':
-        statusColor = const Color(0xFFDBEAFE);
-        statusTextColor = const Color(0xFF1E40AF);
-        statusText = 'مقبول';
-        icon = Icons.check_circle;
-        iconColor = const Color(0xFF2563EB);
-        iconBgColor = const Color(0xFFDBEAFE);
-        break;
-      case 'ready':
+      case 'confirmed':
         statusColor = const Color(0xFFD1FAE5);
         statusTextColor = const Color(0xFF065F46);
-        statusText = 'جاهز';
-        icon = Icons.done_all;
+        statusText = 'مؤكد';
+        icon = Icons.check_circle;
         iconColor = const Color(0xFF059669);
         iconBgColor = const Color(0xFFD1FAE5);
         break;
-      case 'rejected':
+      case 'cancelled':
         statusColor = const Color(0xFFFEE2E2);
         statusTextColor = const Color(0xFF991B1B);
-        statusText = 'مرفوض';
+        statusText = 'ملغي';
         icon = Icons.cancel;
         iconColor = const Color(0xFFDC2626);
         iconBgColor = const Color(0xFFFEE2E2);
@@ -204,16 +167,15 @@ class RequestTrackingScreen extends StatelessWidget {
       default:
         statusColor = const Color(0xFFF3F4F6);
         statusTextColor = const Color(0xFF6B7280);
-        statusText = request.status;
+        statusText = booking.status;
         icon = Icons.info;
         iconColor = const Color(0xFF6B7280);
         iconBgColor = const Color(0xFFF3F4F6);
     }
 
-    final requestDate = DateTime.parse(request.requestDate);
-    final expectedDate = DateTime.parse(request.expectedDate);
-    final now = DateTime.now();
-    final daysRemaining = expectedDate.difference(now).inDays;
+    final bookingDate = DateTime.parse(booking.date);
+    final formattedDate = DateFormat('yyyy/MM/dd', 'ar').format(bookingDate);
+    final formattedTime = DateFormat('HH:mm', 'ar').format(bookingDate);
 
     return Container(
       padding: const EdgeInsets.all(20),
@@ -281,7 +243,7 @@ class RequestTrackingScreen extends StatelessWidget {
                     ),
                     const SizedBox(width: 8),
                     const Text(
-                      'حالة الطلب:',
+                      'الحالة:',
                       style: TextStyle(
                         fontFamily: 'Cairo',
                         fontSize: 14,
@@ -291,24 +253,39 @@ class RequestTrackingScreen extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 12),
-                Text(
-                  'الوقت المتبقي: ${daysRemaining > 0 ? '$daysRemaining أيام' : 'منتهي'}',
-                  style: const TextStyle(
-                    fontFamily: 'Cairo',
-                    fontSize: 12,
-                    color: Color(0xFF6B7280),
-                  ),
-                  textAlign: TextAlign.right,
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  'وقت الطلب: ${DateFormat('yyyy/MM/dd', 'ar').format(requestDate)}',
-                  style: const TextStyle(
-                    fontFamily: 'Cairo',
-                    fontSize: 12,
-                    color: Color(0xFF6B7280),
-                  ),
-                  textAlign: TextAlign.right,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Text(
+                      formattedTime,
+                      style: const TextStyle(
+                        fontFamily: 'Cairo',
+                        fontSize: 12,
+                        color: Color(0xFF6B7280),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    const Icon(
+                      Icons.access_time,
+                      size: 16,
+                      color: Color(0xFF6B7280),
+                    ),
+                    const SizedBox(width: 16),
+                    Text(
+                      formattedDate,
+                      style: const TextStyle(
+                        fontFamily: 'Cairo',
+                        fontSize: 12,
+                        color: Color(0xFF6B7280),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    const Icon(
+                      Icons.calendar_today,
+                      size: 16,
+                      color: Color(0xFF6B7280),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -318,3 +295,5 @@ class RequestTrackingScreen extends StatelessWidget {
     );
   }
 }
+
+

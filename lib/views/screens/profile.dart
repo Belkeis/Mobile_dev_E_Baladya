@@ -1,13 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../logic/cubit/auth_cubit.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: Scaffold(
+    return BlocBuilder<AuthCubit, AuthState>(
+      builder: (context, authState) {
+        String userName = 'اسم المستخدم';
+        String email = 'example@gmail.com';
+        String phone = '456 123 555 213+';
+        String nationalId = '****-****-1234';
+        String address = 'حي البدر، الجزائر العاصمة، الجزائر';
+
+        if (authState is AuthAuthenticated) {
+          final user = authState.user;
+          userName = user.fullName;
+          email = user.email;
+          phone = user.phone ?? 'غير متوفر';
+          nationalId = user.nationalId;
+          address = 'ولاية الجزائر، بلدية باب الزوار'; // Default address
+        }
+
+        return Directionality(
+          textDirection: TextDirection.rtl,
+          child: Scaffold(
         backgroundColor: const Color(0xFFF9FAFB),
         //  AppBar
         appBar: PreferredSize(
@@ -89,9 +108,9 @@ class ProfilePage extends StatelessWidget {
               const SizedBox(height: 12),
 
               //  User Name
-              const Text(
-                'اسم المستخدم',
-                style: TextStyle(
+              Text(
+                userName,
+                style: const TextStyle(
                   fontFamily: 'Cairo',
                   fontSize: 18,
                   fontWeight: FontWeight.normal,
@@ -133,7 +152,7 @@ class ProfilePage extends StatelessWidget {
                     _buildInfoRow(
                       icon: Icons.badge,
                       label: 'رقم الهوية',
-                      value: '****-****-1234',
+                      value: nationalId,
                     ),
                     const Padding(
                       padding: EdgeInsets.symmetric(vertical: 12),
@@ -182,7 +201,7 @@ class ProfilePage extends StatelessWidget {
                     _buildInfoRow(
                       icon: Icons.email,
                       label: 'البريد الإلكتروني',
-                      value: 'example@gmail.com',
+                      value: email,
                       hasVerification: true,
                     ),
                     const Padding(
@@ -192,7 +211,7 @@ class ProfilePage extends StatelessWidget {
                     _buildInfoRow(
                       icon: Icons.phone,
                       label: 'الهاتف',
-                      value: '456 123 555 213+',
+                      value: phone,
                       hasVerification: true,
                     ),
                   ],
@@ -231,13 +250,15 @@ class ProfilePage extends StatelessWidget {
                 child: _buildInfoRow(
                   icon: Icons.location_on,
                   label: 'العنوان المسجل',
-                  value: 'حي البدر، الجزائر العاصمة، الجزائر',
+                  value: address,
                 ),
               ),
             ],
           ),
         ),
       ),
+    );
+      },
     );
   }
 

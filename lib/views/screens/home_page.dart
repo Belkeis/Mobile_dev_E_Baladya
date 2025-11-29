@@ -7,6 +7,7 @@ import 'notifications_page.dart';
 import 'tracking_requests.dart';
 import 'booking_page.dart';
 import 'digital_versions_page.dart';
+import 'my_bookings_page.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -214,26 +215,41 @@ class HomePage extends StatelessWidget {
                     ),
                     const SizedBox(height: 16),
 
-                    // Centered single box
-                    Align(
-                      alignment: Alignment.center,
-                      child: SizedBox(
-                        width: 160,
-                        child: _buildMenuItem(
-                          context,
-                          'حجز موعد',
-                          Icons.calendar_today_rounded,
-                          const Color(0xFF2563EB),
-                          const Color(0xFFDBEAFE),
-                          () => Navigator.push(
+                    // Third Row - Bookings
+                    Row(
+                      children: [
+                        Expanded(
+                          child: _buildMenuItem(
+                            context,
+                            'حجوزاتي',
+                            Icons.event_note_rounded,
+                            const Color(0xFFEC4899),
+                            const Color(0xFFFCE7F3),
+                            () => Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) =>
-                                    const BookingPage(),
+                                builder: (context) => const MyBookingsPage(),
                               ),
                             ),
+                          ),
                         ),
-                      ),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: _buildMenuItem(
+                            context,
+                            'حجز موعد',
+                            Icons.calendar_today_rounded,
+                            const Color(0xFF2563EB),
+                            const Color(0xFFDBEAFE),
+                            () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const BookingPage(),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
