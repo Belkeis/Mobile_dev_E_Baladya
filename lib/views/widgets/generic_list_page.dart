@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class GenericListPage extends StatelessWidget {
+class GenericListPage extends StatefulWidget {
   final String title;
   final String subtitle;
   final List<ListItem> items;
@@ -18,14 +18,44 @@ class GenericListPage extends StatelessWidget {
     this.showTrailingArrow = true,
     this.customAppBar,
   });
+  @override
+  State<GenericListPage> createState() => _GenericListPageState();
+}
+
+class _GenericListPageState extends State<GenericListPage> {
+  late TextEditingController _searchController;
+  String _query = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _searchController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  List<ListItem> get _filteredItems {
+    if (_query.trim().isEmpty) return widget.items;
+    final q = _query.trim().toLowerCase();
+    return widget.items.where((it) {
+      final title = it.title.toLowerCase();
+      final subtitle = it.subtitle?.toLowerCase() ?? '';
+      return title.contains(q) || subtitle.contains(q);
+    }).toList();
+  }
 
   @override
   Widget build(BuildContext context) {
+    final items = _filteredItems;
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
         backgroundColor: const Color(0xFFF9FAFB),
-        appBar: customAppBar,
+        appBar: widget.customAppBar,
         body: SafeArea(
           child: Padding(
             padding: const EdgeInsets.fromLTRB(25, 25, 25, 0),
@@ -33,7 +63,7 @@ class GenericListPage extends StatelessWidget {
               children: [
                 // Header Section
                 Text(
-                  title,
+                  widget.title,
                   textAlign: TextAlign.center,
                   style: const TextStyle(
                     fontSize: 24,
@@ -44,7 +74,7 @@ class GenericListPage extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  subtitle,
+                  widget.subtitle,
                   textAlign: TextAlign.center,
                   style: const TextStyle(
                     fontSize: 14,
@@ -63,7 +93,8 @@ class GenericListPage extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: const Color(0xFFE5E7EB), width: 1),
+                    border:
+                        Border.all(color: const Color(0xFFE5E7EB), width: 1),
                     boxShadow: [
                       BoxShadow(
                         color: Colors.black.withValues(alpha: 0.04),
@@ -72,18 +103,21 @@ class GenericListPage extends StatelessWidget {
                       ),
                     ],
                   ),
-                  child: const Row(
+                  child: Row(
                     children: [
-                      Icon(Icons.search, color: Color(0xFF6B7280), size: 20),
-                      SizedBox(width: 12),
+                      const Icon(Icons.search,
+                          color: Color(0xFF6B7280), size: 20),
+                      const SizedBox(width: 12),
                       Expanded(
                         child: TextField(
-                          style: TextStyle(
+                          controller: _searchController,
+                          onChanged: (value) => setState(() => _query = value),
+                          style: const TextStyle(
                             fontSize: 14,
                             fontFamily: 'Cairo',
                             color: Color(0xFF111827),
                           ),
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                             hintText: 'ابحث...',
                             hintStyle: TextStyle(
                               color: Color(0xFF9CA3AF),
@@ -132,7 +166,8 @@ class GenericListPage extends StatelessWidget {
                           leading: item.icon != null
                               ? FaIcon(
                                   item.icon,
-                                  color: item.iconColor ?? const Color(0xFF2563EB),
+                                  color:
+                                      item.iconColor ?? const Color(0xFF2563EB),
                                   size: 20,
                                 )
                               : null,
@@ -156,7 +191,7 @@ class GenericListPage extends StatelessWidget {
                                   ),
                                 )
                               : null,
-                          trailing: showDownloadIcon
+                          trailing: widget.showDownloadIcon
                               ? SizedBox(
                                   width: 55,
                                   child: Row(
@@ -176,13 +211,13 @@ class GenericListPage extends StatelessWidget {
                                     ],
                                   ),
                                 )
-                              : showTrailingArrow
-                              ? const Icon(
-                                  Icons.arrow_forward_ios,
-                                  size: 16,
-                                  color: Color(0xFF6B7280),
-                                )
-                              : null,
+                              : widget.showTrailingArrow
+                                  ? const Icon(
+                                      Icons.arrow_forward_ios,
+                                      size: 16,
+                                      color: Color(0xFF6B7280),
+                                    )
+                                  : null,
                         ),
                       );
                     },
@@ -209,6 +244,6 @@ class ListItem {
     this.subtitle,
     this.icon,
     this.iconColor,
-    this.onTap, 
+    this.onTap,
   });
 }

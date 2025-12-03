@@ -28,7 +28,7 @@ class BookingPage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-               Container(
+              Container(
                 width: 80,
                 height: 80,
                 decoration: const BoxDecoration(
@@ -43,7 +43,7 @@ class BookingPage extends StatelessWidget {
                   ),
                 ),
               ),
-              // Title
+              const SizedBox(height: 16),
               const Text(
                 'احجز موعدك',
                 style: TextStyle(
@@ -75,7 +75,8 @@ class BookingPage extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (_) => const BookingCalendarScreen(
+                      builder: (_) => BookingCalendarScreen(
+                        serviceId: 1,
                         serviceTitle: 'الحالة المدنية',
                       ),
                     ),
@@ -93,7 +94,8 @@ class BookingPage extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (_) => const BookingCalendarScreen(
+                      builder: (_) => BookingCalendarScreen(
+                        serviceId: 2,
                         serviceTitle: 'المصالح البيومترية',
                       ),
                     ),
@@ -115,7 +117,8 @@ class BookingPage extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (_) => const BookingCalendarScreen(
+                      builder: (_) => BookingCalendarScreen(
+                        serviceId: 3,
                         serviceTitle: 'الاستلام',
                       ),
                     ),
@@ -161,7 +164,7 @@ class ServiceCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.04),
+              color: Colors.black.withOpacity(0.04),
               blurRadius: 8,
               offset: const Offset(0, 2),
             ),
@@ -170,7 +173,6 @@ class ServiceCard extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Icon Container - on the RIGHT in RTL
             Container(
               width: 48,
               height: 48,
@@ -183,11 +185,9 @@ class ServiceCard extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 16),
-            
-            // Text Content - next to icon on the RIGHT
             Expanded(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start, // Changed to start for RTL
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     title,

@@ -4,27 +4,35 @@ import '../../logic/cubit/service_cubit.dart';
 import '../../data/models/service_model.dart';
 import '../widgets/custom_app_bar.dart';
 
-class ServiceRequirementsScreen extends StatelessWidget {
+class ServiceRequirementsScreen extends StatefulWidget {
   final ServiceModel service;
 
   const ServiceRequirementsScreen({super.key, required this.service});
 
   @override
+  State<ServiceRequirementsScreen> createState() =>
+      _ServiceRequirementsScreenState();
+}
+
+class _ServiceRequirementsScreenState extends State<ServiceRequirementsScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // Load required documents once when the screen appears to avoid repeated calls
+    if (widget.service.id != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        context.read<ServiceCubit>().loadRequiredDocuments(widget.service.id!);
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return BlocBuilder<ServiceCubit, ServiceState>(
       builder: (context, state) {
-        if (state is ServiceLoading) {
-          context.read<ServiceCubit>().loadRequiredDocuments(service.id!);
-          return const Scaffold(
-            body: Center(child: CircularProgressIndicator()),
-          );
-        }
-
         List requiredDocuments = [];
         if (state is RequiredDocumentsLoaded) {
           requiredDocuments = state.documents;
-        } else {
-          context.read<ServiceCubit>().loadRequiredDocuments(service.id!);
         }
 
         return Scaffold(
@@ -40,7 +48,7 @@ class ServiceRequirementsScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  service.name,
+                  widget.service.name,
                   style: const TextStyle(
                     fontFamily: 'Cairo',
                     fontSize: 24,
@@ -50,7 +58,7 @@ class ServiceRequirementsScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 12),
                 Text(
-                  service.description,
+                  widget.service.description,
                   style: const TextStyle(
                     fontFamily: 'Cairo',
                     fontSize: 14,
@@ -118,7 +126,8 @@ class ServiceRequirementsScreen extends StatelessWidget {
                                   ),
                                 ]
                               : requiredDocuments
-                                  .map<Widget>((doc) => _buildRequirement(doc.name))
+                                  .map<Widget>(
+                                      (doc) => _buildRequirement(doc.name))
                                   .toList(),
                         ),
                       ),
@@ -193,5 +202,3 @@ class ServiceRequirementsScreen extends StatelessWidget {
     );
   }
 }
-
-

@@ -50,7 +50,23 @@ class AppRoutes {
         digitalVersions: (context) => const DigitalVersionsPage(),
         tracking: (context) => const RequestTrackingScreen(),
         booking: (context) => const BookingPage(),
-        bookingCalendar: (context) => const BookingCalendarScreen(),
+        // For BookingCalendarScreen, extract arguments from RouteSettings
+        bookingCalendar: (context) {
+          final args = ModalRoute.of(context)?.settings.arguments
+              as Map<String, dynamic>?;
+
+          if (args == null ||
+              !args.containsKey('serviceId') ||
+              !args.containsKey('serviceTitle')) {
+            throw ArgumentError(
+                'BookingCalendarScreen requires serviceId and serviceTitle');
+          }
+
+          return BookingCalendarScreen(
+            serviceId: args['serviceId'] as int,
+            serviceTitle: args['serviceTitle'] as String,
+          );
+        },
         passportOnlineRequest: (context) => const OnlineRequestPassport(),
         passportRequirement: (context) => const RequiredDocumentsPage(),
         idCardOnlineRequest: (context) => const IdRequest(),

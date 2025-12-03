@@ -6,17 +6,33 @@ import '../widgets/generic_list_page.dart';
 import '../widgets/custom_app_bar.dart';
 import 'service_requirements_screen.dart';
 
-class MyRequiredDocumentsPage extends StatelessWidget {
+class MyRequiredDocumentsPage extends StatefulWidget {
   const MyRequiredDocumentsPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    // Reload services when screen appears
+  State<MyRequiredDocumentsPage> createState() =>
+      _MyRequiredDocumentsPageState();
+}
+
+class _MyRequiredDocumentsPageState extends State<MyRequiredDocumentsPage> {
+  @override
+  void initState() {
+    super.initState();
+    // Load services once when the page is first created
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<ServiceCubit>().loadServices();
     });
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return BlocBuilder<ServiceCubit, ServiceState>(
+      buildWhen: (previous, current) {
+        // Only rebuild on ServiceLoaded; ignore RequiredDocumentsLoaded to prevent cross-screen interference
+        return current is ServiceLoading ||
+            current is ServiceLoaded ||
+            current is ServiceError;
+      },
       builder: (context, state) {
         if (state is ServiceLoading) {
           return const Scaffold(
@@ -27,12 +43,6 @@ class MyRequiredDocumentsPage extends StatelessWidget {
         List<ServiceModel> services = [];
         if (state is ServiceLoaded) {
           services = state.services;
-        } else if (state is ServiceDetailsLoaded || state is RequiredDocumentsLoaded) {
-          // If state is in details mode, reload services
-          context.read<ServiceCubit>().loadServices();
-          return const Scaffold(
-            body: Center(child: CircularProgressIndicator()),
-          );
         }
 
         return Scaffold(
@@ -55,7 +65,8 @@ class MyRequiredDocumentsPage extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => ServiceRequirementsScreen(service: service),
+                      builder: (context) =>
+                          ServiceRequirementsScreen(service: service),
                     ),
                   );
                 },

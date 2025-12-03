@@ -27,237 +27,237 @@ class ProfilePage extends StatelessWidget {
         return Directionality(
           textDirection: TextDirection.rtl,
           child: Scaffold(
-        backgroundColor: const Color(0xFFF9FAFB),
-        //  AppBar
-        appBar: PreferredSize(
-          preferredSize: const Size.fromHeight(76),
-          child: Container(
-            decoration: const BoxDecoration(
-              color: Color(0xFF2563EB),
-            ),
-            padding: EdgeInsets.only(
-              top: MediaQuery.of(context).padding.top + 16,
-              left: 20,
-              right: 20,
-              bottom: 16,
-            ),
-            child: Stack(
-              children: [
-                //  "تعديل" on LEFT
-                const Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'تعديل',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontFamily: 'Cairo',
-                      fontSize: 16,
-                      fontWeight: FontWeight.normal,
-                    ),
-                  ),
+            backgroundColor: const Color(0xFFF9FAFB),
+            //  AppBar
+            appBar: PreferredSize(
+              preferredSize: const Size.fromHeight(76),
+              child: Container(
+                decoration: const BoxDecoration(
+                  color: Color(0xFF2563EB),
                 ),
-
-                //  Profile title in CENTER
-                const Align(
-                  alignment: Alignment.center,
-                  child: Text(
-                    'الملف الشخصي',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontFamily: 'Cairo',
-                      fontSize: 20,
-                      fontWeight: FontWeight.normal,
-                    ),
-                  ),
+                padding: EdgeInsets.only(
+                  top: MediaQuery.of(context).padding.top + 16,
+                  left: 20,
+                  right: 20,
+                  bottom: 16,
                 ),
-
-                // Arrow on RIGHT pointing right - goes back to previous page
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: InkWell(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: const Icon(
-                      Icons.arrow_back,
-                      color: Colors.white,
-                      size: 22,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-
-        body: SingleChildScrollView(
-          padding: EdgeInsets.only(
-            left: 25,
-            right: 25,
-            top: 25,
-            bottom: MediaQuery.of(context).padding.bottom + 25,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              //  User Picture
-              const CircleAvatar(
-                radius: 48,
-                backgroundImage: AssetImage('assets/images/user.png'),
-              ),
-              const SizedBox(height: 12),
-
-              //  User Name
-              Text(
-                userName,
-                style: const TextStyle(
-                  fontFamily: 'Cairo',
-                  fontSize: 18,
-                  fontWeight: FontWeight.normal,
-                  color: Color(0xFF111827),
-                ),
-              ),
-              const SizedBox(height: 32),
-
-              //  Personal Details Section
-              const Align(
-                alignment: Alignment.centerRight,
-                child: Text(
-                  'المعلومات الشخصية',
-                  style: TextStyle(
-                    fontFamily: 'Cairo',
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: Color(0xFF111827),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 12),
-
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(16),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.04),
-                      blurRadius: 8,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
-                ),
-                child: Column(
+                child: Stack(
                   children: [
-                    _buildInfoRow(
-                      icon: Icons.badge,
-                      label: 'رقم الهوية',
-                      value: nationalId,
+                    //  "تعديل" on LEFT
+                    const Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'تعديل',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontFamily: 'Cairo',
+                          fontSize: 16,
+                          fontWeight: FontWeight.normal,
+                        ),
+                      ),
                     ),
-                    const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 12),
-                      child: Divider(height: 1, color: Color(0xFFE5E7EB)),
+
+                    //  Profile title in CENTER
+                    const Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        'الملف الشخصي',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontFamily: 'Cairo',
+                          fontSize: 20,
+                          fontWeight: FontWeight.normal,
+                        ),
+                      ),
                     ),
-                    _buildInfoRow(
-                      icon: Icons.cake,
-                      label: 'تاريخ الميلاد',
-                      value: 'August 15, 1988',
+
+                    // Arrow on RIGHT pointing right - goes back to previous page
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: const Icon(
+                          Icons.arrow_back,
+                          color: Colors.white,
+                          size: 22,
+                        ),
+                      ),
                     ),
                   ],
                 ),
               ),
-              const SizedBox(height: 20),
+            ),
 
-              //  Contact Information Section
-              const Align(
-                alignment: Alignment.centerRight,
-                child: Text(
-                  'معلومات الاتصال',
-                  style: TextStyle(
-                    fontFamily: 'Cairo',
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: Color(0xFF111827),
+            body: SingleChildScrollView(
+              padding: EdgeInsets.only(
+                left: 25,
+                right: 25,
+                top: 25,
+                bottom: MediaQuery.of(context).padding.bottom + 25,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  //  User Picture
+                  const CircleAvatar(
+                    radius: 48,
+                    backgroundImage: AssetImage('assets/images/person.png'),
                   ),
-                ),
-              ),
-              const SizedBox(height: 12),
+                  const SizedBox(height: 12),
 
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(16),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.04),
-                      blurRadius: 8,
-                      offset: const Offset(0, 2),
+                  //  User Name
+                  Text(
+                    userName,
+                    style: const TextStyle(
+                      fontFamily: 'Cairo',
+                      fontSize: 18,
+                      fontWeight: FontWeight.normal,
+                      color: Color(0xFF111827),
                     ),
-                  ],
-                ),
-                child: Column(
-                  children: [
-                    _buildInfoRow(
-                      icon: Icons.email,
-                      label: 'البريد الإلكتروني',
-                      value: email,
-                      hasVerification: true,
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 12),
-                      child: Divider(height: 1, color: Color(0xFFE5E7EB)),
-                    ),
-                    _buildInfoRow(
-                      icon: Icons.phone,
-                      label: 'الهاتف',
-                      value: phone,
-                      hasVerification: true,
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 20),
-
-              //  Address Section
-              const Align(
-                alignment: Alignment.centerRight,
-                child: Text(
-                  'العنوان',
-                  style: TextStyle(
-                    fontFamily: 'Cairo',
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: Color(0xFF111827),
                   ),
-                ),
-              ),
-              const SizedBox(height: 12),
+                  const SizedBox(height: 32),
 
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(16),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.04),
-                      blurRadius: 8,
-                      offset: const Offset(0, 2),
+                  //  Personal Details Section
+                  const Align(
+                    alignment: Alignment.centerRight,
+                    child: Text(
+                      'المعلومات الشخصية',
+                      style: TextStyle(
+                        fontFamily: 'Cairo',
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Color(0xFF111827),
+                      ),
                     ),
-                  ],
-                ),
-                child: _buildInfoRow(
-                  icon: Icons.location_on,
-                  label: 'العنوان المسجل',
-                  value: address,
-                ),
+                  ),
+                  const SizedBox(height: 12),
+
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.04),
+                          blurRadius: 8,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      children: [
+                        _buildInfoRow(
+                          icon: Icons.badge,
+                          label: 'رقم الهوية',
+                          value: nationalId,
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 12),
+                          child: Divider(height: 1, color: Color(0xFFE5E7EB)),
+                        ),
+                        _buildInfoRow(
+                          icon: Icons.cake,
+                          label: 'تاريخ الميلاد',
+                          value: 'August 15, 1988',
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+
+                  //  Contact Information Section
+                  const Align(
+                    alignment: Alignment.centerRight,
+                    child: Text(
+                      'معلومات الاتصال',
+                      style: TextStyle(
+                        fontFamily: 'Cairo',
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Color(0xFF111827),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.04),
+                          blurRadius: 8,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      children: [
+                        _buildInfoRow(
+                          icon: Icons.email,
+                          label: 'البريد الإلكتروني',
+                          value: email,
+                          hasVerification: true,
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 12),
+                          child: Divider(height: 1, color: Color(0xFFE5E7EB)),
+                        ),
+                        _buildInfoRow(
+                          icon: Icons.phone,
+                          label: 'الهاتف',
+                          value: phone,
+                          hasVerification: true,
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+
+                  //  Address Section
+                  const Align(
+                    alignment: Alignment.centerRight,
+                    child: Text(
+                      'العنوان',
+                      style: TextStyle(
+                        fontFamily: 'Cairo',
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Color(0xFF111827),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.04),
+                          blurRadius: 8,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: _buildInfoRow(
+                      icon: Icons.location_on,
+                      label: 'العنوان المسجل',
+                      value: address,
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
-        ),
-      ),
-    );
+        );
       },
     );
   }
