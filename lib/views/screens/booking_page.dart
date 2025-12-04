@@ -77,6 +77,7 @@ class BookingPage extends StatelessWidget {
                     MaterialPageRoute(
                       builder: (_) => BookingCalendarScreen(
                         serviceId: 1,
+                        bookingTypeId: 1, // NEW: Pass booking type ID
                         serviceTitle: 'الحالة المدنية',
                       ),
                     ),
@@ -96,6 +97,7 @@ class BookingPage extends StatelessWidget {
                     MaterialPageRoute(
                       builder: (_) => BookingCalendarScreen(
                         serviceId: 2,
+                        bookingTypeId: 2, // NEW: Pass booking type ID
                         serviceTitle: 'المصالح البيومترية',
                       ),
                     ),
@@ -119,6 +121,7 @@ class BookingPage extends StatelessWidget {
                     MaterialPageRoute(
                       builder: (_) => BookingCalendarScreen(
                         serviceId: 3,
+                        bookingTypeId: 3, // NEW: Pass booking type ID
                         serviceTitle: 'الاستلام',
                       ),
                     ),

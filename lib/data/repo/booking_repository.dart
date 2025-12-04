@@ -19,13 +19,17 @@ class BookingRepository {
 
     for (final booking in bookings) {
       final service = await _dbHelper.getServiceById(booking.serviceId);
+      final bookingType = booking.bookingTypeId != null
+          ? await _dbHelper.getBookingTypeById(booking.bookingTypeId!)
+          : null;
+
       result.add({
         'booking': booking,
         'service': service,
+        'booking_type': bookingType, // NEW: Include booking type
       });
     }
 
     return result;
   }
 }
-

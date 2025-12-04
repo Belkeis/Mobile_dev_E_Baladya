@@ -27,12 +27,48 @@ class DatabaseHelper {
 
     return await openDatabase(
       path,
-      version: 1,
+      version: 2, // Increment version for migration
       onCreate: _createDB,
+      onUpgrade: _onUpgrade,
       onOpen: (db) async {
         await db.execute('PRAGMA foreign_keys = ON');
       },
     );
+  }
+
+  Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
+    if (oldVersion < 2) {
+      // Add booking_types table
+      await db.execute('''
+      CREATE TABLE booking_types (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,
+        description TEXT NOT NULL
+      )
+      ''');
+
+      // Add booking_type_id column to bookings table
+      await db.execute('''
+      ALTER TABLE bookings ADD COLUMN booking_type_id INTEGER
+      ''');
+
+      // Insert booking types
+      await db.insert('booking_types', {
+        'id': 1,
+        'name': 'الحالة المدنية',
+        'description': 'استخراج وثائق الحالة المدنية'
+      });
+      await db.insert('booking_types', {
+        'id': 2,
+        'name': 'المصالح البيومترية',
+        'description': 'خدمات البصمة والبيانات البيومترية'
+      });
+      await db.insert('booking_types', {
+        'id': 3,
+        'name': 'الاستلام',
+        'description': 'استلام الوثائق الجاهزة'
+      });
+    }
   }
 
   Future<void> _createDB(Database db, int version) async {
@@ -90,15 +126,26 @@ class DatabaseHelper {
     )
   ''');
 
+    // Create booking_types table
+    await db.execute('''
+    CREATE TABLE booking_types (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT NOT NULL,
+      description TEXT NOT NULL
+    )
+  ''');
+
     await db.execute('''
     CREATE TABLE bookings (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       user_id INTEGER NOT NULL,
       service_id INTEGER NOT NULL,
+      booking_type_id INTEGER,
       date TEXT NOT NULL,
       status TEXT NOT NULL,
       FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-      FOREIGN KEY (service_id) REFERENCES services(id) ON DELETE CASCADE
+      FOREIGN KEY (service_id) REFERENCES services(id) ON DELETE CASCADE,
+      FOREIGN KEY (booking_type_id) REFERENCES booking_types(id) ON DELETE SET NULL
     )
   ''');
 
@@ -138,7 +185,7 @@ class DatabaseHelper {
       'email': 'ahmed@example.com',
       'phone': '0555123456',
       'national_id': '1234567890',
-      'password': 'password123', // In real app, this should be hashed
+      'password': 'password123',
       'created_at': DateTime.now().toIso8601String(),
     });
 
@@ -180,6 +227,20 @@ class DatabaseHelper {
       await db.insert('services', service);
     }
 
+    // Insert booking types
+    await db.insert('booking_types', {
+      'id': 1,
+      'name': 'الحالة المدنية',
+      'description': 'استخراج وثائق الحالة المدنية'
+    });
+    await db.insert('booking_types', {
+      'id': 2,
+      'name': 'المصالح البيومترية',
+      'description': 'خدمات البصمة والبيانات البيومترية'
+    });
+    await db.insert('booking_types',
+        {'id': 3, 'name': 'الاستلام', 'description': 'استلام الوثائق الجاهزة'});
+
     // Insert documents
     final documents = [
       {'name': 'شهادة ميلاد', 'type': 'certificate'},
@@ -194,7 +255,6 @@ class DatabaseHelper {
     }
 
     // Insert service requirements
-    // Service 1 (ID Renewal) requires: ID copy, Photo, Form
     await db
         .insert('service_requirements', {'service_id': 1, 'document_id': 2});
     await db
@@ -202,7 +262,6 @@ class DatabaseHelper {
     await db
         .insert('service_requirements', {'service_id': 1, 'document_id': 3});
 
-    // Service 2 (Passport) requires: Birth certificate, ID copy, Photo, Form
     await db
         .insert('service_requirements', {'service_id': 2, 'document_id': 1});
     await db
@@ -212,7 +271,6 @@ class DatabaseHelper {
     await db
         .insert('service_requirements', {'service_id': 2, 'document_id': 3});
 
-    // Service 3 (Birth Certificate) requires: ID copy, Form
     await db
         .insert('service_requirements', {'service_id': 3, 'document_id': 2});
     await db
@@ -257,20 +315,7 @@ class DatabaseHelper {
       'read': 0,
     });
 
-    // Insert sample bookings
-    await db.insert('bookings', {
-      'user_id': 1,
-      'service_id': 1,
-      'date': now.add(const Duration(days: 3)).toIso8601String(),
-      'status': 'confirmed',
-    });
-
-    await db.insert('bookings', {
-      'user_id': 1,
-      'service_id': 2,
-      'date': now.add(const Duration(days: 7)).toIso8601String(),
-      'status': 'pending',
-    });
+    // No sample bookings - users will create their own
   }
 
   // User operations
@@ -417,6 +462,18 @@ class DatabaseHelper {
       where: 'id = ?',
       whereArgs: [notificationId],
     );
+  }
+
+  // Booking type operations
+  Future<Map<String, dynamic>?> getBookingTypeById(int id) async {
+    final db = await database;
+    final maps = await db.query(
+      'booking_types',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+    if (maps.isEmpty) return null;
+    return maps.first;
   }
 
   // Booking operations

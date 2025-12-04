@@ -109,11 +109,14 @@ class MyBookingsPage extends StatelessWidget {
                       ...bookingsWithService.map((item) {
                         final booking = item['booking'] as BookingModel;
                         final service = item['service'] as ServiceModel?;
+                        final bookingType = item['booking_type']
+                            as Map<String, dynamic>?; // NEW
                         return Padding(
                           padding: const EdgeInsets.only(bottom: 16),
                           child: _buildBookingCard(
                             booking: booking,
                             service: service,
+                            bookingType: bookingType, // NEW
                           ),
                         );
                       }),
@@ -130,6 +133,7 @@ class MyBookingsPage extends StatelessWidget {
   Widget _buildBookingCard({
     required BookingModel booking,
     ServiceModel? service,
+    Map<String, dynamic>? bookingType, // NEW
   }) {
     // Determine status colors
     Color statusColor;
@@ -177,6 +181,11 @@ class MyBookingsPage extends StatelessWidget {
     final formattedDate = DateFormat('yyyy/MM/dd', 'ar').format(bookingDate);
     final formattedTime = DateFormat('HH:mm', 'ar').format(bookingDate);
 
+    // NEW: Use booking type name if available, otherwise fallback to service name
+    final displayName = bookingType != null
+        ? bookingType['name'] as String
+        : (service?.name ?? 'خدمة');
+
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -212,7 +221,7 @@ class MyBookingsPage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
-                  service?.name ?? 'خدمة',
+                  displayName, // NEW: Display booking type name
                   style: const TextStyle(
                     fontFamily: 'Cairo',
                     fontSize: 18,
@@ -226,7 +235,8 @@ class MyBookingsPage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 4),
                       decoration: BoxDecoration(
                         color: statusColor,
                         borderRadius: BorderRadius.circular(6),
@@ -295,5 +305,3 @@ class MyBookingsPage extends StatelessWidget {
     );
   }
 }
-
-

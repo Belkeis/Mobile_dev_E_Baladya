@@ -11,10 +11,7 @@ import '../views/screens/digital_versions_page.dart';
 import '../views/screens/tracking_requests.dart';
 import '../views/screens/booking_page.dart';
 import '../views/screens/booking_calendar_screen.dart';
-import '../views/screens/passport_online_request.dart';
-import '../views/screens/passport_requirement.dart';
-import '../views/screens/id_card_online_request.dart';
-import '../views/screens/id_card_requirement.dart';
+
 import '../views/screens/after_req.dart';
 import '../views/screens/service_details_screen.dart';
 import '../views/screens/service_requirements_screen.dart';
@@ -57,20 +54,20 @@ class AppRoutes {
 
           if (args == null ||
               !args.containsKey('serviceId') ||
-              !args.containsKey('serviceTitle')) {
+              !args.containsKey('serviceTitle') ||
+              !args.containsKey('bookingTypeId')) {
+            // ADDED bookingTypeId check
             throw ArgumentError(
-                'BookingCalendarScreen requires serviceId and serviceTitle');
+                'BookingCalendarScreen requires serviceId, serviceTitle, and bookingTypeId');
           }
 
           return BookingCalendarScreen(
             serviceId: args['serviceId'] as int,
             serviceTitle: args['serviceTitle'] as String,
+            bookingTypeId: args['bookingTypeId'] as int, // ADDED bookingTypeId
           );
         },
-        passportOnlineRequest: (context) => const OnlineRequestPassport(),
-        passportRequirement: (context) => const RequiredDocumentsPage(),
-        idCardOnlineRequest: (context) => const IdRequest(),
-        idCardRequirement: (context) => const IdRequirements(),
+
         afterRequest: (context) => const AfterReq(),
         myBookings: (context) => const MyBookingsPage(),
       };
