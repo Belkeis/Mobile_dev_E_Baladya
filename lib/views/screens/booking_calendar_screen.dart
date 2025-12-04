@@ -9,11 +9,13 @@ import '../widgets/custom_app_bar.dart';
 class BookingCalendarScreen extends StatefulWidget {
   final String serviceTitle;
   final int serviceId;
+  final int bookingTypeId; // NEW: Add booking type ID
 
   const BookingCalendarScreen({
     super.key,
     required this.serviceTitle,
     required this.serviceId,
+    required this.bookingTypeId, // NEW
   });
 
   @override
@@ -48,7 +50,8 @@ class _BookingCalendarScreenState extends State<BookingCalendarScreen> {
       final bookingDate = DateTime(selectedYear, selectedMonth, selectedDate!);
       final booking = BookingModel(
         userId: authState.user.id!,
-        serviceId: widget.serviceId, // Use the correct selected service
+        serviceId: widget.serviceId,
+        bookingTypeId: widget.bookingTypeId, // NEW: Include booking type ID
         date: bookingDate.toIso8601String(),
         status: 'pending',
       );
