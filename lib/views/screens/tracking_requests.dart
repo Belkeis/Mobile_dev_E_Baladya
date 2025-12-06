@@ -6,6 +6,7 @@ import '../../logic/cubit/auth_cubit.dart';
 import '../../data/models/request_model.dart';
 import '../../data/models/service_model.dart';
 import '../widgets/custom_app_bar.dart';
+import '../../i18n/app_localizations.dart';
 
 class RequestTrackingScreen extends StatelessWidget {
   const RequestTrackingScreen({super.key});
@@ -75,9 +76,9 @@ class RequestTrackingScreen extends StatelessWidget {
                       padding: const EdgeInsets.all(25),
                       child: Column(
                         children: [
-                          const Text(
-                            'تتبع الطلب',
-                            style: TextStyle(
+                          Text(
+                            AppLocalizations.of(context)!.trackingTitle,
+                            style: const TextStyle(
                               fontFamily: 'Cairo',
                               fontSize: 24,
                               fontWeight: FontWeight.normal,
@@ -86,11 +87,11 @@ class RequestTrackingScreen extends StatelessWidget {
                           ),
                           const SizedBox(height: 40),
                           if (requestsWithService.isEmpty)
-                            const Padding(
-                              padding: EdgeInsets.all(40.0),
+                            Padding(
+                              padding: const EdgeInsets.all(40.0),
                               child: Text(
-                                'لا توجد طلبات',
-                                style: TextStyle(
+                                AppLocalizations.of(context)!.noRequests,
+                                style: const TextStyle(
                                   fontFamily: 'Cairo',
                                   fontSize: 16,
                                   color: Color(0xFF6B7280),
@@ -106,6 +107,7 @@ class RequestTrackingScreen extends StatelessWidget {
                                 child: _buildRequestCard(
                                   request: request,
                                   service: service,
+                                  context: context,
                                 ),
                               );
                             }),
@@ -135,9 +137,9 @@ class RequestTrackingScreen extends StatelessWidget {
                           ),
                           elevation: 0,
                         ),
-                        child: const Text(
-                          'طلب جديد',
-                          style: TextStyle(
+                        child: Text(
+                          AppLocalizations.of(context)!.newRequest,
+                          style: const TextStyle(
                             fontFamily: 'Cairo',
                             fontSize: 18,
                             fontWeight: FontWeight.w400,
@@ -159,7 +161,10 @@ class RequestTrackingScreen extends StatelessWidget {
   Widget _buildRequestCard({
     required RequestModel request,
     ServiceModel? service,
+    required BuildContext context,
   }) {
+    final localizations = AppLocalizations.of(context)!;
+    
     // Determine status colors
     Color statusColor;
     Color statusTextColor;
@@ -172,7 +177,7 @@ class RequestTrackingScreen extends StatelessWidget {
       case 'pending':
         statusColor = const Color(0xFFFEF3C7);
         statusTextColor = const Color(0xFF92400E);
-        statusText = 'قيد المراجعة';
+        statusText = localizations.pending;
         icon = Icons.pending;
         iconColor = const Color(0xFFF59E0B);
         iconBgColor = const Color(0xFFFEF3C7);
@@ -180,7 +185,7 @@ class RequestTrackingScreen extends StatelessWidget {
       case 'approved':
         statusColor = const Color(0xFFDBEAFE);
         statusTextColor = const Color(0xFF1E40AF);
-        statusText = 'مقبول';
+        statusText = localizations.approved;
         icon = Icons.check_circle;
         iconColor = const Color(0xFF2563EB);
         iconBgColor = const Color(0xFFDBEAFE);
@@ -188,7 +193,7 @@ class RequestTrackingScreen extends StatelessWidget {
       case 'ready':
         statusColor = const Color(0xFFD1FAE5);
         statusTextColor = const Color(0xFF065F46);
-        statusText = 'جاهز';
+        statusText = localizations.ready;
         icon = Icons.done_all;
         iconColor = const Color(0xFF059669);
         iconBgColor = const Color(0xFFD1FAE5);
@@ -196,7 +201,7 @@ class RequestTrackingScreen extends StatelessWidget {
       case 'rejected':
         statusColor = const Color(0xFFFEE2E2);
         statusTextColor = const Color(0xFF991B1B);
-        statusText = 'مرفوض';
+        statusText = localizations.rejected;
         icon = Icons.cancel;
         iconColor = const Color(0xFFDC2626);
         iconBgColor = const Color(0xFFFEE2E2);
@@ -250,7 +255,7 @@ class RequestTrackingScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
-                  service?.name ?? 'خدمة',
+                  service?.name ?? AppLocalizations.of(context)!.service,
                   style: const TextStyle(
                     fontFamily: 'Cairo',
                     fontSize: 18,
@@ -280,9 +285,9 @@ class RequestTrackingScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: 8),
-                    const Text(
-                      'حالة الطلب:',
-                      style: TextStyle(
+                    Text(
+                      AppLocalizations.of(context)!.requestStatus,
+                      style: const TextStyle(
                         fontFamily: 'Cairo',
                         fontSize: 14,
                         color: Color(0xFF6B7280),
@@ -292,7 +297,7 @@ class RequestTrackingScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 12),
                 Text(
-                  'الوقت المتبقي: ${daysRemaining > 0 ? '$daysRemaining أيام' : 'منتهي'}',
+                  '${AppLocalizations.of(context)!.remainingTime} ${daysRemaining > 0 ? '$daysRemaining ${AppLocalizations.of(context)!.locale.languageCode == 'ar' ? 'أيام' : 'jours'}' : (AppLocalizations.of(context)!.locale.languageCode == 'ar' ? 'منتهي' : 'Expiré')}',
                   style: const TextStyle(
                     fontFamily: 'Cairo',
                     fontSize: 12,
@@ -302,7 +307,7 @@ class RequestTrackingScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  'وقت الطلب: ${DateFormat('yyyy/MM/dd', 'ar').format(requestDate)}',
+                  '${AppLocalizations.of(context)!.requestDate} ${DateFormat('yyyy/MM/dd', AppLocalizations.of(context)!.locale.languageCode).format(requestDate)}',
                   style: const TextStyle(
                     fontFamily: 'Cairo',
                     fontSize: 12,

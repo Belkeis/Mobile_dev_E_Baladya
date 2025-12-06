@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import '../../logic/cubit/language_cubit.dart';
+import '../../i18n/app_localizations.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -47,6 +50,41 @@ class HomePage extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(width: 16),
+                          // Language toggle button
+                          BlocBuilder<LanguageCubit, LanguageState>(
+                            builder: (context, state) {
+                              final isArabic = state.locale.languageCode == 'ar';
+                              return GestureDetector(
+                                onTap: () {
+                                  context.read<LanguageCubit>().toggleLanguage();
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                    vertical: 4,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white.withOpacity(0.2),
+                                    borderRadius: BorderRadius.circular(8),
+                                    border: Border.all(
+                                      color: Colors.white.withOpacity(0.3),
+                                      width: 1,
+                                    ),
+                                  ),
+                                  child: Text(
+                                    isArabic ? 'FR' : 'AR',
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w600,
+                                      fontFamily: 'Cairo',
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                          const SizedBox(width: 16),
                           // Notification icon (SVG)
                           GestureDetector(
                             onTap: () {
@@ -82,9 +120,10 @@ class HomePage extends StatelessWidget {
                         ],
                       ),
                       const SizedBox(height: 30),
-                      const Text(
-                        'مرحبا بك في البلدية الرقمية ',
-                        style: TextStyle(
+                      Text(
+                        AppLocalizations.of(context)!.welcome,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 24,
                           fontWeight: FontWeight.w600,
@@ -122,7 +161,7 @@ class HomePage extends StatelessWidget {
                         Expanded(
                           child: _buildMenuItem(
                             context,
-                            'الوثائق الرقمية',
+                            AppLocalizations.of(context)!.digitalDocuments,
                             Icons.picture_as_pdf_rounded,
                             () => Navigator.pushNamed(
                                 context, '/digital-versions'),
@@ -132,7 +171,7 @@ class HomePage extends StatelessWidget {
                         Expanded(
                           child: _buildMenuItem(
                             context,
-                            'طلبات عبر الإنترنت',
+                            AppLocalizations.of(context)!.onlineRequests,
                             Icons.language_rounded,
                             () => Navigator.pushNamed(
                                 context, '/online-requests'),
@@ -148,7 +187,7 @@ class HomePage extends StatelessWidget {
                         Expanded(
                           child: _buildMenuItem(
                             context,
-                            'الوثائق المطلوبة',
+                            AppLocalizations.of(context)!.requiredDocuments,
                             Icons.folder_open_rounded,
                             () => Navigator.pushNamed(
                                 context, '/required-documents'),
@@ -158,7 +197,7 @@ class HomePage extends StatelessWidget {
                         Expanded(
                           child: _buildMenuItem(
                             context,
-                            'تتبع الطلبات',
+                            AppLocalizations.of(context)!.trackingRequests,
                             Icons.search_rounded,
                             () => Navigator.pushNamed(context, '/tracking'),
                           ),
@@ -173,7 +212,7 @@ class HomePage extends StatelessWidget {
                         Expanded(
                           child: _buildMenuItem(
                             context,
-                            'حجوزاتي',
+                            AppLocalizations.of(context)!.myBookings,
                             Icons.event_note_rounded,
                             () => Navigator.pushNamed(context, '/my-bookings'),
                           ),
@@ -182,7 +221,7 @@ class HomePage extends StatelessWidget {
                         Expanded(
                           child: _buildMenuItem(
                             context,
-                            'حجز موعد',
+                            AppLocalizations.of(context)!.bookAppointment,
                             Icons.calendar_today_rounded,
                             () => Navigator.pushNamed(context, '/booking'),
                           ),

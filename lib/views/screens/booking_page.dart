@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../widgets/custom_app_bar.dart';
+import '../../i18n/app_localizations.dart';
 import 'booking_calendar_screen.dart';
 
 class BookingPage extends StatelessWidget {
@@ -34,9 +35,9 @@ class BookingPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16),
-            const Text(
-              'احجز موعدك',
-              style: TextStyle(
+            Text(
+              AppLocalizations.of(context)!.bookYourAppointment,
+              style: const TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.normal,
                 fontFamily: 'Cairo',
@@ -45,7 +46,7 @@ class BookingPage extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              'اختر نوع الخدمة المطلوبة',
+              AppLocalizations.of(context)!.selectServiceType,
               style: TextStyle(
                 fontSize: 14,
                 color: Colors.grey.shade600,
@@ -56,16 +57,17 @@ class BookingPage extends StatelessWidget {
 
             // Service Cards
             ServiceCard(
-              title: 'الحالة المدنية',
-              subtitle: 'استخراج وثائق الحالة المدنية',
+              title: AppLocalizations.of(context)!.civilStatus,
+              subtitle: AppLocalizations.of(context)!.civilStatusSubtitle,
               onTap: () {
+                final localizations = AppLocalizations.of(context)!;
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (_) => BookingCalendarScreen(
                       serviceId: 1,
-                      bookingTypeId: 1, // NEW: Pass booking type ID
-                      serviceTitle: 'الحالة المدنية',
+                      bookingTypeId: 1,
+                      serviceTitle: localizations.civilStatus,
                     ),
                   ),
                 );
@@ -73,16 +75,17 @@ class BookingPage extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             ServiceCard(
-              title: 'المصالح البيومترية',
-              subtitle: 'خدمات البصمة والبيانات البيومترية',
+              title: AppLocalizations.of(context)!.biometricServices,
+              subtitle: AppLocalizations.of(context)!.biometricServicesSubtitle,
               onTap: () {
+                final localizations = AppLocalizations.of(context)!;
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (_) => BookingCalendarScreen(
                       serviceId: 2,
-                      bookingTypeId: 2, // NEW: Pass booking type ID
-                      serviceTitle: 'المصالح البيومترية',
+                      bookingTypeId: 2,
+                      serviceTitle: localizations.biometricServices,
                     ),
                   ),
                 );
@@ -90,16 +93,17 @@ class BookingPage extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             ServiceCard(
-              title: 'الاستلام',
-              subtitle: 'استلام الوثائق الجاهزة',
+              title: AppLocalizations.of(context)!.pickup,
+              subtitle: AppLocalizations.of(context)!.pickupSubtitle,
               onTap: () {
+                final localizations = AppLocalizations.of(context)!;
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (_) => BookingCalendarScreen(
                       serviceId: 3,
-                      bookingTypeId: 3, // NEW: Pass booking type ID
-                      serviceTitle: 'الاستلام',
+                      bookingTypeId: 3,
+                      serviceTitle: localizations.pickup,
                     ),
                   ),
                 );
@@ -143,32 +147,26 @@ class ServiceCard extends StatelessWidget {
           ],
         ),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Align(
-              alignment: Alignment.centerRight,
-              child: Text(
-                title,
-                textAlign: TextAlign.right,
-                style: const TextStyle(
-                  fontFamily: 'Cairo',
-                  fontSize: 18,
-                  fontWeight: FontWeight.normal,
-                  color: Color(0xFF111827),
-                ),
+            Text(
+              title,
+              textAlign: TextAlign.left,
+              style: const TextStyle(
+                fontFamily: 'Cairo',
+                fontSize: 18,
+                fontWeight: FontWeight.normal,
+                color: Color(0xFF111827),
               ),
             ),
             const SizedBox(height: 4),
-            Align(
-              alignment: Alignment.centerRight,
-              child: Text(
-                subtitle,
-                textAlign: TextAlign.right,
-                style: const TextStyle(
-                  fontFamily: 'Cairo',
-                  fontSize: 14,
-                  color: Color(0xFF6B7280),
-                ),
+            Text(
+              subtitle,
+              textAlign: TextAlign.left,
+              style: const TextStyle(
+                fontFamily: 'Cairo',
+                fontSize: 14,
+                color: Color(0xFF6B7280),
               ),
             ),
           ],

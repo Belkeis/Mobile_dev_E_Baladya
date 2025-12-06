@@ -5,6 +5,7 @@ import '../../logic/cubit/booking_cubit.dart';
 import '../../logic/cubit/auth_cubit.dart';
 import '../../data/models/booking_model.dart';
 import '../../data/models/service_model.dart';
+import '../../i18n/app_localizations.dart';
 import '../widgets/custom_app_bar.dart';
 
 class MyBookingsPage extends StatelessWidget {
@@ -72,9 +73,9 @@ class MyBookingsPage extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'حجوزاتي',
-                      style: TextStyle(
+                    Text(
+                      AppLocalizations.of(context)!.myBookingsTitle,
+                      style: const TextStyle(
                         fontFamily: 'Cairo',
                         fontSize: 24,
                         fontWeight: FontWeight.normal,
@@ -83,7 +84,7 @@ class MyBookingsPage extends StatelessWidget {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'عرض جميع حجوزاتك والمواعيد المحددة',
+                      AppLocalizations.of(context)!.myBookingsSubtitle,
                       style: TextStyle(
                         fontSize: 14,
                         color: Colors.grey.shade600,
@@ -92,12 +93,12 @@ class MyBookingsPage extends StatelessWidget {
                     ),
                     const SizedBox(height: 40),
                     if (bookingsWithService.isEmpty)
-                      const Padding(
-                        padding: EdgeInsets.all(40.0),
+                      Padding(
+                        padding: const EdgeInsets.all(40.0),
                         child: Center(
                           child: Text(
-                            'لا توجد حجوزات',
-                            style: TextStyle(
+                            AppLocalizations.of(context)!.noBookings,
+                            style: const TextStyle(
                               fontFamily: 'Cairo',
                               fontSize: 16,
                               color: Color(0xFF6B7280),
@@ -116,7 +117,8 @@ class MyBookingsPage extends StatelessWidget {
                           child: _buildBookingCard(
                             booking: booking,
                             service: service,
-                            bookingType: bookingType, // NEW
+                            bookingType: bookingType,
+                            context: context,
                           ),
                         );
                       }),
@@ -133,8 +135,11 @@ class MyBookingsPage extends StatelessWidget {
   Widget _buildBookingCard({
     required BookingModel booking,
     ServiceModel? service,
-    Map<String, dynamic>? bookingType, // NEW
+    Map<String, dynamic>? bookingType,
+    required BuildContext context,
   }) {
+    final localizations = AppLocalizations.of(context)!;
+    
     // Determine status colors
     Color statusColor;
     Color statusTextColor;
@@ -147,7 +152,7 @@ class MyBookingsPage extends StatelessWidget {
       case 'pending':
         statusColor = const Color(0xFFFEF3C7);
         statusTextColor = const Color(0xFF92400E);
-        statusText = 'قيد الانتظار';
+        statusText = localizations.waiting;
         icon = Icons.pending;
         iconColor = const Color(0xFFF59E0B);
         iconBgColor = const Color(0xFFFEF3C7);
@@ -155,7 +160,7 @@ class MyBookingsPage extends StatelessWidget {
       case 'confirmed':
         statusColor = const Color(0xFFD1FAE5);
         statusTextColor = const Color(0xFF065F46);
-        statusText = 'مؤكد';
+        statusText = localizations.confirmed;
         icon = Icons.check_circle;
         iconColor = const Color(0xFF059669);
         iconBgColor = const Color(0xFFD1FAE5);
@@ -163,7 +168,7 @@ class MyBookingsPage extends StatelessWidget {
       case 'cancelled':
         statusColor = const Color(0xFFFEE2E2);
         statusTextColor = const Color(0xFF991B1B);
-        statusText = 'ملغي';
+        statusText = localizations.cancelled;
         icon = Icons.cancel;
         iconColor = const Color(0xFFDC2626);
         iconBgColor = const Color(0xFFFEE2E2);
@@ -178,13 +183,18 @@ class MyBookingsPage extends StatelessWidget {
     }
 
     final bookingDate = DateTime.parse(booking.date);
-    final formattedDate = DateFormat('yyyy/MM/dd', 'ar').format(bookingDate);
-    final formattedTime = DateFormat('HH:mm', 'ar').format(bookingDate);
+    final formattedDate = DateFormat('yyyy/MM/dd', localizations.locale.languageCode).format(bookingDate);
+    final formattedTime = DateFormat('HH:mm', localizations.locale.languageCode).format(bookingDate);
 
-    // NEW: Use booking type name if available, otherwise fallback to service name
-    final displayName = bookingType != null
-        ? bookingType['name'] as String
-        : (service?.name ?? 'خدمة');
+    // Use booking type name if available, otherwise fallback to service name
+    String displayName;
+    if (bookingType != null) {
+      displayName = localizations.translateServiceName(bookingType['name'] as String);
+    } else if (service != null) {
+      displayName = localizations.translateServiceName(service.name);
+    } else {
+      displayName = localizations.service;
+    }
 
     return Container(
       padding: const EdgeInsets.all(20),
@@ -252,9 +262,9 @@ class MyBookingsPage extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: 8),
-                    const Text(
-                      'الحالة:',
-                      style: TextStyle(
+                    Text(
+                      AppLocalizations.of(context)!.status,
+                      style: const TextStyle(
                         fontFamily: 'Cairo',
                         fontSize: 14,
                         color: Color(0xFF6B7280),

@@ -4,6 +4,7 @@ import '../../logic/cubit/service_cubit.dart';
 import '../../data/models/service_model.dart';
 import '../widgets/generic_list_page.dart';
 import '../widgets/custom_app_bar.dart';
+import '../../i18n/app_localizations.dart';
 import 'service_requirements_screen.dart';
 
 class MyRequiredDocumentsPage extends StatefulWidget {
@@ -53,14 +54,14 @@ class _MyRequiredDocumentsPageState extends State<MyRequiredDocumentsPage> {
             },
           ),
           body: GenericListPage(
-            title: 'الوثائق المطلوبة',
-            subtitle:
-                'تعرّف على الوثائق المطلوبة لإتمام مختلف \nالمعاملات الإدارية بسهولة.',
+            title: AppLocalizations.of(context)!.requiredDocumentsTitle,
+            subtitle: AppLocalizations.of(context)!.requiredDocumentsSubtitle,
             showTrailingArrow: true,
             items: services.map((service) {
+              final localizations = AppLocalizations.of(context)!;
               return ListItem(
-                title: service.name,
-                subtitle: service.description,
+                title: localizations.translateServiceName(service.name),
+                subtitle: localizations.translateServiceDescription(service.description),
                 onTap: () {
                   Navigator.push(
                     context,

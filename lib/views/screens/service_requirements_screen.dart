@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../logic/cubit/service_cubit.dart';
 import '../../data/models/service_model.dart';
+import '../../i18n/app_localizations.dart';
 import '../widgets/custom_app_bar.dart';
 
 class ServiceRequirementsScreen extends StatefulWidget {
@@ -48,7 +49,7 @@ class _ServiceRequirementsScreenState extends State<ServiceRequirementsScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  widget.service.name,
+                  AppLocalizations.of(context)!.translateServiceName(widget.service.name),
                   style: const TextStyle(
                     fontFamily: 'Cairo',
                     fontSize: 24,
@@ -58,7 +59,7 @@ class _ServiceRequirementsScreenState extends State<ServiceRequirementsScreen> {
                 ),
                 const SizedBox(height: 12),
                 Text(
-                  widget.service.description,
+                  AppLocalizations.of(context)!.translateServiceDescription(widget.service.description),
                   style: const TextStyle(
                     fontFamily: 'Cairo',
                     fontSize: 14,
@@ -90,18 +91,18 @@ class _ServiceRequirementsScreenState extends State<ServiceRequirementsScreen> {
                             topRight: Radius.circular(16),
                           ),
                         ),
-                        child: const Row(
+                        child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(
+                            const Icon(
                               Icons.description,
                               color: Color(0xFF2563EB),
                               size: 24,
                             ),
-                            SizedBox(width: 8),
+                            const SizedBox(width: 8),
                             Text(
-                              'الوثائق المطلوبة',
-                              style: TextStyle(
+                              AppLocalizations.of(context)!.requiredDocumentsLabel,
+                              style: const TextStyle(
                                 fontFamily: 'Cairo',
                                 fontSize: 18,
                                 fontWeight: FontWeight.normal,
@@ -116,9 +117,9 @@ class _ServiceRequirementsScreenState extends State<ServiceRequirementsScreen> {
                         child: Column(
                           children: requiredDocuments.isEmpty
                               ? [
-                                  const Text(
-                                    'لا توجد وثائق مطلوبة',
-                                    style: TextStyle(
+                                  Text(
+                                    AppLocalizations.of(context)!.noRequiredDocuments,
+                                    style: const TextStyle(
                                       fontFamily: 'Cairo',
                                       fontSize: 14,
                                       color: Color(0xFF6B7280),
@@ -141,17 +142,17 @@ class _ServiceRequirementsScreenState extends State<ServiceRequirementsScreen> {
                     color: const Color(0xFFF0F7FF),
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: const Row(
+                  child: Row(
                     children: [
-                      Icon(
+                      const Icon(
                         Icons.info_outline,
                         color: Color(0xFF2563EB),
                       ),
-                      SizedBox(width: 12),
+                      const SizedBox(width: 12),
                       Expanded(
                         child: Text(
-                          'يرجى التأكد من إحضار جميع الوثائق المطلوبة عند زيارة البلدية.',
-                          style: TextStyle(
+                          AppLocalizations.of(context)!.bringAllDocuments,
+                          style: const TextStyle(
                             fontFamily: 'Cairo',
                             fontSize: 13,
                             color: Color(0xFF2563EB),
@@ -171,13 +172,18 @@ class _ServiceRequirementsScreenState extends State<ServiceRequirementsScreen> {
   }
 
   Widget _buildRequirement(String text) {
+    final localizations = AppLocalizations.of(context)!;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            margin: const EdgeInsets.only(top: 6, left: 12),
+            margin: EdgeInsets.only(
+              top: 6,
+              left: localizations.isArabic ? 12 : 0,
+              right: localizations.isArabic ? 0 : 12,
+            ),
             width: 6,
             height: 6,
             decoration: const BoxDecoration(
@@ -187,8 +193,8 @@ class _ServiceRequirementsScreenState extends State<ServiceRequirementsScreen> {
           ),
           Expanded(
             child: Text(
-              text,
-              textAlign: TextAlign.right,
+              localizations.translateDocumentName(text),
+              textAlign: localizations.isArabic ? TextAlign.right : TextAlign.left,
               style: const TextStyle(
                 fontFamily: 'Cairo',
                 fontSize: 14,

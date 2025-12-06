@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../logic/cubit/auth_cubit.dart';
 import '../../data/models/user_model.dart';
 import '../widgets/custom_app_bar.dart';
+import '../../i18n/app_localizations.dart';
 import 'entering.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -45,26 +46,28 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   void _showLogoutDialog(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+    final isArabic = localizations.isArabic;
     showDialog(
       context: context,
       builder: (BuildContext dialogContext) {
         return Directionality(
-          textDirection: TextDirection.rtl,
+          textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
           child: AlertDialog(
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16),
             ),
-            title: const Text(
-              'تسجيل الخروج',
-              style: TextStyle(
+            title: Text(
+              localizations.logout,
+              style: const TextStyle(
                 fontFamily: 'Cairo',
                 fontWeight: FontWeight.w700,
                 color: Color(0xFF1F2937),
               ),
             ),
-            content: const Text(
-              'هل أنت متأكد من رغبتك في تسجيل الخروج؟',
-              style: TextStyle(
+            content: Text(
+              localizations.logoutConfirm,
+              style: const TextStyle(
                 fontFamily: 'Cairo',
                 color: Color(0xFF6B7280),
               ),
@@ -74,9 +77,9 @@ class _ProfilePageState extends State<ProfilePage> {
                 onPressed: () {
                   Navigator.of(dialogContext).pop();
                 },
-                child: const Text(
-                  'إلغاء',
-                  style: TextStyle(
+                child: Text(
+                  localizations.cancel,
+                  style: const TextStyle(
                     fontFamily: 'Cairo',
                     color: Color(0xFF6B7280),
                     fontWeight: FontWeight.w600,
@@ -99,9 +102,9 @@ class _ProfilePageState extends State<ProfilePage> {
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),
-                child: const Text(
-                  'تسجيل الخروج',
-                  style: TextStyle(
+                child: Text(
+                  localizations.logout,
+                  style: const TextStyle(
                     fontFamily: 'Cairo',
                     fontWeight: FontWeight.w600,
                     color: Colors.white,
@@ -140,10 +143,10 @@ class _ProfilePageState extends State<ProfilePage> {
         } else if (state is AuthAuthenticated && _isEditing) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: const Text(
-                'تم تحديث البيانات بنجاح',
+              content: Text(
+                AppLocalizations.of(context)!.dataUpdatedSuccessfully,
                 textAlign: TextAlign.right,
-                style: TextStyle(
+                style: const TextStyle(
                   fontFamily: 'Cairo',
                   fontWeight: FontWeight.w600,
                 ),
@@ -168,11 +171,11 @@ class _ProfilePageState extends State<ProfilePage> {
         }
 
         if (state is! AuthAuthenticated) {
-          return const Scaffold(
+          return Scaffold(
             body: Center(
               child: Text(
-                'الرجاء تسجيل الدخول',
-                style: TextStyle(
+                AppLocalizations.of(context)!.pleaseLogin,
+                style: const TextStyle(
                   fontFamily: 'Cairo',
                   fontSize: 16,
                 ),
@@ -188,8 +191,10 @@ class _ProfilePageState extends State<ProfilePage> {
           _initializeControllers(user);
         }
 
+        final localizations = AppLocalizations.of(context)!;
+        final isArabic = localizations.isArabic;
         return Directionality(
-          textDirection: TextDirection.rtl,
+          textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
           child: Scaffold(
             backgroundColor: const Color(0xFFF9FAFB),
             appBar: PreferredSize(
@@ -265,10 +270,10 @@ class _ProfilePageState extends State<ProfilePage> {
                                   _nationalIdController.text.isEmpty) {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
-                                    content: const Text(
-                                      'الرجاء ملء جميع الحقول المطلوبة',
+                                    content: Text(
+                                      AppLocalizations.of(context)!.pleaseFillAllFields,
                                       textAlign: TextAlign.right,
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         fontFamily: 'Cairo',
                                         fontWeight: FontWeight.w600,
                                       ),
@@ -304,7 +309,9 @@ class _ProfilePageState extends State<ProfilePage> {
                             size: 20,
                           ),
                           label: Text(
-                            _isEditing ? 'حفظ التغييرات' : 'تعديل البيانات',
+                            _isEditing 
+                                ? AppLocalizations.of(context)!.saveChanges 
+                                : AppLocalizations.of(context)!.editData,
                             style: const TextStyle(
                               fontFamily: 'Cairo',
                               fontSize: 16,
@@ -333,9 +340,9 @@ class _ProfilePageState extends State<ProfilePage> {
                               });
                             },
                             icon: const Icon(Icons.cancel, size: 20),
-                            label: const Text(
-                              'إلغاء',
-                              style: TextStyle(
+                            label: Text(
+                              AppLocalizations.of(context)!.cancel,
+                              style: const TextStyle(
                                 fontFamily: 'Cairo',
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
@@ -373,7 +380,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     child: Column(
                       children: [
                         _buildInfoTile(
-                          label: 'الاسم الكامل',
+                          label: AppLocalizations.of(context)!.fullName,
                           value: user.fullName,
                           icon: Icons.person_outline,
                           controller: _fullNameController,
@@ -381,7 +388,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                         _buildDivider(),
                         _buildInfoTile(
-                          label: 'البريد الإلكتروني',
+                          label: AppLocalizations.of(context)!.email,
                           value: user.email,
                           icon: Icons.email_outlined,
                           controller: _emailController,
@@ -389,15 +396,15 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                         _buildDivider(),
                         _buildInfoTile(
-                          label: 'رقم الهاتف',
-                          value: user.phone ?? 'غير متوفر',
+                          label: AppLocalizations.of(context)!.phone,
+                          value: user.phone ?? AppLocalizations.of(context)!.notAvailable,
                           icon: Icons.phone_outlined,
                           controller: _phoneController,
                           isEditing: _isEditing,
                         ),
                         _buildDivider(),
                         _buildInfoTile(
-                          label: 'رقم البطاقة الوطنية',
+                          label: AppLocalizations.of(context)!.nationalId,
                           value: user.nationalId,
                           icon: Icons.credit_card_outlined,
                           controller: _nationalIdController,
@@ -414,9 +421,9 @@ class _ProfilePageState extends State<ProfilePage> {
                     child: ElevatedButton.icon(
                       onPressed: () => _showLogoutDialog(context),
                       icon: const Icon(Icons.logout, size: 20),
-                      label: const Text(
-                        'تسجيل الخروج',
-                        style: TextStyle(
+                      label: Text(
+                        AppLocalizations.of(context)!.logout,
+                        style: const TextStyle(
                           fontFamily: 'Cairo',
                           fontSize: 16,
                           fontWeight: FontWeight.w600,

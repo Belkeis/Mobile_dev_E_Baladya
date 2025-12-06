@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../logic/cubit/booking_cubit.dart';
 import '../../logic/cubit/auth_cubit.dart';
 import '../../data/models/booking_model.dart';
+import '../../i18n/app_localizations.dart';
 import '../widgets/custom_app_bar.dart';
 
 class BookingCalendarScreen extends StatefulWidget {
@@ -30,7 +31,6 @@ class _BookingCalendarScreenState extends State<BookingCalendarScreen> {
   int selectedYear = DateTime.now().year;
   bool _isSubmitting = false;
 
-  final List<String> weekDays = ['خ', 'ج', 'س', 'ح', 'إ', 'ث', 'أ'];
 
   Future<void> _submitBooking() async {
     if (selectedDate == null) return;
@@ -38,7 +38,7 @@ class _BookingCalendarScreenState extends State<BookingCalendarScreen> {
     final authState = context.read<AuthCubit>().state;
     if (authState is! AuthAuthenticated) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('يجب تسجيل الدخول أولاً')),
+        SnackBar(content: Text(AppLocalizations.of(context)!.mustLoginFirst)),
       );
       return;
     }
@@ -59,8 +59,8 @@ class _BookingCalendarScreenState extends State<BookingCalendarScreen> {
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('تم حجز الموعد بنجاح'),
+          SnackBar(
+            content: Text(AppLocalizations.of(context)!.bookingSuccess),
             backgroundColor: Colors.green,
           ),
         );
@@ -70,7 +70,7 @@ class _BookingCalendarScreenState extends State<BookingCalendarScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('حدث خطأ: ${e.toString()}'),
+            content: Text(AppLocalizations.of(context)!.errorMessage(e.toString())),
             backgroundColor: Colors.red,
           ),
         );
@@ -85,7 +85,7 @@ class _BookingCalendarScreenState extends State<BookingCalendarScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFFF9FAFB),
       appBar: CustomAppBar(
-        title: 'حجز في ${widget.serviceTitle}',
+        title: '${AppLocalizations.of(context)!.bookingIn} ${widget.serviceTitle}',
       ),
       body: Column(
         children: [
@@ -163,20 +163,8 @@ class _BookingCalendarScreenState extends State<BookingCalendarScreen> {
   }
 
   Widget _buildMonthHeader() {
-    final months = [
-      'يناير',
-      'فبراير',
-      'مارس',
-      'أبريل',
-      'مايو',
-      'يونيو',
-      'يوليو',
-      'أغسطس',
-      'سبتمبر',
-      'أكتوبر',
-      'نوفمبر',
-      'ديسمبر'
-    ];
+    final localizations = AppLocalizations.of(context)!;
+    final months = localizations.months;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -217,6 +205,8 @@ class _BookingCalendarScreenState extends State<BookingCalendarScreen> {
   }
 
   Widget _buildWeekDays() {
+    final localizations = AppLocalizations.of(context)!;
+    final weekDays = localizations.weekDays;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: weekDays.map((day) {
@@ -309,7 +299,7 @@ class _BookingCalendarScreenState extends State<BookingCalendarScreen> {
                 child: CircularProgressIndicator(
                     strokeWidth: 2,
                     valueColor: AlwaysStoppedAnimation<Color>(Colors.white)))
-            : Text('احجز',
+            : Text(AppLocalizations.of(context)!.book,
                 style: TextStyle(
                     fontFamily: 'Cairo',
                     fontSize: 16,
@@ -322,14 +312,15 @@ class _BookingCalendarScreenState extends State<BookingCalendarScreen> {
   }
 
   Widget _buildLegend() {
+    final localizations = AppLocalizations.of(context)!;
     return Align(
-      alignment: Alignment.centerRight,
+      alignment: localizations.isArabic ? Alignment.centerRight : Alignment.centerLeft,
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
+        crossAxisAlignment: localizations.isArabic ? CrossAxisAlignment.end : CrossAxisAlignment.start,
         children: [
-          _buildLegendItem('الأخضر متاح للحجز', const Color(0xFF10B981)),
+          _buildLegendItem(localizations.greenAvailable, const Color(0xFF10B981)),
           const SizedBox(height: 12),
-          _buildLegendItem('الأحمر غير متاح للحجز', const Color(0xFFEF4444)),
+          _buildLegendItem(localizations.redNotAvailable, const Color(0xFFEF4444)),
         ],
       ),
     );

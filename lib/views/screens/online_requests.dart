@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../logic/cubit/service_cubit.dart';
 import '../../data/models/service_model.dart';
 import '../widgets/custom_app_bar.dart';
+import '../../i18n/app_localizations.dart';
 import 'service_details_screen.dart';
 
 class MyOnlineRequestsPage extends StatelessWidget {
@@ -58,8 +59,9 @@ class MyOnlineRequestsPage extends StatelessWidget {
           services = state.allServices; // Use cached services
         }
 
+        final localizations = AppLocalizations.of(context)!;
         return Directionality(
-          textDirection: TextDirection.rtl,
+          textDirection: localizations.isArabic ? TextDirection.rtl : TextDirection.ltr,
           child: Scaffold(
             backgroundColor: const Color(0xFFF9FAFB),
             appBar: PreferredSize(
@@ -79,9 +81,9 @@ class MyOnlineRequestsPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   // Title
-                  const Text(
-                    'الطلبات الإلكترونية',
-                    style: TextStyle(
+                  Text(
+                    AppLocalizations.of(context)!.onlineRequestsTitle,
+                    style: const TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.normal,
                       fontFamily: 'Cairo',
@@ -90,7 +92,7 @@ class MyOnlineRequestsPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'اختر نوع الطلب وأكمل تأكيد معلوماتك\nلتقديمه إلكترونيًا بسهولة.',
+                    AppLocalizations.of(context)!.onlineRequestsSubtitle,
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 14,
@@ -131,6 +133,7 @@ class MyOnlineRequestsPage extends StatelessWidget {
   required ServiceModel service,
   required VoidCallback onTap,
 }) {
+  final localizations = AppLocalizations.of(context)!;
   return GestureDetector(
     onTap: onTap,
     child: Container(
@@ -150,14 +153,14 @@ class MyOnlineRequestsPage extends StatelessWidget {
         children: [
           Expanded(
             child: Text(
-              service.name,
+              localizations.translateServiceName(service.name),
               style: const TextStyle(
                 fontFamily: 'Cairo',
                 fontSize: 17,
                 fontWeight: FontWeight.normal,
                 color: Color(0xFF111827),
               ),
-              textAlign: TextAlign.right,
+              textAlign: localizations.isArabic ? TextAlign.right : TextAlign.left,
             ),
           ),
         ],

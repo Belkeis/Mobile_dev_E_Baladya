@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import '../../i18n/app_localizations.dart';
 
 class GenericListPage extends StatefulWidget {
   final String title;
@@ -51,8 +52,9 @@ class _GenericListPageState extends State<GenericListPage> {
   @override
   Widget build(BuildContext context) {
     final items = _filteredItems;
+    final localizations = AppLocalizations.of(context)!;
     return Directionality(
-      textDirection: TextDirection.rtl,
+      textDirection: localizations.isArabic ? TextDirection.rtl : TextDirection.ltr,
       child: Scaffold(
         backgroundColor: const Color(0xFFF9FAFB),
         appBar: widget.customAppBar,
@@ -117,9 +119,9 @@ class _GenericListPageState extends State<GenericListPage> {
                             fontFamily: 'Cairo',
                             color: Color(0xFF111827),
                           ),
-                          decoration: const InputDecoration(
-                            hintText: 'ابحث...',
-                            hintStyle: TextStyle(
+                          decoration: InputDecoration(
+                            hintText: localizations.isArabic ? 'ابحث...' : 'Rechercher...',
+                            hintStyle: const TextStyle(
                               color: Color(0xFF9CA3AF),
                               fontSize: 14,
                               fontFamily: 'Cairo',

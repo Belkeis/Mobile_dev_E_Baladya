@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/services.dart';
 import '../../logic/cubit/auth_cubit.dart';
 import '../../data/models/user_model.dart';
+import '../../i18n/app_localizations.dart';
 import 'home_page.dart';
 
 class SignUpPage extends StatefulWidget {
@@ -34,35 +35,39 @@ class _SignUpPageState extends State<SignUpPage> {
   bool _showLoginPassword = false;
 
   // Validators
-  String? _emailValidator(String? value) {
+  String? _emailValidator(String? value, BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     if (value == null || value.trim().isEmpty)
-      return 'الرجاء إدخال البريد الإلكتروني';
+      return localizations.pleaseEnterEmail;
     final email = value.trim();
     final regex = RegExp(r'^[\w\-.]+@([\w-]+\.)+[\w-]{2,4}$');
-    if (!regex.hasMatch(email)) return 'الرجاء إدخال بريد إلكتروني صحيح';
+    if (!regex.hasMatch(email)) return localizations.pleaseEnterValidEmail;
     return null;
   }
 
-  String? _phoneValidator(String? value) {
-    if (value == null || value.trim().isEmpty) return 'الرجاء إدخال رقم الهاتف';
+  String? _phoneValidator(String? value, BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+    if (value == null || value.trim().isEmpty) return localizations.pleaseEnterPhone;
     final phone = value.trim();
     final regex = RegExp(r'^(05|06|07)\d{8}$');
-    if (!regex.hasMatch(phone)) return 'الرجاء إدخال رقم هاتف  صحيح';
+    if (!regex.hasMatch(phone)) return localizations.pleaseEnterValidPhone;
     return null;
   }
 
-  String? _passwordValidator(String? value) {
-    if (value == null || value.isEmpty) return 'الرجاء إدخال كلمة المرور';
-    if (value.length < 6) return 'كلمة المرور يجب أن تكون 6 أحرف على الأقل';
+  String? _passwordValidator(String? value, BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+    if (value == null || value.isEmpty) return localizations.pleaseEnterPassword;
+    if (value.length < 6) return localizations.passwordMinLength;
     return null;
   }
 
-  String? _nationalIdValidator(String? value) {
+  String? _nationalIdValidator(String? value, BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     if (value == null || value.trim().isEmpty)
-      return 'الرجاء إدخال رقم البطاقة';
+      return localizations.pleaseEnterNationalId;
     final s = value.trim();
     final regex = RegExp(r'^\d{18}$');
-    if (!regex.hasMatch(s)) return 'رقم البطاقة يجب أن يتكون من 18 رقماً';
+    if (!regex.hasMatch(s)) return localizations.nationalIdLength;
     return null;
   }
 
@@ -71,6 +76,8 @@ class _SignUpPageState extends State<SignUpPage> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+    final isArabic = localizations.isArabic;
     return BlocListener<AuthCubit, AuthState>(
       listener: (context, state) {
         if (state is AuthAuthenticated) {
@@ -83,7 +90,7 @@ class _SignUpPageState extends State<SignUpPage> {
             SnackBar(
               content: Text(
                 state.message,
-                textAlign: TextAlign.right,
+                textAlign: isArabic ? TextAlign.right : TextAlign.left,
                 style: const TextStyle(
                   fontFamily: 'Cairo',
                   fontWeight: FontWeight.w600,
@@ -98,41 +105,44 @@ class _SignUpPageState extends State<SignUpPage> {
           );
         }
       },
-      child: Scaffold(
-        backgroundColor: const Color(0xFFE5E7EB),
-        body: SafeArea(
-          child: SingleChildScrollView(
-            child: Container(
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topRight,
-                  end: Alignment.bottomLeft,
-                  colors: [Color(0xFFEFF6FF), Color(0xFFE0E7FF)],
-                ),
-              ),
-              child: Column(
-                children: [
-                  _buildHeader(),
-                  const SizedBox(height: 20),
-                  _buildTabButtons(),
-                  const SizedBox(height: 20),
-                  _isLoginSelected
-                      ? _buildLoginSection()
-                      : _buildSignUpSection(),
-                  const SizedBox(height: 24),
-                  const Text(
-                    'جميع الحقوق محفوظة © 2024 البلدية\nالإلكترونية',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontFamily: 'Cairo',
-                      color: Color(0xFF9CA3AF),
-                      fontSize: 11,
-                      height: 1.6,
-                      fontWeight: FontWeight.w400,
-                    ),
+      child: Directionality(
+        textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
+        child: Scaffold(
+          backgroundColor: const Color(0xFFE5E7EB),
+          body: SafeArea(
+            child: SingleChildScrollView(
+              child: Container(
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topRight,
+                    end: Alignment.bottomLeft,
+                    colors: [Color(0xFFEFF6FF), Color(0xFFE0E7FF)],
                   ),
-                  const SizedBox(height: 24),
-                ],
+                ),
+                child: Column(
+                  children: [
+                    _buildHeader(),
+                    const SizedBox(height: 20),
+                    _buildTabButtons(),
+                    const SizedBox(height: 20),
+                    _isLoginSelected
+                        ? _buildLoginSection()
+                        : _buildSignUpSection(),
+                    const SizedBox(height: 24),
+                    Text(
+                      localizations.allRightsReserved,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        fontFamily: 'Cairo',
+                        color: Color(0xFF9CA3AF),
+                        fontSize: 11,
+                        height: 1.6,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                  ],
+                ),
               ),
             ),
           ),
@@ -142,6 +152,8 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   Widget _buildHeader() {
+    final localizations = AppLocalizations.of(context)!;
+    final isArabic = localizations.isArabic;
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(vertical: 24),
@@ -169,35 +181,22 @@ class _SignUpPageState extends State<SignUpPage> {
           ),
           const SizedBox(height: 12),
           // Title
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
-              Text(
-                'e-Baladya',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 20,
-                  fontFamily: 'Cairo',
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: -0.3,
-                ),
-              ),
-              Text(
-                ' مرحبا بكم في',
-                style: TextStyle(
-                  color: Color(0xFF1F2937),
-                  fontSize: 20,
-                  fontFamily: 'Cairo',
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ],
+          Text(
+            isArabic ? 'مرحبا بكم في e-Baladya' : 'Bienvenue dans e-Baladya',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: isArabic ? const Color(0xFF1F2937) : Colors.black,
+              fontSize: 20,
+              fontFamily: 'Cairo',
+              fontWeight: FontWeight.w700,
+              letterSpacing: -0.3,
+            ),
           ),
           const SizedBox(height: 4),
           // Subtitle
-          const Text(
-            'نظام إدارة الخدمات البلدية',
-            style: TextStyle(
+          Text(
+            AppLocalizations.of(context)!.systemTitle,
+            style: const TextStyle(
               color: Color(0xFF6B7280),
               fontSize: 13,
               fontFamily: 'Cairo',
@@ -210,6 +209,7 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   Widget _buildTabButtons() {
+    final localizations = AppLocalizations.of(context)!;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Container(
@@ -245,7 +245,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   ),
                   child: Center(
                     child: Text(
-                      'تسجيل الدخول',
+                      localizations.login,
                       style: TextStyle(
                         color: _isLoginSelected
                             ? Colors.white
@@ -276,7 +276,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   ),
                   child: Center(
                     child: Text(
-                      'إنشاء حساب',
+                      localizations.signUp,
                       style: TextStyle(
                         color: !_isLoginSelected
                             ? Colors.white
@@ -300,6 +300,7 @@ class _SignUpPageState extends State<SignUpPage> {
     return BlocBuilder<AuthCubit, AuthState>(
       builder: (context, state) {
         final isLoading = state is AuthLoading;
+        final localizations = AppLocalizations.of(context)!;
 
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -323,9 +324,9 @@ class _SignUpPageState extends State<SignUpPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  const Text(
-                    'تسجيل الدخول',
-                    style: TextStyle(
+                  Text(
+                    AppLocalizations.of(context)!.login,
+                    style: const TextStyle(
                       fontFamily: 'Cairo',
                       color: Color(0xFF1F2937),
                       fontSize: 22,
@@ -334,9 +335,9 @@ class _SignUpPageState extends State<SignUpPage> {
                     ),
                   ),
                   const SizedBox(height: 6),
-                  const Text(
-                    'أدخل بياناتك للوصول إلى حسابك',
-                    style: TextStyle(
+                  Text(
+                    AppLocalizations.of(context)!.loginSubtitle,
+                    style: const TextStyle(
                       fontFamily: 'Cairo',
                       color: Color(0xFF6B7280),
                       fontSize: 13,
@@ -346,18 +347,18 @@ class _SignUpPageState extends State<SignUpPage> {
                   ),
                   const SizedBox(height: 24),
                   _buildFormField(
-                    label: 'البريد الإلكتروني',
-                    hintText: 'أدخل بريدك الإلكتروني',
+                    label: AppLocalizations.of(context)!.email,
+                    hintText: AppLocalizations.of(context)!.enterEmail,
                     controller: _loginEmailController,
                     iconData: Icons.email_outlined,
-                    validator: _emailValidator,
+                    validator: (v) => _emailValidator(v, context),
                     fieldKey: 'loginEmail',
                     keyboardType: TextInputType.emailAddress,
                   ),
                   const SizedBox(height: 16),
                   _buildPasswordField(
-                    label: 'كلمة المرور',
-                    hintText: 'أدخل كلمة المرور',
+                    label: AppLocalizations.of(context)!.password,
+                    hintText: AppLocalizations.of(context)!.enterPassword,
                     controller: _loginPasswordController,
                     showPassword: _showLoginPassword,
                     onToggle: () {
@@ -365,20 +366,21 @@ class _SignUpPageState extends State<SignUpPage> {
                         _showLoginPassword = !_showLoginPassword;
                       });
                     },
-                    validator: _passwordValidator,
+                    validator: (v) => _passwordValidator(v, context),
                     fieldKey: 'loginPassword',
                   ),
                   const SizedBox(height: 12),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    textDirection: localizations.isArabic ? TextDirection.rtl : TextDirection.ltr,
                     children: [
                       GestureDetector(
                         onTap: () {
                           // Handle forgot password
                         },
-                        child: const Text(
-                          'نسيت كلمة المرور؟',
-                          style: TextStyle(
+                        child: Text(
+                          AppLocalizations.of(context)!.forgotPassword,
+                          style: const TextStyle(
                             fontFamily: 'Cairo',
                             color: Color(0xFF2563EB),
                             fontSize: 12,
@@ -387,10 +389,11 @@ class _SignUpPageState extends State<SignUpPage> {
                         ),
                       ),
                       Row(
+                        textDirection: localizations.isArabic ? TextDirection.rtl : TextDirection.ltr,
                         children: [
-                          const Text(
-                            'تذكرني',
-                            style: TextStyle(
+                          Text(
+                            AppLocalizations.of(context)!.rememberMe,
+                            style: const TextStyle(
                               fontFamily: 'Cairo',
                               color: Color(0xFF6B7280),
                               fontSize: 12,
@@ -442,9 +445,9 @@ class _SignUpPageState extends State<SignUpPage> {
                                     AlwaysStoppedAnimation<Color>(Colors.white),
                               ),
                             )
-                          : const Text(
-                              'تسجيل الدخول',
-                              style: TextStyle(
+                          : Text(
+                              AppLocalizations.of(context)!.login,
+                              style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 15,
                                 fontFamily: 'Cairo',
@@ -490,9 +493,9 @@ class _SignUpPageState extends State<SignUpPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  const Text(
-                    'إنشاء حساب جديد',
-                    style: TextStyle(
+                  Text(
+                    AppLocalizations.of(context)!.createAccount,
+                    style: const TextStyle(
                       fontFamily: 'Cairo',
                       color: Color(0xFF1F2937),
                       fontSize: 22,
@@ -501,9 +504,9 @@ class _SignUpPageState extends State<SignUpPage> {
                     ),
                   ),
                   const SizedBox(height: 6),
-                  const Text(
-                    'أنشئ حسابك للبدء',
-                    style: TextStyle(
+                  Text(
+                    AppLocalizations.of(context)!.createAccountSubtitle,
+                    style: const TextStyle(
                       fontFamily: 'Cairo',
                       color: Color(0xFF6B7280),
                       fontSize: 13,
@@ -513,32 +516,32 @@ class _SignUpPageState extends State<SignUpPage> {
                   ),
                   const SizedBox(height: 24),
                   _buildFormField(
-                    label: 'الاسم الكامل',
-                    hintText: 'أدخل اسمك الكامل',
+                    label: AppLocalizations.of(context)!.fullName,
+                    hintText: AppLocalizations.of(context)!.enterFullName,
                     controller: _fullNameController,
                     iconData: Icons.person_outline_rounded,
                     validator: (v) => v == null || v.trim().isEmpty
-                        ? 'الرجاء إدخال الاسم'
+                        ? AppLocalizations.of(context)!.pleaseEnterName
                         : null,
                     fieldKey: 'fullName',
                   ),
                   const SizedBox(height: 16),
                   _buildFormField(
-                    label: 'البريد الإلكتروني',
-                    hintText: 'أدخل بريدك الإلكتروني',
+                    label: AppLocalizations.of(context)!.email,
+                    hintText: AppLocalizations.of(context)!.enterEmail,
                     controller: _emailController,
                     iconData: Icons.email_outlined,
-                    validator: _emailValidator,
+                    validator: (v) => _emailValidator(v, context),
                     fieldKey: 'email',
                     keyboardType: TextInputType.emailAddress,
                   ),
                   const SizedBox(height: 16),
                   _buildFormField(
-                    label: 'رقم الهاتف',
-                    hintText: 'أدخل رقم هاتفك',
+                    label: AppLocalizations.of(context)!.phone,
+                    hintText: AppLocalizations.of(context)!.enterPhone,
                     controller: _phoneController,
                     iconData: Icons.phone_outlined,
-                    validator: _phoneValidator,
+                    validator: (v) => _phoneValidator(v, context),
                     keyboardType: TextInputType.phone,
                     inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                     maxLength: 10,
@@ -546,11 +549,11 @@ class _SignUpPageState extends State<SignUpPage> {
                   ),
                   const SizedBox(height: 16),
                   _buildFormField(
-                    label: 'رقم البطاقة الوطنية',
-                    hintText: 'أدخل رقم البطاقة',
+                    label: AppLocalizations.of(context)!.nationalId,
+                    hintText: AppLocalizations.of(context)!.enterNationalId,
                     controller: _nationalIdController,
                     iconData: Icons.credit_card_outlined,
-                    validator: _nationalIdValidator,
+                    validator: (v) => _nationalIdValidator(v, context),
                     inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                     maxLength: 18,
                     keyboardType: TextInputType.number,
@@ -558,8 +561,8 @@ class _SignUpPageState extends State<SignUpPage> {
                   ),
                   const SizedBox(height: 16),
                   _buildPasswordField(
-                    label: 'كلمة المرور',
-                    hintText: 'أدخل كلمة المرور',
+                    label: AppLocalizations.of(context)!.password,
+                    hintText: AppLocalizations.of(context)!.enterPassword,
                     controller: _passwordController,
                     showPassword: _showPassword,
                     onToggle: () {
@@ -567,7 +570,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         _showPassword = !_showPassword;
                       });
                     },
-                    validator: _passwordValidator,
+                    validator: (v) => _passwordValidator(v, context),
                     fieldKey: 'password',
                   ),
                   const SizedBox(height: 24),
@@ -594,9 +597,9 @@ class _SignUpPageState extends State<SignUpPage> {
                                     AlwaysStoppedAnimation<Color>(Colors.white),
                               ),
                             )
-                          : const Text(
-                              'إنشاء الحساب',
-                              style: TextStyle(
+                          : Text(
+                              AppLocalizations.of(context)!.createAccount,
+                              style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 15,
                                 fontFamily: 'Cairo',
@@ -615,10 +618,10 @@ class _SignUpPageState extends State<SignUpPage> {
                     },
                     child: Text.rich(
                       TextSpan(
-                        children: const [
+                        children: [
                           TextSpan(
-                            text: 'لديك حساب بالفعل؟ ',
-                            style: TextStyle(
+                            text: AppLocalizations.of(context)!.alreadyHaveAccount,
+                            style: const TextStyle(
                               color: Color(0xFF6B7280),
                               fontSize: 13,
                               fontFamily: 'Cairo',
@@ -626,8 +629,8 @@ class _SignUpPageState extends State<SignUpPage> {
                             ),
                           ),
                           TextSpan(
-                            text: 'تسجيل الدخول',
-                            style: TextStyle(
+                            text: AppLocalizations.of(context)!.login,
+                            style: const TextStyle(
                               color: Color(0xFF2563EB),
                               fontSize: 13,
                               fontFamily: 'Cairo',
@@ -658,11 +661,17 @@ class _SignUpPageState extends State<SignUpPage> {
     TextInputType? keyboardType,
     int? maxLength,
   }) {
+    final localizations = AppLocalizations.of(context)!;
+    final isArabic = localizations.isArabic;
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
+      crossAxisAlignment: isArabic ? CrossAxisAlignment.end : CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.only(right: 4, bottom: 8),
+          padding: EdgeInsets.only(
+            right: isArabic ? 4 : 0,
+            left: isArabic ? 0 : 4,
+            bottom: 8,
+          ),
           child: Text(
             label,
             style: const TextStyle(
@@ -685,13 +694,18 @@ class _SignUpPageState extends State<SignUpPage> {
             ),
           ),
           child: Row(
+            textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
             children: [
               Container(
                 width: 40,
                 height: 50,
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                   border: Border(
-                    right: BorderSide(
+                    right: isArabic ? const BorderSide(
+                      color: Color(0xFFE5E7EB),
+                      width: 1,
+                    ) : BorderSide.none,
+                    left: isArabic ? BorderSide.none : const BorderSide(
                       color: Color(0xFFE5E7EB),
                       width: 1,
                     ),
@@ -712,7 +726,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   keyboardType: keyboardType ?? TextInputType.text,
                   inputFormatters: inputFormatters,
                   maxLength: maxLength,
-                  textAlign: TextAlign.right,
+                  textAlign: isArabic ? TextAlign.right : TextAlign.left,
                   style: const TextStyle(
                     fontFamily: 'Cairo',
                     color: Color(0xFF1F2937),
@@ -744,10 +758,13 @@ class _SignUpPageState extends State<SignUpPage> {
         if (fieldKey.isNotEmpty && _fieldErrors[fieldKey] != null) ...[
           const SizedBox(height: 6),
           Padding(
-            padding: EdgeInsets.only(right: 4),
+            padding: EdgeInsets.only(
+              right: isArabic ? 4 : 0,
+              left: isArabic ? 0 : 4,
+            ),
             child: Text(
               _fieldErrors[fieldKey]!,
-              textAlign: TextAlign.right,
+              textAlign: isArabic ? TextAlign.right : TextAlign.left,
               style: const TextStyle(
                 color: Colors.red,
                 fontSize: 12,
@@ -769,11 +786,17 @@ class _SignUpPageState extends State<SignUpPage> {
     String fieldKey = '',
     String? Function(String?)? validator,
   }) {
+    final localizations = AppLocalizations.of(context)!;
+    final isArabic = localizations.isArabic;
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
+      crossAxisAlignment: isArabic ? CrossAxisAlignment.end : CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.only(right: 4, bottom: 8),
+          padding: EdgeInsets.only(
+            right: isArabic ? 4 : 0,
+            left: isArabic ? 0 : 4,
+            bottom: 8,
+          ),
           child: Text(
             label,
             style: const TextStyle(
@@ -796,13 +819,18 @@ class _SignUpPageState extends State<SignUpPage> {
             ),
           ),
           child: Row(
+            textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
             children: [
               Container(
                 width: 40,
                 height: 50,
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                   border: Border(
-                    right: BorderSide(
+                    right: isArabic ? const BorderSide(
+                      color: Color(0xFFE5E7EB),
+                      width: 1,
+                    ) : BorderSide.none,
+                    left: isArabic ? BorderSide.none : const BorderSide(
                       color: Color(0xFFE5E7EB),
                       width: 1,
                     ),
@@ -820,7 +848,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 child: TextFormField(
                   controller: controller,
                   validator: null,
-                  textAlign: TextAlign.right,
+                  textAlign: isArabic ? TextAlign.right : TextAlign.left,
                   obscureText: !showPassword,
                   style: const TextStyle(
                     fontFamily: 'Cairo',
@@ -844,7 +872,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       vertical: 14,
                     ),
                     border: InputBorder.none,
-                    suffixIcon: GestureDetector(
+                    suffixIcon: isArabic ? GestureDetector(
                       onTap: onToggle,
                       child: Icon(
                         showPassword
@@ -853,7 +881,17 @@ class _SignUpPageState extends State<SignUpPage> {
                         size: 18,
                         color: const Color(0xFF9CA3AF),
                       ),
-                    ),
+                    ) : null,
+                    prefixIcon: !isArabic ? GestureDetector(
+                      onTap: onToggle,
+                      child: Icon(
+                        showPassword
+                            ? Icons.visibility_outlined
+                            : Icons.visibility_off_outlined,
+                        size: 18,
+                        color: const Color(0xFF9CA3AF),
+                      ),
+                    ) : null,
                   ),
                 ),
               ),
@@ -863,10 +901,13 @@ class _SignUpPageState extends State<SignUpPage> {
         if (fieldKey.isNotEmpty && _fieldErrors[fieldKey] != null) ...[
           const SizedBox(height: 6),
           Padding(
-            padding: EdgeInsets.only(right: 4),
+            padding: EdgeInsets.only(
+              right: isArabic ? 4 : 0,
+              left: isArabic ? 0 : 4,
+            ),
             child: Text(
               _fieldErrors[fieldKey]!,
-              textAlign: TextAlign.right,
+              textAlign: isArabic ? TextAlign.right : TextAlign.left,
               style: const TextStyle(
                 color: Colors.red,
                 fontSize: 12,
@@ -880,24 +921,26 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   void _createAccount() {
+    final localizations = AppLocalizations.of(context)!;
+    final isArabic = localizations.isArabic;
     _fieldErrors.clear();
     _fieldErrors['fullName'] =
-        _fullNameController.text.trim().isEmpty ? 'الرجاء إدخال الاسم' : null;
-    _fieldErrors['email'] = _emailValidator(_emailController.text);
-    _fieldErrors['phone'] = _phoneValidator(_phoneController.text);
+        _fullNameController.text.trim().isEmpty ? localizations.pleaseEnterName : null;
+    _fieldErrors['email'] = _emailValidator(_emailController.text, context);
+    _fieldErrors['phone'] = _phoneValidator(_phoneController.text, context);
     _fieldErrors['nationalId'] =
-        _nationalIdValidator(_nationalIdController.text);
-    _fieldErrors['password'] = _passwordValidator(_passwordController.text);
+        _nationalIdValidator(_nationalIdController.text, context);
+    _fieldErrors['password'] = _passwordValidator(_passwordController.text, context);
     setState(() {});
 
     final hasError = _fieldErrors.values.any((e) => e != null);
     if (hasError) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text(
-            'الرجاء ملء جميع الحقول بشكل صحيح',
-            textAlign: TextAlign.right,
-            style: TextStyle(
+          content: Text(
+            localizations.pleaseFillAllFieldsCorrectly,
+            textAlign: isArabic ? TextAlign.right : TextAlign.left,
+            style: const TextStyle(
               fontFamily: 'Cairo',
               fontWeight: FontWeight.w600,
             ),
@@ -925,20 +968,22 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   void _login() {
+    final localizations = AppLocalizations.of(context)!;
+    final isArabic = localizations.isArabic;
     _fieldErrors.clear();
-    _fieldErrors['loginEmail'] = _emailValidator(_loginEmailController.text);
+    _fieldErrors['loginEmail'] = _emailValidator(_loginEmailController.text, context);
     _fieldErrors['loginPassword'] =
-        _passwordValidator(_loginPasswordController.text);
+        _passwordValidator(_loginPasswordController.text, context);
     setState(() {});
 
     final hasError = _fieldErrors.values.any((e) => e != null);
     if (hasError) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text(
-            'الرجاء ملء جميع المعلومات بشكل صحيح',
-            textAlign: TextAlign.right,
-            style: TextStyle(
+          content: Text(
+            localizations.pleaseFillAllInfo,
+            textAlign: isArabic ? TextAlign.right : TextAlign.left,
+            style: const TextStyle(
               fontFamily: 'Cairo',
               fontWeight: FontWeight.w600,
             ),

@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../logic/cubit/service_cubit.dart';
 import '../../logic/cubit/request_cubit.dart';
 import '../../logic/cubit/auth_cubit.dart';
+import '../../i18n/app_localizations.dart';
 import '../../data/models/service_model.dart';
 import '../../data/models/request_model.dart';
 import '../../data/models/user_model.dart';
@@ -16,6 +17,8 @@ class ServiceDetailsScreen extends StatelessWidget {
   const ServiceDetailsScreen({super.key, required this.service});
 
   void _showConfirmationDialog(BuildContext context, UserModel user) {
+    final localizations = AppLocalizations.of(context)!;
+    final isArabic = localizations.isArabic;
     showDialog(
       context: context,
       barrierColor: Colors.black.withValues(alpha: 0.3),
@@ -23,7 +26,7 @@ class ServiceDetailsScreen extends StatelessWidget {
         return BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
           child: Directionality(
-            textDirection: TextDirection.rtl,
+            textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
             child: Dialog(
               elevation: 0,
               backgroundColor: Colors.white,
@@ -36,9 +39,9 @@ class ServiceDetailsScreen extends StatelessWidget {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Text(
-                      "تأكيد البيانات الشخصية",
-                      style: TextStyle(
+                    Text(
+                      localizations.confirmPersonalData,
+                      style: const TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.normal,
                         color: Color(0xFF2563EB),
@@ -46,10 +49,10 @@ class ServiceDetailsScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 10),
-                    const Text(
-                      "يرجى مراجعة معلوماتك لتأكيد هويتك واستكمال الطلب بسهولة.",
+                    Text(
+                      localizations.confirmPersonalDataSubtitle,
                       textAlign: TextAlign.center,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 14,
                         color: Color(0xFF6B7280),
                         height: 1.5,
@@ -60,10 +63,10 @@ class ServiceDetailsScreen extends StatelessWidget {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _InfoRow("الاسم الكامل:", user.fullName),
-                        _InfoRow("البريد الإلكتروني:", user.email),
-                        _InfoRow("رقم الهاتف:", user.phone ?? 'غير متوفر'),
-                        _InfoRow("رقم الهوية:", user.nationalId),
+                        _InfoRow(localizations.fullNameLabel, user.fullName),
+                        _InfoRow(localizations.emailLabel, user.email),
+                        _InfoRow(localizations.phoneLabel, user.phone ?? localizations.notAvailable),
+                        _InfoRow(localizations.nationalIdLabel, user.nationalId),
                       ],
                     ),
                     const SizedBox(height: 25),
@@ -72,7 +75,7 @@ class ServiceDetailsScreen extends StatelessWidget {
                       children: [
                         Expanded(
                           child: _ActionButton(
-                            text: "تأكيد ",
+                            text: localizations.confirm,
                             textColor: Colors.white,
                             background: const Color(0xFF2563EB),
                             isConfirm: true,
@@ -83,7 +86,7 @@ class ServiceDetailsScreen extends StatelessWidget {
                         const SizedBox(width: 12),
                         Expanded(
                           child: _ActionButton(
-                            text: "إلغاء",
+                            text: localizations.cancel,
                             textColor: const Color(0xFF6B7280),
                             background: Colors.white,
                             shadow: true,
@@ -148,7 +151,7 @@ class ServiceDetailsScreen extends StatelessWidget {
                   child: Column(
                     children: [
                       Text(
-                        service.name,
+                        AppLocalizations.of(context)!.translateServiceName(service.name),
                         style: const TextStyle(
                           fontFamily: 'Cairo',
                           fontSize: 24,
@@ -158,7 +161,7 @@ class ServiceDetailsScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 12),
                       Text(
-                        service.description,
+                        AppLocalizations.of(context)!.translateServiceDescription(service.description),
                         textAlign: TextAlign.center,
                         style: const TextStyle(
                           fontFamily: 'Cairo',
@@ -169,15 +172,15 @@ class ServiceDetailsScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 20),
                       _buildInfoCard(
-                        'مدة المعالجة',
-                        service.processingTime,
+                        AppLocalizations.of(context)!.processingTimeLabel,
+                        AppLocalizations.of(context)!.translateProcessingTime(service.processingTime),
                         Icons.access_time,
                         const Color(0xFF3B82F6),
                       ),
                       const SizedBox(height: 12),
                       _buildInfoCard(
-                        'الرسوم',
-                        '${service.fee.toStringAsFixed(0)} دج',
+                        AppLocalizations.of(context)!.feesLabel,
+                        '${service.fee.toStringAsFixed(0)} ${AppLocalizations.of(context)!.currency}',
                         Icons.payments,
                         const Color(0xFF10B981),
                       ),
@@ -205,18 +208,18 @@ class ServiceDetailsScreen extends StatelessWidget {
                                   topRight: Radius.circular(16),
                                 ),
                               ),
-                              child: const Row(
+                              child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Icon(
+                                  const Icon(
                                     Icons.description,
                                     color: Color(0xFF2563EB),
                                     size: 24,
                                   ),
-                                  SizedBox(width: 8),
+                                  const SizedBox(width: 8),
                                   Text(
-                                    'الوثائق المطلوبة',
-                                    style: TextStyle(
+                                    AppLocalizations.of(context)!.requiredDocumentsLabel,
+                                    style: const TextStyle(
                                       fontFamily: 'Cairo',
                                       fontSize: 18,
                                       fontWeight: FontWeight.normal,
@@ -230,7 +233,7 @@ class ServiceDetailsScreen extends StatelessWidget {
                               padding: const EdgeInsets.all(20),
                               child: Column(
                                 children: requiredDocuments
-                                    .map<Widget>((doc) => _buildRequirement(doc.name))
+                                    .map<Widget>((doc) => _buildRequirement(context, doc.name))
                                     .toList(),
                               ),
                             ),
@@ -253,7 +256,7 @@ class ServiceDetailsScreen extends StatelessWidget {
                             const SizedBox(width: 12),
                             Expanded(
                               child: Text(
-                                'بعد تقديم الطلب، ستحصل على إشعار تأكيد. ثم قم بزيارة البلدية لاستلام الوثيقة والدفع (مثال: ${service.fee.toStringAsFixed(0)} دج).',
+                                AppLocalizations.of(context)!.afterRequestMessageReplace(service.fee.toStringAsFixed(0)),
                                 style: const TextStyle(
                                   fontFamily: 'Cairo',
                                   fontSize: 13,
@@ -291,20 +294,20 @@ class ServiceDetailsScreen extends StatelessWidget {
                       ),
                       elevation: 0,
                     ),
-                    child: const Row(
+                    child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          'طلب الآن',
-                          style: TextStyle(
+                          AppLocalizations.of(context)!.requestNow,
+                          style: const TextStyle(
                             fontFamily: 'Cairo',
                             fontSize: 18,
                             fontWeight: FontWeight.w400,
                             color: Colors.white,
                           ),
                         ),
-                        SizedBox(width: 8),
-                        Icon(Icons.send, color: Colors.white, size: 20),
+                        const SizedBox(width: 8),
+                        const Icon(Icons.send, color: Colors.white, size: 20),
                       ],
                     ),
                   ),
@@ -372,14 +375,19 @@ class ServiceDetailsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildRequirement(String text) {
+  Widget _buildRequirement(BuildContext context, String text) {
+    final localizations = AppLocalizations.of(context)!;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            margin: const EdgeInsets.only(top: 6, left: 12),
+            margin: EdgeInsets.only(
+              top: 6,
+              left: localizations.isArabic ? 12 : 0,
+              right: localizations.isArabic ? 0 : 12,
+            ),
             width: 6,
             height: 6,
             decoration: const BoxDecoration(
@@ -389,8 +397,8 @@ class ServiceDetailsScreen extends StatelessWidget {
           ),
           Expanded(
             child: Text(
-              text,
-              textAlign: TextAlign.right,
+              localizations.translateDocumentName(text),
+              textAlign: localizations.isArabic ? TextAlign.right : TextAlign.left,
               style: const TextStyle(
                 fontFamily: 'Cairo',
                 fontSize: 14,
@@ -412,10 +420,11 @@ class _InfoRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 5.0),
       child: RichText(
-        textDirection: TextDirection.rtl,
+        textDirection: localizations.isArabic ? TextDirection.rtl : TextDirection.ltr,
         text: TextSpan(
           style: const TextStyle(
             fontFamily: 'Cairo',

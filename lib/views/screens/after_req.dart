@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import '../../i18n/app_localizations.dart';
 
 class AfterReq extends StatelessWidget {
   const AfterReq({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     return Directionality(
-      textDirection: TextDirection.rtl,
+      textDirection: localizations.isArabic ? TextDirection.rtl : TextDirection.ltr,
       child: Scaffold(
         backgroundColor: const Color(0xFFF9FAFB),
         body: Center(
@@ -34,10 +36,10 @@ class AfterReq extends StatelessWidget {
                   size: 80,
                 ),
                 const SizedBox(height: 15),
-                const Text(
-                  "تم تقديم طلبك بنجاح!",
+                Text(
+                  AppLocalizations.of(context)!.requestSubmittedSuccessfully,
                   textAlign: TextAlign.center,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontFamily: 'Cairo',
                     fontSize: 24,
                     fontWeight: FontWeight.normal,
@@ -45,10 +47,10 @@ class AfterReq extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 10),
-                const Text(
-                  "سيتم التواصل معك قريباً لتأكيد الخطوات القادمة.",
+                Text(
+                  AppLocalizations.of(context)!.requestSubmittedSubtitle,
                   textAlign: TextAlign.center,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontFamily: 'Cairo',
                     fontSize: 14,
                     color: Color(0xFF6B7280),
@@ -70,9 +72,9 @@ class AfterReq extends StatelessWidget {
                       ),
                       elevation: 0,
                     ),
-                    child: const Text(
-                      "العودة إلى الصفحة الرئيسية",
-                      style: TextStyle(
+                    child: Text(
+                      AppLocalizations.of(context)!.backToHome,
+                      style: const TextStyle(
                         fontFamily: 'Cairo',
                         fontSize: 18,
                         fontWeight: FontWeight.w400,

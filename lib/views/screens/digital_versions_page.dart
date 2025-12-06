@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import '../../logic/cubit/document_cubit.dart';
 import '../../logic/cubit/auth_cubit.dart';
+import '../../i18n/app_localizations.dart';
 import '../widgets/generic_list_page.dart';
 import '../widgets/custom_app_bar.dart';
 
@@ -48,45 +49,48 @@ class DigitalVersionsPage extends StatelessWidget {
                 documentsWithService = state.documentsWithService;
               }
 
+              final localizations = AppLocalizations.of(context)!;
+              
               if (documentsWithService.isEmpty) {
                 return GenericListPage(
-                  title: 'الوثائق الرقمية',
-                  subtitle:
-                      'الوصول إلى جميع الوثائق الرسمية الرقمية بسهولة وتنزيلها مباشرة من هذه الصفحة',
+                  title: localizations.digitalDocumentsTitle,
+                  subtitle: localizations.digitalDocumentsSubtitle,
                   showDownloadIcon: true,
                   showTrailingArrow: false,
-                  items: const [
+                  items: [
                     ListItem(
-                      title: 'لا توجد وثائق رقمية',
-                      subtitle: 'سيتم عرض الوثائق الرقمية هنا عند توفرها',
+                      title: localizations.noDigitalDocuments,
+                      subtitle: localizations.digitalDocumentsSubtitle,
                     ),
                   ],
                 );
               }
 
               return GenericListPage(
-                title: 'الوثائق الرقمية',
-                subtitle:
-                    'الوصول إلى جميع الوثائق الرسمية الرقمية بسهولة وتنزيلها مباشرة من هذه الصفحة',
+                title: localizations.digitalDocumentsTitle,
+                subtitle: localizations.digitalDocumentsSubtitle,
                 showDownloadIcon: true,
                 showTrailingArrow: false,
                 items: documentsWithService.map((item) {
                   final document = item['document'];
                   final service = item['service'];
                   final issuedDate = DateTime.parse(document.issuedDate);
+                  final serviceName = service != null 
+                      ? localizations.translateServiceName(service.name)
+                      : localizations.digitalDocument;
                   final subtitle = service != null
-                      ? '${service.name} - ${DateFormat('yyyy', 'ar').format(issuedDate)}'
-                      : DateFormat('yyyy', 'ar').format(issuedDate);
+                      ? '${serviceName} - ${DateFormat('yyyy', localizations.locale.languageCode).format(issuedDate)}'
+                      : DateFormat('yyyy', localizations.locale.languageCode).format(issuedDate);
 
                   return ListItem(
-                    title: service?.name ?? 'وثيقة رقمية',
+                    title: serviceName,
                     subtitle: subtitle,
                     onTap: () {
                       // In a real app, this would open/view the PDF
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('سيتم فتح الوثيقة قريباً'),
-                          duration: Duration(seconds: 2),
+                        SnackBar(
+                          content: Text(localizations.documentWillOpenSoon),
+                          duration: const Duration(seconds: 2),
                         ),
                       );
                     },
