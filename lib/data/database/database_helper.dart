@@ -496,4 +496,14 @@ class DatabaseHelper {
     final db = await database;
     await db.close();
   }
+
+Future<int> updateUser(UserModel user) async {
+  final db = await database;
+  return await db.update(
+    'users',
+    user.toMap(),
+    where: 'id = ?',
+    whereArgs: [user.id],
+  );
+}
 }

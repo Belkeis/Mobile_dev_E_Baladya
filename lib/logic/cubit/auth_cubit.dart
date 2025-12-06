@@ -35,6 +35,16 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
+  Future<void> updateUser(UserModel user) async {
+    emit(AuthLoading());
+    try {
+      await _userRepository.updateUser(user);
+      emit(AuthAuthenticated(user));
+    } catch (e) {
+      emit(AuthError('حدث خطأ أثناء تحديث البيانات'));
+    }
+  }
+
   void logout() {
     emit(AuthInitial());
   }
@@ -53,4 +63,3 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 }
-

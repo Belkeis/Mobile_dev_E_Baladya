@@ -151,7 +151,7 @@ class HomePage extends StatelessWidget {
                             'الوثائق المطلوبة',
                             Icons.folder_open_rounded,
                             () => Navigator.pushNamed(
-                                context, '/required-document'),
+                                context, '/required-documents'),
                           ),
                         ),
                         const SizedBox(width: 16),

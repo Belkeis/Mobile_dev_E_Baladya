@@ -23,5 +23,8 @@ class UserRepository {
     }
     return null;
   }
-}
 
+  Future<int> updateUser(UserModel user) async {
+    return await _dbHelper.updateUser(user);
+  }
+}
