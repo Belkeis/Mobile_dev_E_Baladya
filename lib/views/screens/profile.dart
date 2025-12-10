@@ -14,7 +14,6 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  bool _isEditing = false;
   late TextEditingController _fullNameController;
   late TextEditingController _emailController;
   late TextEditingController _phoneController;
@@ -48,6 +47,7 @@ class _ProfilePageState extends State<ProfilePage> {
   void _showLogoutDialog(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
     final isArabic = localizations.isArabic;
+
     showDialog(
       context: context,
       builder: (BuildContext dialogContext) {
@@ -121,48 +121,7 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AuthCubit, AuthState>(
-      listener: (context, state) {
-        if (state is AuthError) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                state.message,
-                textAlign: TextAlign.right,
-                style: const TextStyle(
-                  fontFamily: 'Cairo',
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              backgroundColor: Colors.red.shade600,
-              behavior: SnackBarBehavior.floating,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-            ),
-          );
-        } else if (state is AuthAuthenticated && _isEditing) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                AppLocalizations.of(context)!.dataUpdatedSuccessfully,
-                textAlign: TextAlign.right,
-                style: const TextStyle(
-                  fontFamily: 'Cairo',
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              backgroundColor: const Color(0xFF10B981),
-              behavior: SnackBarBehavior.floating,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-            ),
-          );
-          setState(() {
-            _isEditing = false;
-          });
-        }
-      },
+      listener: (context, state) {},
       builder: (context, state) {
         if (state is AuthLoading) {
           return const Scaffold(
@@ -185,14 +144,11 @@ class _ProfilePageState extends State<ProfilePage> {
         }
 
         final user = state.user;
-        
-        // Initialize controllers with user data
-        if (!_isEditing) {
-          _initializeControllers(user);
-        }
+        _initializeControllers(user);
 
         final localizations = AppLocalizations.of(context)!;
         final isArabic = localizations.isArabic;
+
         return Directionality(
           textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
           child: Scaffold(
@@ -202,9 +158,7 @@ class _ProfilePageState extends State<ProfilePage> {
               child: Directionality(
                 textDirection: TextDirection.ltr,
                 child: CustomAppBar(
-                  onArrowTap: () {
-                    Navigator.pop(context);
-                  },
+                  onArrowTap: () => Navigator.pop(context),
                 ),
               ),
             ),
@@ -213,7 +167,7 @@ class _ProfilePageState extends State<ProfilePage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  // Profile Header
+                  // Profile avatar
                   Container(
                     width: 100,
                     height: 100,
@@ -229,14 +183,12 @@ class _ProfilePageState extends State<ProfilePage> {
                       ],
                     ),
                     child: const Center(
-                      child: Icon(
-                        Icons.person,
-                        size: 50,
-                        color: Colors.white,
-                      ),
+                      child: Icon(Icons.person, size: 50, color: Colors.white),
                     ),
                   ),
                   const SizedBox(height: 16),
+
+                  // Full name
                   Text(
                     user.fullName,
                     style: const TextStyle(
@@ -247,6 +199,8 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                   ),
                   const SizedBox(height: 4),
+
+                  // Email
                   Text(
                     user.email,
                     style: const TextStyle(
@@ -257,114 +211,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                   const SizedBox(height: 30),
 
-                  // Edit/Save Button
-                  Row(
-                    children: [
-                      Expanded(
-                        child: ElevatedButton.icon(
-                          onPressed: () {
-                            if (_isEditing) {
-                              // Save changes
-                              if (_fullNameController.text.isEmpty ||
-                                  _emailController.text.isEmpty ||
-                                  _nationalIdController.text.isEmpty) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                      AppLocalizations.of(context)!.pleaseFillAllFields,
-                                      textAlign: TextAlign.right,
-                                      style: const TextStyle(
-                                        fontFamily: 'Cairo',
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                    backgroundColor: Colors.red.shade600,
-                                    behavior: SnackBarBehavior.floating,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                  ),
-                                );
-                                return;
-                              }
-
-                              final updatedUser = user.copyWith(
-                                fullName: _fullNameController.text,
-                                email: _emailController.text,
-                                phone: _phoneController.text.isEmpty 
-                                    ? null 
-                                    : _phoneController.text,
-                                nationalId: _nationalIdController.text,
-                              );
-
-                              context.read<AuthCubit>().updateUser(updatedUser);
-                            } else {
-                              setState(() {
-                                _isEditing = true;
-                              });
-                            }
-                          },
-                          icon: Icon(
-                            _isEditing ? Icons.save : Icons.edit,
-                            size: 20,
-                          ),
-                          label: Text(
-                            _isEditing 
-                                ? AppLocalizations.of(context)!.saveChanges 
-                                : AppLocalizations.of(context)!.editData,
-                            style: const TextStyle(
-                              fontFamily: 'Cairo',
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF2563EB),
-                            foregroundColor: Colors.white,
-                            padding: const EdgeInsets.symmetric(vertical: 14),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            elevation: 0,
-                          ),
-                        ),
-                      ),
-                      if (_isEditing) ...[
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: ElevatedButton.icon(
-                            onPressed: () {
-                              setState(() {
-                                _isEditing = false;
-                                _initializeControllers(user);
-                              });
-                            },
-                            icon: const Icon(Icons.cancel, size: 20),
-                            label: Text(
-                              AppLocalizations.of(context)!.cancel,
-                              style: const TextStyle(
-                                fontFamily: 'Cairo',
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFF6B7280),
-                              foregroundColor: Colors.white,
-                              padding: const EdgeInsets.symmetric(vertical: 14),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              elevation: 0,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ],
-                  ),
-                  const SizedBox(height: 30),
-
-                  // Profile Information
+                  // Profile Information Box
                   Container(
                     decoration: BoxDecoration(
                       color: Colors.white,
@@ -380,39 +227,32 @@ class _ProfilePageState extends State<ProfilePage> {
                     child: Column(
                       children: [
                         _buildInfoTile(
-                          label: AppLocalizations.of(context)!.fullName,
+                          label: localizations.fullName,
                           value: user.fullName,
                           icon: Icons.person_outline,
-                          controller: _fullNameController,
-                          isEditing: _isEditing,
                         ),
                         _buildDivider(),
                         _buildInfoTile(
-                          label: AppLocalizations.of(context)!.email,
+                          label: localizations.email,
                           value: user.email,
                           icon: Icons.email_outlined,
-                          controller: _emailController,
-                          isEditing: _isEditing,
                         ),
                         _buildDivider(),
                         _buildInfoTile(
-                          label: AppLocalizations.of(context)!.phone,
-                          value: user.phone ?? AppLocalizations.of(context)!.notAvailable,
+                          label: localizations.phone,
+                          value: user.phone ?? localizations.notAvailable,
                           icon: Icons.phone_outlined,
-                          controller: _phoneController,
-                          isEditing: _isEditing,
                         ),
                         _buildDivider(),
                         _buildInfoTile(
-                          label: AppLocalizations.of(context)!.nationalId,
+                          label: localizations.nationalId,
                           value: user.nationalId,
                           icon: Icons.credit_card_outlined,
-                          controller: _nationalIdController,
-                          isEditing: _isEditing,
                         ),
                       ],
                     ),
                   ),
+
                   const SizedBox(height: 24),
 
                   // Logout Button
@@ -422,7 +262,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       onPressed: () => _showLogoutDialog(context),
                       icon: const Icon(Icons.logout, size: 20),
                       label: Text(
-                        AppLocalizations.of(context)!.logout,
+                        localizations.logout,
                         style: const TextStyle(
                           fontFamily: 'Cairo',
                           fontSize: 16,
@@ -453,8 +293,6 @@ class _ProfilePageState extends State<ProfilePage> {
     required String label,
     required String value,
     required IconData icon,
-    required TextEditingController controller,
-    required bool isEditing,
   }) {
     return Padding(
       padding: const EdgeInsets.all(20),
@@ -466,11 +304,7 @@ class _ProfilePageState extends State<ProfilePage> {
               color: const Color(0xFFEFF6FF),
               borderRadius: BorderRadius.circular(10),
             ),
-            child: Icon(
-              icon,
-              color: const Color(0xFF2563EB),
-              size: 24,
-            ),
+            child: Icon(icon, color: const Color(0xFF2563EB), size: 24),
           ),
           const SizedBox(width: 16),
           Expanded(
@@ -487,52 +321,15 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                 ),
                 const SizedBox(height: 4),
-                isEditing
-                    ? TextField(
-                        controller: controller,
-                        textAlign: TextAlign.right,
-                        style: const TextStyle(
-                          fontFamily: 'Cairo',
-                          fontSize: 15,
-                          color: Color(0xFF1F2937),
-                          fontWeight: FontWeight.w600,
-                        ),
-                        decoration: InputDecoration(
-                          isDense: true,
-                          contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 8,
-                          ),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                            borderSide: const BorderSide(
-                              color: Color(0xFFE5E7EB),
-                            ),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                            borderSide: const BorderSide(
-                              color: Color(0xFFE5E7EB),
-                            ),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                            borderSide: const BorderSide(
-                              color: Color(0xFF2563EB),
-                              width: 2,
-                            ),
-                          ),
-                        ),
-                      )
-                    : Text(
-                        value,
-                        style: const TextStyle(
-                          fontFamily: 'Cairo',
-                          fontSize: 15,
-                          color: Color(0xFF1F2937),
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
+                Text(
+                  value,
+                  style: const TextStyle(
+                    fontFamily: 'Cairo',
+                    fontSize: 15,
+                    color: Color(0xFF1F2937),
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
               ],
             ),
           ),
