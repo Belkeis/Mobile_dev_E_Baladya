@@ -14,7 +14,17 @@ import '../views/screens/booking_calendar_screen.dart';
 import '../views/screens/after_req.dart';
 import '../views/screens/my_bookings_page.dart';
 
+// Admin imports
+import '../views/screens/admin/admin_login_page.dart';
+import '../views/screens/admin/admin_home_page.dart';
+import '../views/screens/admin/admin_notifications_page.dart';
+import '../views/screens/admin/admin_track_bookings_page.dart';
+import '../views/screens/admin/admin_manage_users_page.dart';
+import '../views/screens/admin/admin_settings_page.dart';
+import '../views/screens/admin/admin_profile_page.dart';
+
 class AppRoutes {
+  // User routes
   static const String entering = '/entering';
   static const String home = '/home';
   static const String signUp = '/sign_up';
@@ -29,7 +39,17 @@ class AppRoutes {
   static const String afterRequest = '/after-request';
   static const String myBookings = '/my-bookings';
 
+  // Admin routes
+  static const String adminLogin = '/admin/login';
+  static const String adminHome = '/admin/home';
+  static const String adminNotifications = '/admin/notifications';
+  static const String adminTrackBookings = '/admin/bookings';
+  static const String adminManageUsers = '/admin/users';
+  static const String adminSettings = '/admin/settings';
+  static const String adminProfile = '/admin/profile';
+
   static Map<String, WidgetBuilder> get routes => {
+        // User routes
         entering: (context) => const Entering(),
         home: (context) => const HomePage(),
         signUp: (context) => const SignUpPage(),
@@ -40,6 +60,7 @@ class AppRoutes {
         digitalVersions: (context) => const DigitalVersionsPage(),
         tracking: (context) => const RequestTrackingScreen(),
         booking: (context) => const BookingPage(),
+
         // For BookingCalendarScreen, extract arguments from RouteSettings
         bookingCalendar: (context) {
           final args = ModalRoute.of(context)?.settings.arguments
@@ -51,18 +72,28 @@ class AppRoutes {
               !args.containsKey('bookingTypeId')) {
             // ADDED bookingTypeId check
             throw ArgumentError(
-                'BookingCalendarScreen requires serviceId, serviceTitle, and bookingTypeId');
+              'BookingCalendarScreen requires serviceId, serviceTitle, and bookingTypeId',
+            );
           }
 
           return BookingCalendarScreen(
             serviceId: args['serviceId'] as int,
             serviceTitle: args['serviceTitle'] as String,
-            bookingTypeId: args['bookingTypeId'] as int, // ADDED bookingTypeId
+            bookingTypeId: args['bookingTypeId'] as int,
           );
         },
 
         afterRequest: (context) => const AfterReq(),
         myBookings: (context) => const MyBookingsPage(),
+
+        // Admin routes
+        adminLogin: (context) => const AdminLoginPage(),
+        adminHome: (context) => const AdminHomePage(),
+        adminNotifications: (context) => const AdminNotificationsPage(),
+        adminTrackBookings: (context) => const AdminTrackBookingsPage(),
+        adminManageUsers: (context) => const AdminManageUsersPage(),
+        adminSettings: (context) => const AdminSettingsPage(),
+        adminProfile: (context) => const AdminProfilePage(),
       };
 
   static String get initialRoute => entering;

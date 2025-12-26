@@ -15,6 +15,203 @@ class AppLocalizations {
   bool get isArabic => locale.languageCode == 'ar';
   bool get isFrench => locale.languageCode == 'fr';
 
+  String translate(String key) {
+    switch (key) {
+      case 'profile':
+        return isArabic ? 'الملف الشخصي' : 'Profil';
+      case 'admin_login':
+        return isArabic ? 'تسجيل دخول المسؤول' : 'Connexion Admin';
+      case 'admin_login_subtitle':
+        return isArabic
+            ? 'أدخل بياناتك للدخول كمسؤول'
+            : 'Entrez vos informations pour vous connecter en tant qu\'administrateur';
+      case 'admin_login_button':
+        return isArabic ? 'تسجيل الدخول كمسؤول' : 'Connexion Administrateur';
+      case 'admin_dashboard':
+        return isArabic ? 'لوحة تحكم المسؤول' : 'Tableau de Bord Admin';
+      case 'admin_notifications':
+        return isArabic ? 'إشعارات المسؤول' : 'Notifications Admin';
+      case 'admin_welcome':
+        return isArabic ? 'مرحباً بك' : 'Bienvenue';
+      case 'admin_dashboard_subtitle':
+        return isArabic
+            ? 'قم بإدارة الطلبات والحجوزات ومتابعة آخر المستجدات.'
+            : 'Gérez les demandes, les réservations et suivez les dernières mises à jour.';
+      case 'quick_actions':
+        return isArabic ? 'إجراءات سريعة' : 'Actions Rapides';
+      case 'recent_activity':
+        return isArabic ? 'آخر النشاطات' : 'Activité Récente';
+
+      case 'track_requests':
+        return trackingRequests;
+      case 'track_bookings':
+        return isArabic ? 'تتبع الحجوزات' : 'Suivi des Réservations';
+      case 'manage_users':
+        return isArabic ? 'إدارة المستخدمين' : 'Gérer les Utilisateurs';
+      case 'settings':
+        return isArabic ? 'الإعدادات' : 'Paramètres';
+
+      case 'search_bookings':
+        return isArabic ? 'ابحث عن الحجوزات...' : 'Rechercher des réservations...';
+      case 'no_bookings_found':
+        return isArabic ? 'لا توجد حجوزات مطابقة' : 'Aucune réservation trouvée';
+      case 'booking':
+        return isArabic ? 'حجز' : 'Réservation';
+      case 'booking_date':
+        return isArabic ? 'تاريخ الموعد' : 'Date du rendez-vous';
+      case 'booking_details':
+        return isArabic ? 'تفاصيل الحجز' : 'Détails de la Réservation';
+      case 'booking_type':
+        return isArabic ? 'نوع الحجز' : 'Type de réservation';
+      case 'update_booking_status':
+        return isArabic ? 'تحديث حالة الحجز' : 'Mettre à jour le statut de réservation';
+      case 'booking_status_updated':
+        return isArabic ? 'تم تحديث حالة الحجز' : 'Statut de réservation mis à jour';
+      case 'booking_details_short':
+        return isArabic ? 'اضغط لعرض التفاصيل' : 'Appuyez pour voir les détails';
+
+      case 'search_users':
+        return isArabic ? 'ابحث عن المستخدمين...' : 'Rechercher des utilisateurs...';
+      case 'no_users_found':
+        return isArabic ? 'لا يوجد مستخدمون مطابقون' : 'Aucun utilisateur trouvé';
+      case 'filter_role':
+        return isArabic ? 'الدور' : 'Rôle';
+      case 'filter_user_status':
+        return isArabic ? 'الحالة' : 'Statut';
+      case 'role_all':
+        return isArabic ? 'الكل' : 'Tous';
+      case 'role_citizen':
+        return isArabic ? 'مواطن' : 'Citoyen';
+      case 'role_admin':
+        return isArabic ? 'مسؤول' : 'Administrateur';
+      case 'user_active':
+        return isArabic ? 'نشط' : 'Actif';
+      case 'user_blocked':
+        return isArabic ? 'محظور' : 'Bloqué';
+      case 'block_user':
+        return isArabic ? 'حظر' : 'Bloquer';
+      case 'unblock_user':
+        return isArabic ? 'إلغاء الحظر' : 'Débloquer';
+
+      case 'admin_settings_title':
+        return isArabic ? 'إعدادات المسؤول' : 'Paramètres Admin';
+      case 'setting_push_notifications':
+        return isArabic ? 'تفعيل الإشعارات' : 'Activer les notifications';
+      case 'setting_sound':
+        return isArabic ? 'الصوت' : 'Son';
+      case 'setting_email_notifications':
+        return isArabic ? 'إشعارات البريد الإلكتروني' : 'Notifications e-mail';
+      case 'setting_maintenance_mode':
+        return isArabic ? 'وضع الصيانة' : 'Mode maintenance';
+
+      case 'admin_profile_title':
+        return isArabic ? 'حساب المسؤول' : 'Profil Administrateur';
+      case 'admin_role':
+        return isArabic ? 'الصفة' : 'Rôle';
+      case 'municipality':
+        return isArabic ? 'البلدية' : 'Municipalité';
+
+      case 'citizen_login':
+        return isArabic ? 'تسجيل الدخول كمواطن' : 'Connexion Citoyen';
+      case 'invalid_credentials':
+        return isArabic
+            ? 'بيانات الدخول غير صحيحة. الرجاء المحاولة مرة أخرى.'
+            : 'Identifiants invalides. Veuillez réessayer.';
+
+      case 'search':
+        return isArabic ? 'بحث' : 'Recherche';
+
+      case 'requests':
+        return isArabic ? 'الطلبات' : 'Demandes';
+      case 'bookings':
+        return isArabic ? 'الحجوزات' : 'Réservations';
+      case 'users':
+        return isArabic ? 'المستخدمون' : 'Utilisateurs';
+
+      case 'update_status_dialog_title':
+        return isArabic ? 'تحديث الحالة' : 'Mettre à jour le statut';
+      case 'current_status':
+        return isArabic ? 'الحالة الحالية' : 'Statut actuel';
+      case 'new_status':
+        return isArabic ? 'الحالة الجديدة' : 'Nouveau statut';
+      case 'cancel_upper':
+        return isArabic ? 'إلغاء' : 'ANNULER';
+      case 'update_upper':
+        return isArabic ? 'تحديث' : 'METTRE À JOUR';
+      case 'status_updated':
+        return isArabic ? 'تم تحديث الحالة' : 'Statut mis à jour';
+
+      case 'all':
+        return isArabic ? 'الكل' : 'Tous';
+      case 'pending_key':
+        return pending;
+      case 'approved_key':
+        return approved;
+      case 'ready_key':
+        return ready;
+      case 'rejected_key':
+        return rejected;
+      case 'filter_status':
+        return isArabic ? 'الحالة' : 'Statut';
+      case 'filter_priority':
+        return isArabic ? 'الأولوية' : 'Priorité';
+      case 'priority_high':
+        return isArabic ? 'مرتفعة' : 'Haute';
+      case 'priority_medium':
+        return isArabic ? 'متوسطة' : 'Moyenne';
+      case 'priority_low':
+        return isArabic ? 'منخفضة' : 'Faible';
+
+      case 'email':
+        return email;
+      case 'password':
+        return password;
+      case 'login':
+        return login;
+      case 'back_to_home':
+        return backToHome;
+
+      case 'email_required':
+        return pleaseEnterEmail;
+      case 'invalid_email':
+        return pleaseEnterValidEmail;
+      case 'password_required':
+        return pleaseEnterPassword;
+      case 'password_too_short':
+        return passwordMinLength;
+
+      case 'search_requests':
+        return isArabic ? 'ابحث عن الطلبات...' : 'Rechercher des demandes...';
+      case 'no_requests_found':
+        return isArabic ? 'لا توجد طلبات مطابقة' : 'Aucune demande trouvée';
+      case 'request':
+        return isArabic ? 'طلب' : 'Demande';
+      case 'submitted':
+        return isArabic ? 'تم الإرسال:' : 'Soumis :';
+      case 'update_status':
+        return isArabic ? 'تحديث الحالة' : 'Mettre à jour le statut';
+
+      case 'request_details':
+        return isArabic ? 'تفاصيل الطلب' : 'Détails de la Demande';
+      case 'request_type':
+        return isArabic ? 'نوع الطلب' : 'Type de Demande';
+      case 'citizen_name':
+        return isArabic ? 'اسم المواطن' : 'Nom du Citoyen';
+      case 'submission_date':
+        return isArabic ? 'تاريخ الإرسال' : 'Date de Soumission';
+      case 'status':
+        return isArabic ? 'الحالة' : 'Statut';
+      case 'priority':
+        return isArabic ? 'الأولوية' : 'Priorité';
+
+      case 'close':
+        return close;
+
+      default:
+        return key;
+    }
+  }
+
   // Home Page
   String get welcome => isArabic ? 'مرحبا بك في البلدية الرقمية' : 'Bienvenue dans la Mairie Numérique';
   String get digitalDocuments => isArabic ? 'الوثائق الرقمية' : 'Documents Numériques';
