@@ -38,6 +38,7 @@ class AppRoutes {
   static const String bookingCalendar = '/booking-calendar';
   static const String afterRequest = '/after-request';
   static const String myBookings = '/my-bookings';
+  static const String documentTest = '/document-test';
 
   // Admin routes
   static const String adminLogin = '/admin/login';

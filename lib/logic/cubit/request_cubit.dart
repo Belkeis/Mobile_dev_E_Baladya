@@ -7,6 +7,7 @@ part 'request_state.dart';
 
 class RequestCubit extends Cubit<RequestState> {
   final RequestRepository _requestRepository;
+  RequestRepository get repository => _requestRepository;
 
   RequestCubit(this._requestRepository) : super(RequestInitial());
 

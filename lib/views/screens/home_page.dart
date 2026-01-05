@@ -228,11 +228,11 @@ class HomePage extends StatelessWidget {
                         ),
                       ],
                     ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
 
           // Bottom blue curve
           ClipPath(

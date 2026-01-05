@@ -17,6 +17,7 @@ import 'logic/cubit/notification_cubit.dart';
 import 'logic/cubit/booking_cubit.dart';
 import 'logic/cubit/language_cubit.dart';
 import 'i18n/app_localizations.dart';
+import 'data/services/mock_storage_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -55,7 +56,10 @@ class MyApp extends StatelessWidget {
           create: (context) => RequestCubit(requestRepository),
         ),
         BlocProvider(
-          create: (context) => DocumentCubit(documentRepository),
+          create: (context) => DocumentCubit(
+            documentRepository: documentRepository,
+            storageService: MockStorageService(),
+          ),
         ),
         BlocProvider(
           create: (context) => NotificationCubit(notificationRepository),

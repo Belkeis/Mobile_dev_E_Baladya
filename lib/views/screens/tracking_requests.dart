@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
+import 'package:intl/intl.dart' hide TextDirection;
 import '../../logic/cubit/request_cubit.dart';
 import '../../logic/cubit/auth_cubit.dart';
 import '../../data/models/request_model.dart';
 import '../../data/models/service_model.dart';
 import '../widgets/custom_app_bar.dart';
 import '../../i18n/app_localizations.dart';
+import '../../data/models/request_document_model.dart';
 
 class RequestTrackingScreen extends StatelessWidget {
   const RequestTrackingScreen({super.key});
@@ -38,120 +39,124 @@ class RequestTrackingScreen extends StatelessWidget {
           );
         }
 
-        return Scaffold(
-          backgroundColor: const Color(0xFFF9FAFB),
-          appBar: CustomAppBar(
-            onArrowTap: () {
-              Navigator.pop(context);
-            },
-          ),
-          body: BlocBuilder<RequestCubit, RequestState>(
-            builder: (context, state) {
-              if (state is RequestLoading) {
-                return const Center(child: CircularProgressIndicator());
-              }
+        final localizations = AppLocalizations.of(context)!;
+        return Directionality(
+          textDirection: localizations.isArabic ? TextDirection.rtl : TextDirection.ltr,
+          child: Scaffold(
+            backgroundColor: const Color(0xFFF9FAFB),
+            appBar: CustomAppBar(
+              onArrowTap: () {
+                Navigator.pop(context);
+              },
+            ),
+            body: BlocBuilder<RequestCubit, RequestState>(
+              builder: (context, state) {
+                if (state is RequestLoading) {
+                  return const Center(child: CircularProgressIndicator());
+                }
 
-              if (state is RequestError) {
-                return Center(
-                  child: Text(
-                    state.message,
-                    style: const TextStyle(
-                      fontFamily: 'Cairo',
-                      fontSize: 16,
-                      color: Color(0xFF6B7280),
+                if (state is RequestError) {
+                  return Center(
+                    child: Text(
+                      state.message,
+                      style: const TextStyle(
+                        fontFamily: 'Cairo',
+                        fontSize: 16,
+                        color: Color(0xFF6B7280),
+                      ),
                     ),
-                  ),
-                );
-              }
+                  );
+                }
 
-              List<Map<String, dynamic>> requestsWithService = [];
-              if (state is RequestsLoaded) {
-                requestsWithService = state.requestsWithService;
-              }
+                List<Map<String, dynamic>> requestsWithService = [];
+                if (state is RequestsLoaded) {
+                  requestsWithService = state.requestsWithService;
+                }
 
-              return Column(
-                children: [
-                  Expanded(
-                    child: SingleChildScrollView(
-                      padding: const EdgeInsets.all(25),
-                      child: Column(
-                        children: [
-                          Text(
-                            AppLocalizations.of(context)!.trackingTitle,
+                return Column(
+                  children: [
+                    Expanded(
+                      child: SingleChildScrollView(
+                        padding: const EdgeInsets.all(25),
+                        child: Column(
+                          children: [
+                            Text(
+                              AppLocalizations.of(context)!.trackingTitle,
+                              style: const TextStyle(
+                                fontFamily: 'Cairo',
+                                fontSize: 24,
+                                fontWeight: FontWeight.normal,
+                                color: Color(0xFF2563EB),
+                              ),
+                            ),
+                            const SizedBox(height: 40),
+                            if (requestsWithService.isEmpty)
+                              Padding(
+                                padding: const EdgeInsets.all(40.0),
+                                child: Text(
+                                  AppLocalizations.of(context)!.noRequests,
+                                  style: const TextStyle(
+                                    fontFamily: 'Cairo',
+                                    fontSize: 16,
+                                    color: Color(0xFF6B7280),
+                                  ),
+                                ),
+                              )
+                            else
+                              ...requestsWithService.map((item) {
+                                final request = item['request'] as RequestModel;
+                                final service = item['service'] as ServiceModel?;
+                                return Padding(
+                                  padding: const EdgeInsets.only(bottom: 20),
+                                  child: _buildRequestCard(
+                                    request: request,
+                                    service: service,
+                                    context: context,
+                                  ),
+                                );
+                              }),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Container(
+                      padding: EdgeInsets.only(
+                        left: 20,
+                        right: 20,
+                        top: 20,
+                        bottom: MediaQuery.of(context).padding.bottom + 20,
+                      ),
+                      color: Colors.transparent,
+                      child: SizedBox(
+                        width: double.infinity,
+                        height: 56,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.pushNamed(context, '/online-requests');
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF2563EB),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            elevation: 0,
+                          ),
+                          child: Text(
+                            AppLocalizations.of(context)!.newRequest,
                             style: const TextStyle(
                               fontFamily: 'Cairo',
-                              fontSize: 24,
-                              fontWeight: FontWeight.normal,
-                              color: Color(0xFF2563EB),
+                              fontSize: 18,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.white,
                             ),
                           ),
-                          const SizedBox(height: 40),
-                          if (requestsWithService.isEmpty)
-                            Padding(
-                              padding: const EdgeInsets.all(40.0),
-                              child: Text(
-                                AppLocalizations.of(context)!.noRequests,
-                                style: const TextStyle(
-                                  fontFamily: 'Cairo',
-                                  fontSize: 16,
-                                  color: Color(0xFF6B7280),
-                                ),
-                              ),
-                            )
-                          else
-                            ...requestsWithService.map((item) {
-                              final request = item['request'] as RequestModel;
-                              final service = item['service'] as ServiceModel?;
-                              return Padding(
-                                padding: const EdgeInsets.only(bottom: 20),
-                                child: _buildRequestCard(
-                                  request: request,
-                                  service: service,
-                                  context: context,
-                                ),
-                              );
-                            }),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.only(
-                      left: 20,
-                      right: 20,
-                      top: 20,
-                      bottom: MediaQuery.of(context).padding.bottom + 20,
-                    ),
-                    color: Colors.transparent,
-                    child: SizedBox(
-                      width: double.infinity,
-                      height: 56,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.pushNamed(context, '/online-requests');
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF2563EB),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          elevation: 0,
-                        ),
-                        child: Text(
-                          AppLocalizations.of(context)!.newRequest,
-                          style: const TextStyle(
-                            fontFamily: 'Cairo',
-                            fontSize: 18,
-                            fontWeight: FontWeight.w400,
-                            color: Colors.white,
-                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
-              );
-            },
+                  ],
+                );
+              },
+            ),
           ),
         );
       },
@@ -164,7 +169,7 @@ class RequestTrackingScreen extends StatelessWidget {
     required BuildContext context,
   }) {
     final localizations = AppLocalizations.of(context)!;
-    
+
     // Determine status colors
     Color statusColor;
     Color statusTextColor;
@@ -315,11 +320,127 @@ class RequestTrackingScreen extends StatelessWidget {
                   ),
                   textAlign: TextAlign.right,
                 ),
+                const SizedBox(height: 12),
+                Align(
+                  alignment: localizations.isArabic ? Alignment.bottomLeft : Alignment.bottomRight,
+                  child: FutureBuilder<List<RequestDocumentModel>>(
+                    future: context.read<RequestCubit>().repository.getRequestDocuments(request.id!),
+                    builder: (context, snapshot) {
+                      final count = snapshot.data?.length ?? 0;
+                      return TextButton.icon(
+                        onPressed: () => _showAttachedDocuments(context, request.id!),
+                        icon: const Icon(Icons.attach_file, size: 16),
+                        label: Text(
+                          localizations.isArabic 
+                            ? "مشاهدة المرفقات ${count > 0 ? "($count)" : ""}" 
+                            : "Voir les documents ${count > 0 ? "($count)" : ""}",
+                          style: const TextStyle(fontFamily: 'Cairo', fontSize: 13, fontWeight: FontWeight.bold),
+                        ),
+                        style: TextButton.styleFrom(
+                          foregroundColor: const Color(0xFF2563EB),
+                          backgroundColor: count > 0 ? const Color(0xFFDBEAFE) : const Color(0xFFEFF6FF),
+                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                        ),
+                      );
+                    }
+                  ),
+                ),
               ],
             ),
           ),
         ],
       ),
+    );
+  }
+
+  void _showAttachedDocuments(BuildContext context, int requestId) {
+    final localizations = AppLocalizations.of(context)!;
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) {
+        return Directionality(
+          textDirection: localizations.isArabic ? TextDirection.rtl : TextDirection.ltr,
+          child: FutureBuilder<List<RequestDocumentModel>>(
+            future: context.read<RequestCubit>().repository.getRequestDocuments(requestId),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const SizedBox(
+                  height: 200,
+                  child: Center(child: CircularProgressIndicator()),
+                );
+              }
+
+              if (snapshot.hasError) {
+                return Container(
+                  padding: const EdgeInsets.all(25),
+                  child: Text("Error: ${snapshot.error}"),
+                );
+              }
+
+              final List<RequestDocumentModel> docs = snapshot.data ?? [];
+              return Container(
+                padding: const EdgeInsets.all(25),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      localizations.isArabic
+                          ? "الوثائق المرفقة للطلب #$requestId"
+                          : "Documents pour la demande #$requestId",
+                      style: const TextStyle(fontFamily: 'Cairo', fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF2563EB)),
+                    ),
+                    const SizedBox(height: 15),
+                    if (docs.isEmpty)
+                      Center(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 20),
+                          child: Text(
+                            localizations.isArabic ? "لا توجد وثائق مرفقة بعد." : "Aucun document lié pour le moment.",
+                            style: const TextStyle(fontFamily: 'Cairo', color: Color(0xFF6B7280)),
+                          ),
+                        ),
+                      )
+                    else
+                      Flexible(
+                        child: ListView.separated(
+                          shrinkWrap: true,
+                          itemCount: docs.length,
+                          separatorBuilder: (context, index) => const Divider(height: 1),
+                          itemBuilder: (context, index) {
+                            final doc = docs[index];
+                            return ListTile(
+                              contentPadding: EdgeInsets.zero,
+                              leading: const Icon(Icons.file_present, color: Colors.blue),
+                              title: Text(
+                                doc.fileName,
+                                style: const TextStyle(fontFamily: 'Cairo', fontWeight: FontWeight.w500),
+                              ),
+                              subtitle: Text(
+                                doc.fileUrl,
+                                style: const TextStyle(fontSize: 10, color: Color(0xFF9CA3AF)),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              onTap: () {
+                                // Optional: Open document if needed
+                              },
+                            );
+                          },
+                        ),
+                      ),
+                    const SizedBox(height: 20),
+                  ],
+                ),
+              );
+            },
+          ),
+        );
+      },
     );
   }
 }

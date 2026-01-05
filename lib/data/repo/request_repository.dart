@@ -1,5 +1,6 @@
 import '../database/database_helper.dart';
 import '../models/request_model.dart';
+import '../models/request_document_model.dart';
 
 class RequestRepository {
   final DatabaseHelper _dbHelper = DatabaseHelper.instance;
@@ -33,6 +34,14 @@ class RequestRepository {
     }
 
     return result;
+  }
+
+  Future<int> linkDocumentToRequest(RequestDocumentModel doc) async {
+    return await _dbHelper.insertRequestDocument(doc);
+  }
+
+  Future<List<RequestDocumentModel>> getRequestDocuments(int requestId) async {
+    return await _dbHelper.getDocumentsByRequestId(requestId);
   }
 }
 

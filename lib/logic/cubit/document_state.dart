@@ -29,3 +29,13 @@ class DocumentError extends DocumentState {
   List<Object?> get props => [message];
 }
 
+class DocumentUploading extends DocumentState {}
+
+class DocumentOperationSuccess extends DocumentState {
+  final String message;
+  const DocumentOperationSuccess(this.message);
+
+  @override
+  List<Object?> get props => [message];
+}
+
