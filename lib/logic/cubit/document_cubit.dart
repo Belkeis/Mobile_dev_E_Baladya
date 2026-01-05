@@ -1,23 +1,34 @@
-import 'package:flutter/material.dart';
+import 'dart:io';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
-import '../../data/repo/document_repository.dart';
-import '../../data/models/digital_document_model.dart';
-import '../../data/services/storage_service.dart';
 import 'package:file_picker/file_picker.dart';
-import 'dart:io';
+import '../../data/repo/document_repository.dart';
+import '../../data/repo/request_repository.dart';
+import '../../data/repo/service_repository.dart';
+import '../../data/models/digital_document_model.dart';
+import '../../data/models/request_document_model.dart';
+import '../../data/models/service_model.dart';
+import '../../data/models/document_model.dart';
+import '../../data/services/storage_service.dart';
 
 part 'document_state.dart';
 
 /// DocumentCubit handles all document-related business logic and state management
 class DocumentCubit extends Cubit<DocumentState> {
   final DocumentRepository _documentRepository;
+  final RequestRepository _requestRepository;
+  final ServiceRepository _serviceRepository;
   final StorageService _storageService;
   
   // Cache for current user ID to simplify operations
   int? _currentUserId;
 
-  DocumentCubit(this._documentRepository, this._storageService) : super(const DocumentInitial());
+  DocumentCubit(
+    this._documentRepository,
+    this._storageService,
+    this._requestRepository,
+    this._serviceRepository,
+  ) : super(const DocumentInitial());
 
   // ==========================================================================
   // CORE CRUD OPERATIONS
@@ -29,7 +40,7 @@ class DocumentCubit extends Cubit<DocumentState> {
     emit(const DocumentsFetching());
     
     try {
-      final documentsWithService = await _documentRepository.getDigitalDocumentsWithService(userId);
+      final documentsWithService = await _documentRepository.getDigitalDocumentsWithInfo(userId);
       emit(DocumentsLoaded(documentsWithService));
     } catch (e) {
       emit(DocumentFetchError(
@@ -161,15 +172,15 @@ class DocumentCubit extends Cubit<DocumentState> {
   // SEARCH AND FILTER OPERATIONS
   // ==========================================================================
 
-  /// Search documents by service ID
-  Future<void> searchByService(int userId, int serviceId) async {
+  /// Search documents by document type ID
+  Future<void> searchByDocumentId(int userId, int documentId) async {
     emit(const DocumentSearching());
     
     try {
-      final documents = await _documentRepository.searchByServiceId(userId, serviceId);
+      final documents = await _documentRepository.searchByDocumentId(userId, documentId);
       emit(DocumentSearchResults(
         documents,
-        searchQuery: 'Service ID: $serviceId',
+        searchQuery: 'Document Type ID: $documentId',
       ));
     } catch (e) {
       emit(DocumentSearchError(
@@ -287,32 +298,47 @@ class DocumentCubit extends Cubit<DocumentState> {
   }
 
   // Helper method to combine logic from both branches
+  // Helper method to combine logic from both branches
   Future<void> uploadAndSaveDigitalDocument({
     required int userId,
-    required int serviceId,
+    required int documentId, // CHANGED: Now using documentId
     required File file,
   }) async {
     _currentUserId = userId;
     emit(const DocumentFileUploading());
     try {
+      // 1. Upload to storage
       final String fileName = '${DateTime.now().millisecondsSinceEpoch}_${file.path.split('/').last}';
       final String remotePath = 'documents/$userId/$fileName';
       final String fileUrl = await _storageService.uploadFile(file, remotePath);
 
+      // 2. CHECK FOR DUPLICATES & REPLACE
+      // Find existing documents of this type
+      final existingDocs = await _documentRepository.getDigitalDocumentsByDocumentId(userId, documentId);
+      for (final oldDoc in existingDocs) {
+        if (oldDoc.id != null) {
+          // Delete old document (logical delete or from DB)
+          // For now, we delete from DB to enforce "only one version" rule as requested
+          await _documentRepository.deleteDigitalDocument(oldDoc.id!);
+        }
+      }
+
+      // 3. Save to Digital Documents (Vault)
       final now = DateTime.now();
       final document = DigitalDocumentModel(
         userId: userId,
-        serviceId: serviceId,
+        documentId: documentId, // CHANGED
         filePath: fileUrl,
         issuedDate: now.toIso8601String(),
         isValid: 1,
       );
 
       await _documentRepository.createDigitalDocument(document);
+
       emit(const DocumentOperationSuccess('تم رفع الوثيقة بنجاح'));
       await loadDocuments(userId);
     } catch (e) {
-      emit(DocumentUploadError('حدث خطأ أثناء رفع الوثيقة', exception: e));
+      emit(DocumentUploadError('حدث خطأ أثناء رفع الوثيقة: $e', exception: e));
     }
   }
 

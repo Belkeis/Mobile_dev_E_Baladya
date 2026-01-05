@@ -3,107 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import '../../logic/cubit/document_cubit.dart';
 import '../../logic/cubit/auth_cubit.dart';
-<<<<<<< HEAD
-import '../../i18n/app_localizations.dart';
-import '../widgets/generic_list_page.dart';
-import '../widgets/custom_app_bar.dart';
-
-class DigitalVersionsPage extends StatelessWidget {
-  const DigitalVersionsPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<AuthCubit, AuthState>(
-      builder: (context, authState) {
-        if (authState is AuthAuthenticated) {
-          context.read<DocumentCubit>().loadDigitalDocuments(authState.user.id!);
-        }
-
-        return Scaffold(
-          backgroundColor: const Color(0xFFF9FAFB),
-          appBar: CustomAppBar(
-            onArrowTap: () {
-              Navigator.pop(context);
-            },
-          ),
-          body: BlocBuilder<DocumentCubit, DocumentState>(
-            builder: (context, state) {
-              if (state is DocumentLoading) {
-                return const Center(child: CircularProgressIndicator());
-              }
-
-              if (state is DocumentError) {
-                return Center(
-                  child: Text(
-                    state.message,
-                    style: const TextStyle(
-                      fontFamily: 'Cairo',
-                      fontSize: 16,
-                      color: Color(0xFF6B7280),
-                    ),
-                  ),
-                );
-              }
-
-              List<Map<String, dynamic>> documentsWithService = [];
-              if (state is DocumentsLoaded) {
-                documentsWithService = state.documentsWithService;
-              }
-
-              final localizations = AppLocalizations.of(context)!;
-              
-              if (documentsWithService.isEmpty) {
-                return GenericListPage(
-                  title: localizations.digitalDocumentsTitle,
-                  subtitle: localizations.digitalDocumentsSubtitle,
-                  showDownloadIcon: true,
-                  showTrailingArrow: false,
-                  items: [
-                    ListItem(
-                      title: localizations.noDigitalDocuments,
-                      subtitle: localizations.digitalDocumentsSubtitle,
-                    ),
-                  ],
-                );
-              }
-
-              return GenericListPage(
-                title: localizations.digitalDocumentsTitle,
-                subtitle: localizations.digitalDocumentsSubtitle,
-                showDownloadIcon: true,
-                showTrailingArrow: false,
-                items: documentsWithService.map((item) {
-                  final document = item['document'];
-                  final service = item['service'];
-                  final issuedDate = DateTime.parse(document.issuedDate);
-                  final serviceName = service != null 
-                      ? localizations.translateServiceName(service.name)
-                      : localizations.digitalDocument;
-                  final subtitle = service != null
-                      ? '${serviceName} - ${DateFormat('yyyy', localizations.locale.languageCode).format(issuedDate)}'
-                      : DateFormat('yyyy', localizations.locale.languageCode).format(issuedDate);
-
-                  return ListItem(
-                    title: serviceName,
-                    subtitle: subtitle,
-                    onTap: () {
-                      // In a real app, this would open/view the PDF
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(localizations.documentWillOpenSoon),
-                          duration: const Duration(seconds: 2),
-                        ),
-                      );
-                    },
-                  );
-                }).toList(),
-              );
-            },
-          ),
-=======
 import '../../logic/cubit/service_cubit.dart';
 import '../../i18n/app_localizations.dart';
-import '../../data/models/service_model.dart';
+import '../../data/models/document_model.dart';
+import '../../data/models/digital_document_model.dart';
+import '../../data/repo/document_repository.dart';
 import '../../utils/file_picker_helper.dart';
 import '../widgets/generic_list_page.dart';
 import '../widgets/custom_app_bar.dart';
@@ -132,46 +36,61 @@ class _DigitalVersionsPageState extends State<DigitalVersionsPage> {
   }
 
   void _showUploadDialog(BuildContext context, int userId) {
-    final serviceCubit = context.read<ServiceCubit>();
     final documentCubit = context.read<DocumentCubit>();
+    final documentRepository = context.read<DocumentRepository>();
     final localizations = AppLocalizations.of(context)!;
     
     showDialog(
       context: context,
       builder: (context) {
-        return BlocBuilder<ServiceCubit, ServiceState>(
-          builder: (context, state) {
-            List<ServiceModel> services = [];
-            if (state is ServiceLoaded) {
-              services = state.services;
-            }
+        return FutureBuilder<List<DocumentModel>>(
+          future: documentRepository.getAllDocumentTypes(),
+          builder: (context, snapshot) {
+            List<DocumentModel> docTypes = snapshot.data ?? [];
+            final isLoading = snapshot.connectionState == ConnectionState.waiting;
 
             return AlertDialog(
+              backgroundColor: Colors.white,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
               title: Text(
-                localizations.digitalDocumentsTitle,
-                style: const TextStyle(fontFamily: 'Cairo'),
+                localizations.isArabic ? 'اختر نوع الوثيقة للرفع' : 'Choisir le type de document',
+                style: const TextStyle(fontFamily: 'Cairo', fontWeight: FontWeight.bold, color: Color(0xFF2563EB)),
+                textAlign: TextAlign.center,
               ),
-              content: services.isEmpty
-                  ? const CircularProgressIndicator()
+              content: isLoading || docTypes.isEmpty
+                  ? const SizedBox(
+                      height: 100,
+                      child: Center(child: CircularProgressIndicator()))
                   : SizedBox(
                       width: double.maxFinite,
-                      child: ListView.builder(
+                      child: ListView.separated(
                         shrinkWrap: true,
-                        itemCount: services.length,
+                        itemCount: docTypes.length,
+                        separatorBuilder: (context, index) => const Divider(height: 1),
                         itemBuilder: (context, index) {
-                          final service = services[index];
+                          final docType = docTypes[index];
                           return ListTile(
-                            title: Text(
-                              localizations.translateServiceName(service.name),
-                              style: const TextStyle(fontFamily: 'Cairo'),
+                            contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                            leading: Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFF0F7FF),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: const Icon(Icons.description_outlined, color: Color(0xFF2563EB)),
                             ),
+                            title: Text(
+                              localizations.isArabic ? docType.name.replaceAll('Certificate', 'شهادة') : docType.name, // Simple localization fallback
+                              style: const TextStyle(fontFamily: 'Cairo', fontSize: 14),
+                            ),
+                            trailing: const Icon(Icons.chevron_right, size: 18),
                             onTap: () async {
                               Navigator.pop(context);
                               final file = await FilePickerHelper.pickDocument();
                               if (file != null && file.path != null) {
                                 documentCubit.uploadAndSaveDigitalDocument(
                                   userId: userId,
-                                  serviceId: service.id!,
+                                  documentId: docType.id!, // Pass Document ID
                                   file: File(file.path!),
                                 );
                               }
@@ -180,15 +99,21 @@ class _DigitalVersionsPageState extends State<DigitalVersionsPage> {
                         },
                       ),
                     ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: Text(
+                    localizations.isArabic ? 'إلغاء' : 'Annuler',
+                    style: const TextStyle(fontFamily: 'Cairo', color: Colors.grey),
+                  ),
+                ),
+              ],
             );
           },
->>>>>>> main
         );
       },
     );
   }
-<<<<<<< HEAD
-=======
 
   @override
   Widget build(BuildContext context) {
@@ -209,27 +134,21 @@ class _DigitalVersionsPageState extends State<DigitalVersionsPage> {
                 Navigator.pop(context);
               },
             ),
-            floatingActionButton: authState is AuthAuthenticated
-                ? FloatingActionButton(
-                    onPressed: () => _showUploadDialog(
-                      context,
-                      (authState as AuthAuthenticated).user.id!,
-                    ),
-                    backgroundColor: const Color(0xFF2563EB),
-                    child: const Icon(Icons.add_a_photo_rounded, color: Colors.white),
-                  )
-                : null,
+            // floatingActionButton: Removed as per user request (read-only admin data)
             body: BlocListener<DocumentCubit, DocumentState>(
               listener: (context, state) {
                 if (state is DocumentOperationSuccess) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(state.message)),
+                    SnackBar(
+                      content: Text(state.message),
+                      backgroundColor: Colors.green,
+                    ),
                   );
                 }
               },
               child: BlocBuilder<DocumentCubit, DocumentState>(
                 builder: (context, state) {
-                  if (state is DocumentLoading || state is DocumentUploading) {
+                  if (state is DocumentLoading || state is DocumentUploading || state is DocumentFileUploading) {
                     return const Center(child: CircularProgressIndicator());
                   }
 
@@ -292,55 +211,37 @@ class _DigitalVersionsPageState extends State<DigitalVersionsPage> {
                     showDownloadIcon: true,
                     showTrailingArrow: false,
                     items: documentsWithService.map((item) {
-                      final document = item['document'];
-                      final service = item['service'];
+                      final document = item['document'] as DigitalDocumentModel;
+                      final docType = item['documentType'] as DocumentModel?;
                       final issuedDate = DateTime.parse(document.issuedDate);
-                      final serviceName = service != null
-                          ? localizations.translateServiceName(service.name)
+                      final typeName = docType != null
+                          ? (localizations.isArabic && docType.name == 'Birth Certificate' ? 'شهادة ميلاد' : docType.name)
                           : localizations.digitalDocument;
-                      final subtitle = service != null
-                          ? '${serviceName} - ${DateFormat('yyyy', localizations.locale.languageCode).format(issuedDate)}'
+                      final subtitle = docType != null
+                          ? '${typeName} - ${DateFormat('yyyy', localizations.locale.languageCode).format(issuedDate)}'
                           : DateFormat('yyyy', localizations.locale.languageCode).format(issuedDate);
 
                       return ListItem(
-                        title: serviceName,
+                        title: typeName,
                         subtitle: subtitle,
                         onTap: () async {
                           String filePath = document.filePath.trim();
                           if (filePath.isEmpty) return;
 
-                          // For testing: Use a reliable public PDF if it's a mock path
                           if (filePath.startsWith('/documents/') || filePath.contains('mock-storage.com')) {
                             filePath = 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf';
                           }
                           
-                          // Ensure valid URL encoding
                           final encodedPath = filePath.replaceAll(' ', '%20');
                           final Uri url = Uri.parse(encodedPath);
                           
                           try {
-                            // Try in-app browser first (better UX)
                             bool launched = await launchUrl(url, mode: LaunchMode.platformDefault);
                             if (!launched) {
-                              // Fallback to external browser
                               await launchUrl(url, mode: LaunchMode.externalApplication);
                             }
                           } catch (e) {
                             debugPrint('URL Launch Failure: $e');
-                            if (mounted) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text('${localizations.errorMessage(e.toString())}'),
-                                  backgroundColor: Colors.redAccent,
-                                  duration: const Duration(seconds: 10),
-                                  action: SnackBarAction(
-                                    label: 'OK',
-                                    textColor: Colors.white,
-                                    onPressed: () {},
-                                  ),
-                                ),
-                              );
-                            }
                           }
                         },
                         onDownload: () async {
@@ -356,20 +257,8 @@ class _DigitalVersionsPageState extends State<DigitalVersionsPage> {
                           
                           try {
                             await launchUrl(url, mode: LaunchMode.externalApplication);
-                            if (mounted) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text(localizations.downloadDocument)),
-                              );
-                            }
                           } catch (e) {
-                             if (mounted) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text('${localizations.errorMessage(e.toString())}'),
-                                  backgroundColor: Colors.redAccent,
-                                ),
-                              );
-                            }
+                            debugPrint('Download Failure: $e');
                           }
                         },
                       );
@@ -383,5 +272,4 @@ class _DigitalVersionsPageState extends State<DigitalVersionsPage> {
       ),
     );
   }
->>>>>>> main
 }

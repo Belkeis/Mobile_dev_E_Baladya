@@ -1,5 +1,6 @@
 import '../database/database_helper.dart';
 import '../models/digital_document_model.dart';
+import '../models/document_model.dart';
 
 /// Repository for document-related data operations
 /// Follows clean architecture principles by separating data layer from business logic
@@ -12,6 +13,24 @@ class DocumentRepository {
       return await _dbHelper.getDigitalDocumentsByUserId(userId);
     } catch (e) {
       throw RepositoryException('Failed to fetch documents: ${e.toString()}');
+    }
+  }
+
+  /// Finds digital documents of a specific document type for a user
+  Future<List<DigitalDocumentModel>> getDigitalDocumentsByDocumentId(int userId, int documentId) async {
+    try {
+      return await _dbHelper.getDigitalDocumentsByDocumentId(userId, documentId);
+    } catch (e) {
+      throw RepositoryException('Failed to fetch documents by type: ${e.toString()}');
+    }
+  }
+
+  /// Get all available document types
+  Future<List<DocumentModel>> getAllDocumentTypes() async {
+    try {
+      return await _dbHelper.getAllDocuments();
+    } catch (e) {
+      throw RepositoryException('Failed to fetch document types: ${e.toString()}');
     }
   }
 
@@ -69,14 +88,14 @@ class DocumentRepository {
     }
   }
 
-  /// Search documents by service ID
-  Future<List<DigitalDocumentModel>> searchByServiceId(int userId, int serviceId) async {
+  /// Search documents by document type ID
+  Future<List<DigitalDocumentModel>> searchByDocumentId(int userId, int documentId) async {
     try {
       final db = await _dbHelper.database;
       final maps = await db.query(
         'digital_documents',
-        where: 'user_id = ? AND service_id = ?',
-        whereArgs: [userId, serviceId],
+        where: 'user_id = ? AND document_id = ?',
+        whereArgs: [userId, documentId],
         orderBy: 'issued_date DESC',
       );
       return maps.map((map) => DigitalDocumentModel.fromMap(map)).toList();
@@ -101,18 +120,64 @@ class DocumentRepository {
     }
   }
 
-  /// Get documents with their associated service information
-  Future<List<Map<String, dynamic>>> getDigitalDocumentsWithService(int userId) async {
+  /// Get documents with their associated document type information
+  Future<List<Map<String, dynamic>>> getDigitalDocumentsWithInfo(int userId) async {
     try {
       final documents = await getDigitalDocumentsByUserId(userId);
       final result = <Map<String, dynamic>>[];
+      
+      // Cache common lookups
+      final allTypes = await getAllDocumentTypes();
+      final typeMap = {for (var e in allTypes) e.id: e};
 
       for (final doc in documents) {
-        final service = await _dbHelper.getServiceById(doc.serviceId);
+        final docType = typeMap[doc.documentId];
         result.add({
           'document': doc,
-          'service': service,
+          'documentType': docType,
         });
+      }
+
+      if (result.isEmpty) {
+        // Fallback: If DB is empty or user has no docs, RETURN DUMMY DATA as requested
+        final now = DateTime.now();
+        final dummyDocs = [
+          // Birth Cert
+          DigitalDocumentModel(
+            userId: userId,
+            documentId: allTypes.firstWhere((t) => t.type == 'certificate', orElse: () => allTypes.first).id!,
+            filePath: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+            issuedDate: now.subtract(const Duration(days: 30)).toIso8601String(),
+            isValid: 1,
+            id: 991,
+          ),
+          // ID Card
+          DigitalDocumentModel(
+            userId: userId,
+            documentId: allTypes.firstWhere((t) => t.type == 'copy', orElse: () => allTypes.length > 1 ? allTypes[1] : allTypes.first).id!,
+            filePath: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+            issuedDate: now.subtract(const Duration(days: 100)).toIso8601String(),
+            isValid: 1,
+            id: 992,
+          ),
+           // Passport
+          DigitalDocumentModel(
+            userId: userId,
+            documentId: allTypes.firstWhere((t) => t.type == 'passport', orElse: () => allTypes.last).id!,
+            filePath: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+            issuedDate: now.subtract(const Duration(days: 20)).toIso8601String(),
+            isValid: 1,
+            id: 993,
+          ),
+        ];
+
+        for (final doc in dummyDocs) {
+           final docType = typeMap[doc.documentId] ?? (allTypes.isNotEmpty ? allTypes.first : DocumentModel(name: 'Document', type: 'unknown'));
+           result.add({
+             'document': doc,
+             'documentType': docType,
+           });
+        }
       }
 
       return result;

@@ -64,10 +64,19 @@ class MyApp extends StatelessWidget {
           create: (context) => ServiceCubit(serviceRepository),
         ),
         BlocProvider(
-          create: (context) => RequestCubit(requestRepository),
+          create: (context) => RequestCubit(
+            requestRepository: requestRepository,
+            documentRepository: documentRepository,
+            serviceRepository: serviceRepository,
+          ),
         ),
         BlocProvider(
-          create: (context) => DocumentCubit(documentRepository, storageService),
+          create: (context) => DocumentCubit(
+            documentRepository,
+            storageService,
+            requestRepository,
+            serviceRepository,
+          ),
         ),
         BlocProvider(
           create: (context) => NotificationCubit(notificationRepository),

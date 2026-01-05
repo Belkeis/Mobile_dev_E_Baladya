@@ -27,7 +27,7 @@ class DatabaseHelper {
 
     return await openDatabase(
       path,
-      version: 4, // Increment version to ensure request_documents exists
+      version: 6, // Increment version to apply seed data changes
       onCreate: _createDB,
       onUpgrade: _onUpgrade,
       onOpen: (db) async {
@@ -79,6 +79,62 @@ class DatabaseHelper {
           "file_name TEXT NOT NULL,"
           "FOREIGN KEY (request_id) REFERENCES requests(id) ON DELETE CASCADE"
           ")");
+    }
+
+    if (oldVersion < 5) {
+      // Migration: Change digital_documents to link to documents instead of services
+      await db.execute('DROP TABLE IF EXISTS digital_documents');
+      await db.execute('''
+        CREATE TABLE digital_documents (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          user_id INTEGER NOT NULL,
+          document_id INTEGER NOT NULL,
+          file_path TEXT NOT NULL,
+          issued_date TEXT NOT NULL,
+          expires_on TEXT,
+          is_valid INTEGER NOT NULL DEFAULT 1,
+          FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+          FOREIGN KEY (document_id) REFERENCES documents(id) ON DELETE CASCADE
+        )
+      ''');
+    }
+
+    if (oldVersion < 6) {
+      // Add 'Passport' to document types
+      final passportId = await db.insert('documents', {'name': 'جواز سفر', 'type': 'passport'});
+      
+      final now = DateTime.now();
+      
+      // Insert dummy digital documents for the default user (ID 1)
+      // Birth Certificate (assuming ID 1)
+      await db.insert('digital_documents', {
+        'user_id': 1,
+        'document_id': 1, 
+        'file_path': 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+        'issued_date': now.subtract(const Duration(days: 30)).toIso8601String(),
+        'expires_on': now.add(const Duration(days: 3650)).toIso8601String(),
+        'is_valid': 1,
+      });
+
+      // National ID Copy (assuming ID 2)
+      await db.insert('digital_documents', {
+        'user_id': 1,
+        'document_id': 2, 
+        'file_path': 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf', 
+        'issued_date': now.subtract(const Duration(days: 100)).toIso8601String(),
+        'expires_on': now.add(const Duration(days: 3000)).toIso8601String(),
+        'is_valid': 1,
+      });
+
+      // Passport
+      await db.insert('digital_documents', {
+        'user_id': 1,
+        'document_id': passportId, 
+        'file_path': 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf', 
+        'issued_date': now.subtract(const Duration(days: 20)).toIso8601String(),
+        'expires_on': now.add(const Duration(days: 1500)).toIso8601String(),
+        'is_valid': 1,
+      });
     }
   }
 
@@ -176,13 +232,13 @@ class DatabaseHelper {
     CREATE TABLE digital_documents (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       user_id INTEGER NOT NULL,
-      service_id INTEGER NOT NULL,
+      document_id INTEGER NOT NULL,
       file_path TEXT NOT NULL,
       issued_date TEXT NOT NULL,
       expires_on TEXT,
       is_valid INTEGER NOT NULL DEFAULT 1,
       FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-      FOREIGN KEY (service_id) REFERENCES services(id) ON DELETE CASCADE
+      FOREIGN KEY (document_id) REFERENCES documents(id) ON DELETE CASCADE
     )
   ''');
 
@@ -269,7 +325,9 @@ class DatabaseHelper {
       {'name': 'نموذج الطلب', 'type': 'form'},
       {'name': 'صورة شخصية', 'type': 'photo'},
       {'name': 'إثبات الإقامة', 'type': 'proof'},
+      {'name': 'جواز سفر', 'type': 'passport'}, // Added Passport
     ];
+
 
     for (final doc in documents) {
       await db.insert('documents', doc);
@@ -317,13 +375,36 @@ class DatabaseHelper {
       'notes': 'جاهز للاستلام',
     });
 
-    // Insert sample digital documents
+    // Insert sample digital documents (Dummy Data for Admin Side)
+    // Document IDs: 1 (Birth Cert), 2 (ID Copy), 6 (Passport) based on insertion order
+    
+    // Birth Certificate
     await db.insert('digital_documents', {
       'user_id': 1,
-      'service_id': 1,
-      'file_path': '/documents/id_card_123.pdf',
+      'document_id': 1, 
+      'file_path': 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf', // Dummy remote URL
       'issued_date': now.subtract(const Duration(days: 30)).toIso8601String(),
       'expires_on': now.add(const Duration(days: 3650)).toIso8601String(),
+      'is_valid': 1,
+    });
+
+    // National ID Copy
+    await db.insert('digital_documents', {
+      'user_id': 1,
+      'document_id': 2, 
+      'file_path': 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf', 
+      'issued_date': now.subtract(const Duration(days: 100)).toIso8601String(),
+      'expires_on': now.add(const Duration(days: 3000)).toIso8601String(),
+      'is_valid': 1,
+    });
+
+    // Passport
+    await db.insert('digital_documents', {
+      'user_id': 1,
+      'document_id': 6, 
+      'file_path': 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf', 
+      'issued_date': now.subtract(const Duration(days: 20)).toIso8601String(),
+      'expires_on': now.add(const Duration(days: 1500)).toIso8601String(),
       'is_valid': 1,
     });
 
@@ -402,6 +483,17 @@ class DatabaseHelper {
     return maps.map((map) => RequestModel.fromMap(map)).toList();
   }
 
+  /// Finds active (pending/approved) requests for a specific service and user
+  Future<List<RequestModel>> getActiveRequestsByService(int userId, int serviceId) async {
+    final db = await database;
+    final maps = await db.query(
+      'requests',
+      where: 'user_id = ? AND service_id = ? AND (status = ? OR status = ?)',
+      whereArgs: [userId, serviceId, 'pending', 'approved'],
+    );
+    return maps.map((map) => RequestModel.fromMap(map)).toList();
+  }
+
   Future<RequestModel?> getRequestById(int id) async {
     final db = await database;
     final maps = await db.query(
@@ -449,6 +541,17 @@ class DatabaseHelper {
       where: 'user_id = ?',
       whereArgs: [userId],
       orderBy: 'issued_date DESC',
+    );
+    return maps.map((map) => DigitalDocumentModel.fromMap(map)).toList();
+  }
+
+  /// Finds digital documents of a specific document type for a user
+  Future<List<DigitalDocumentModel>> getDigitalDocumentsByDocumentId(int userId, int documentId) async {
+    final db = await database;
+    final maps = await db.query(
+      'digital_documents',
+      where: 'user_id = ? AND document_id = ? AND is_valid = 1',
+      whereArgs: [userId, documentId],
     );
     return maps.map((map) => DigitalDocumentModel.fromMap(map)).toList();
   }

@@ -43,4 +43,8 @@ class RequestRepository {
   Future<List<RequestDocumentModel>> getRequestDocuments(int requestId) async {
     return await _dbHelper.getDocumentsByRequestId(requestId);
   }
+
+  Future<List<RequestModel>> getActiveRequestsByService(int userId, int serviceId) async {
+    return await _dbHelper.getActiveRequestsByService(userId, serviceId);
+  }
 }
