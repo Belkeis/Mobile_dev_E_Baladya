@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import '../../data/repo/document_repository.dart';
@@ -9,10 +10,6 @@ import 'dart:io';
 part 'document_state.dart';
 
 /// DocumentCubit handles all document-related business logic and state management
-/// Follows clean architecture principles by separating concerns:
-/// - UI layer: Listens to states and displays appropriate UI
-/// - Business logic layer (this cubit): Handles operations and emits states
-/// - Data layer: Repository handles data operations
 class DocumentCubit extends Cubit<DocumentState> {
   final DocumentRepository _documentRepository;
   final StorageService _storageService;
@@ -27,7 +24,6 @@ class DocumentCubit extends Cubit<DocumentState> {
   // ==========================================================================
 
   /// Load all documents for a specific user
-  /// Emits: DocumentsFetching -> DocumentsLoaded | DocumentFetchError
   Future<void> loadDocuments(int userId) async {
     _currentUserId = userId;
     emit(const DocumentsFetching());
@@ -44,7 +40,6 @@ class DocumentCubit extends Cubit<DocumentState> {
   }
 
   /// Create a new document
-  /// Emits: DocumentCreating -> DocumentCreated -> DocumentsLoaded | DocumentCreateError
   Future<void> createDocument(DigitalDocumentModel document) async {
     emit(const DocumentCreating());
     
@@ -63,7 +58,6 @@ class DocumentCubit extends Cubit<DocumentState> {
   }
 
   /// Update an existing document
-  /// Emits: DocumentUpdating -> DocumentUpdated -> DocumentsLoaded | DocumentUpdateError
   Future<void> updateDocument(DigitalDocumentModel document) async {
     if (document.id == null) {
       emit(const DocumentUpdateError('معرف الوثيقة مفقود'));
@@ -94,7 +88,6 @@ class DocumentCubit extends Cubit<DocumentState> {
   }
 
   /// Delete a document by ID
-  /// Emits: DocumentDeleting -> DocumentDeleted -> DocumentsLoaded | DocumentDeleteError
   Future<void> deleteDocument(int documentId, int userId) async {
     emit(DocumentDeleting(documentId));
     
@@ -118,7 +111,6 @@ class DocumentCubit extends Cubit<DocumentState> {
   }
 
   /// Upload a document file to storage
-  /// Emits: DocumentFileUploading -> DocumentFileUploaded | DocumentUploadError
   Future<void> uploadDocumentFile(File file) async {
     emit(const DocumentFileUploading());
     
@@ -141,7 +133,6 @@ class DocumentCubit extends Cubit<DocumentState> {
   }
 
   /// Upload a file using PlatformFile (from file_picker)
-  /// Emits: DocumentFileUploading -> DocumentUploadSuccess | DocumentUploadError
   Future<void> uploadFile(PlatformFile file) async {
     emit(const DocumentFileUploading());
 
@@ -154,7 +145,6 @@ class DocumentCubit extends Cubit<DocumentState> {
       final path = 'documents/$_currentUserId/$fileName';
 
       // Convert PlatformFile to File for StorageService
-      // Note: On web this would need different handling (bytes)
       final fileObj = File(file.path!); 
       
       final downloadUrl = await _storageService.uploadFile(fileObj, path);
@@ -172,7 +162,6 @@ class DocumentCubit extends Cubit<DocumentState> {
   // ==========================================================================
 
   /// Search documents by service ID
-  /// Emits: DocumentSearching -> DocumentSearchResults | DocumentSearchError
   Future<void> searchByService(int userId, int serviceId) async {
     emit(const DocumentSearching());
     
@@ -191,7 +180,6 @@ class DocumentCubit extends Cubit<DocumentState> {
   }
 
   /// Filter to show only valid documents
-  /// Emits: DocumentSearching -> DocumentSearchResults | DocumentSearchError
   Future<void> filterValidDocuments(int userId) async {
     emit(const DocumentSearching());
     
@@ -210,7 +198,6 @@ class DocumentCubit extends Cubit<DocumentState> {
   }
 
   /// Filter documents by validity status (client-side filtering)
-  /// Uses current loaded state to filter without additional API calls
   void filterByValidity(bool isValid) {
     final currentState = state;
     if (currentState is! DocumentsLoaded) {
@@ -240,7 +227,6 @@ class DocumentCubit extends Cubit<DocumentState> {
   // ==========================================================================
 
   /// Select a document to view its details
-  /// Emits: DocumentSelected
   void selectDocument(DigitalDocumentModel document) {
     emit(DocumentSelected(document));
   }
@@ -262,7 +248,6 @@ class DocumentCubit extends Cubit<DocumentState> {
   }
 
   /// Get a specific document by ID
-  /// Emits: DocumentLoading -> DocumentSelected | DocumentFetchError
   Future<void> getDocumentById(int documentId) async {
     emit(const DocumentLoading());
     
@@ -301,12 +286,37 @@ class DocumentCubit extends Cubit<DocumentState> {
     }
   }
 
-  /// Legacy method for backward compatibility
-  @Deprecated('Use loadDocuments instead')
-  Future<void> loadDigitalDocuments(int userId) => loadDocuments(userId);
+  // Helper method to combine logic from both branches
+  Future<void> uploadAndSaveDigitalDocument({
+    required int userId,
+    required int serviceId,
+    required File file,
+  }) async {
+    _currentUserId = userId;
+    emit(const DocumentFileUploading());
+    try {
+      final String fileName = '${DateTime.now().millisecondsSinceEpoch}_${file.path.split('/').last}';
+      final String remotePath = 'documents/$userId/$fileName';
+      final String fileUrl = await _storageService.uploadFile(file, remotePath);
 
-  /// Legacy method for backward compatibility
-  @Deprecated('Use createDocument instead')
+      final now = DateTime.now();
+      final document = DigitalDocumentModel(
+        userId: userId,
+        serviceId: serviceId,
+        filePath: fileUrl,
+        issuedDate: now.toIso8601String(),
+        isValid: 1,
+      );
+
+      await _documentRepository.createDigitalDocument(document);
+      emit(const DocumentOperationSuccess('تم رفع الوثيقة بنجاح'));
+      await loadDocuments(userId);
+    } catch (e) {
+      emit(DocumentUploadError('حدث خطأ أثناء رفع الوثيقة', exception: e));
+    }
+  }
+
+  /// Legacy methods for backward compatibility
+  Future<void> loadDigitalDocuments(int userId) => loadDocuments(userId);
   Future<void> createDigitalDocument(DigitalDocumentModel document) => createDocument(document);
 }
-

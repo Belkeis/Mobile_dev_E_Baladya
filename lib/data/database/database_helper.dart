@@ -7,6 +7,7 @@ import '../models/document_model.dart';
 import '../models/digital_document_model.dart';
 import '../models/notification_model.dart';
 import '../models/booking_model.dart';
+import '../models/request_document_model.dart';
 
 class DatabaseHelper {
   static final DatabaseHelper instance = DatabaseHelper._init();
@@ -26,7 +27,7 @@ class DatabaseHelper {
 
     return await openDatabase(
       path,
-      version: 2, // Increment version for migration
+      version: 4, // Increment version to ensure request_documents exists
       onCreate: _createDB,
       onUpgrade: _onUpgrade,
       onOpen: (db) async {
@@ -67,6 +68,17 @@ class DatabaseHelper {
         'name': 'الاستلام',
         'description': 'استلام الوثائق الجاهزة'
       });
+    }
+
+    if (oldVersion < 4) {
+      // Ensure request_documents table exists (was added in v3, but forcing v4 upgrade)
+      await db.execute("CREATE TABLE IF NOT EXISTS request_documents ("
+          "id INTEGER PRIMARY KEY AUTOINCREMENT,"
+          "request_id INTEGER NOT NULL,"
+          "file_url TEXT NOT NULL,"
+          "file_name TEXT NOT NULL,"
+          "FOREIGN KEY (request_id) REFERENCES requests(id) ON DELETE CASCADE"
+          ")");
     }
   }
 
@@ -171,6 +183,16 @@ class DatabaseHelper {
       is_valid INTEGER NOT NULL DEFAULT 1,
       FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
       FOREIGN KEY (service_id) REFERENCES services(id) ON DELETE CASCADE
+    )
+  ''');
+
+    await db.execute('''
+    CREATE TABLE request_documents (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      request_id INTEGER NOT NULL,
+      file_url TEXT NOT NULL,
+      file_name TEXT NOT NULL,
+      FOREIGN KEY (request_id) REFERENCES requests(id) ON DELETE CASCADE
     )
   ''');
 
@@ -492,18 +514,34 @@ class DatabaseHelper {
     return maps.map((map) => BookingModel.fromMap(map)).toList();
   }
 
+  // Request document operations
+  Future<int> insertRequestDocument(RequestDocumentModel doc) async {
+    final db = await database;
+    return await db.insert('request_documents', doc.toMap());
+  }
+
+  Future<List<RequestDocumentModel>> getDocumentsByRequestId(int requestId) async {
+    final db = await database;
+    final maps = await db.query(
+      'request_documents',
+      where: 'request_id = ?',
+      whereArgs: [requestId],
+    );
+    return maps.map((map) => RequestDocumentModel.fromMap(map)).toList();
+  }
+
+  Future<int> updateUser(UserModel user) async {
+    final db = await database;
+    return await db.update(
+      'users',
+      user.toMap(),
+      where: 'id = ?',
+      whereArgs: [user.id],
+    );
+  }
+
   Future<void> close() async {
     final db = await database;
     await db.close();
   }
-
-Future<int> updateUser(UserModel user) async {
-  final db = await database;
-  return await db.update(
-    'users',
-    user.toMap(),
-    where: 'id = ?',
-    whereArgs: [user.id],
-  );
-}
 }

@@ -130,4 +130,3 @@ class RepositoryException implements Exception {
   @override
   String toString() => message;
 }
-

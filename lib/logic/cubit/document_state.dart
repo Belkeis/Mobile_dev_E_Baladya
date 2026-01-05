@@ -1,7 +1,6 @@
 part of 'document_cubit.dart';
 
 /// Base abstract class for all document states
-/// Uses Equatable for value comparison to optimize rebuild performance
 abstract class DocumentState extends Equatable {
   const DocumentState();
 
@@ -66,6 +65,9 @@ class DocumentSearching extends DocumentState {
 class DocumentFileUploading extends DocumentState {
   const DocumentFileUploading();
 }
+
+/// Loading state for uploading (simplified name)
+class DocumentUploading extends DocumentState {}
 
 // ============================================================================
 // SUCCESS STATES
@@ -158,22 +160,32 @@ class DocumentSelected extends DocumentState {
   List<Object?> get props => [document];
 }
 
-@Deprecated('Use DocumentUploadSuccess instead')
-class DocumentFileUploaded extends DocumentState {
-  final String downloadUrl;
-  
-  const DocumentFileUploaded(this.downloadUrl);
-  
-  @override
-  List<Object?> get props => [downloadUrl];
-}
-
 /// Document file successfully uploaded
 class DocumentUploadSuccess extends DocumentState {
   final String downloadUrl;
 
   const DocumentUploadSuccess(this.downloadUrl);
 
+  @override
+  List<Object?> get props => [downloadUrl];
+}
+
+/// Operation success with message
+class DocumentOperationSuccess extends DocumentState {
+  final String message;
+  const DocumentOperationSuccess(this.message);
+
+  @override
+  List<Object?> get props => [message];
+}
+
+/// Deprecated state for backward compatibility
+@Deprecated('Use DocumentUploadSuccess instead')
+class DocumentFileUploaded extends DocumentState {
+  final String downloadUrl;
+  
+  const DocumentFileUploaded(this.downloadUrl);
+  
   @override
   List<Object?> get props => [downloadUrl];
 }
@@ -251,4 +263,3 @@ class DocumentUploadError extends DocumentError {
     super.exception,
   });
 }
-

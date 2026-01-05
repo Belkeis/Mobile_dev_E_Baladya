@@ -195,20 +195,28 @@ class _GenericListPageState extends State<GenericListPage> {
                               : null,
                           trailing: widget.showDownloadIcon
                               ? SizedBox(
-                                  width: 55,
+                                  width: 65,
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.end,
-                                    children: const [
-                                      FaIcon(
-                                        FontAwesomeIcons.filePdf,
-                                        color: Colors.redAccent,
-                                        size: 18,
+                                    children: [
+                                      GestureDetector(
+                                        onTap: item.onTap,
+                                        behavior: HitTestBehavior.opaque,
+                                        child: const FaIcon(
+                                          FontAwesomeIcons.filePdf,
+                                          color: Colors.redAccent,
+                                          size: 20,
+                                        ),
                                       ),
-                                      SizedBox(width: 10),
-                                      FaIcon(
-                                        FontAwesomeIcons.download,
-                                        color: Color(0xFF6B7280),
-                                        size: 18,
+                                      const SizedBox(width: 12),
+                                      GestureDetector(
+                                        onTap: item.onDownload,
+                                        behavior: HitTestBehavior.opaque,
+                                        child: const FaIcon(
+                                          FontAwesomeIcons.download,
+                                          color: Color(0xFF2563EB),
+                                          size: 20,
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -240,6 +248,7 @@ class ListItem {
   final IconData? icon;
   final Color? iconColor;
   final VoidCallback? onTap;
+  final VoidCallback? onDownload;
 
   const ListItem({
     required this.title,
@@ -247,5 +256,6 @@ class ListItem {
     this.icon,
     this.iconColor,
     this.onTap,
+    this.onDownload,
   });
 }
