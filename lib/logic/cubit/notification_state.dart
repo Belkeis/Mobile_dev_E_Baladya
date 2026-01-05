@@ -21,6 +21,21 @@ class NotificationsLoaded extends NotificationState {
   List<Object?> get props => [notifications, unreadCount];
 }
 
+class NotificationNavigate extends NotificationState {
+  final String route;
+  final Map<String, dynamic>? arguments;
+  final String? notificationType;
+
+  const NotificationNavigate({
+    required this.route,
+    this.arguments,
+    this.notificationType,
+  });
+
+  @override
+  List<Object?> get props => [route, arguments, notificationType];
+}
+
 class NotificationError extends NotificationState {
   final String message;
 

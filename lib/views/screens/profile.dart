@@ -89,7 +89,7 @@ class _ProfilePageState extends State<ProfilePage> {
               ElevatedButton(
                 onPressed: () {
                   Navigator.of(dialogContext).pop();
-                  context.read<AuthCubit>().logout();
+                  context.read<AuthCubit>().logout(null);
                   Navigator.of(context).pushAndRemoveUntil(
                     MaterialPageRoute(builder: (context) => const Entering()),
                     (route) => false,

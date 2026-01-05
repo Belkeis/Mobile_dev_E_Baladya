@@ -61,3 +61,4 @@ class BookingModel extends Equatable {
   List<Object?> get props =>
       [id, userId, serviceId, bookingTypeId, date, status]; // Updated
 }
+

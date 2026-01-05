@@ -55,7 +55,7 @@ class AdminProfilePage extends StatelessWidget {
                 onPressed: () {
                   Navigator.of(dialogContext).pop();
                   AdminAuth().logout();
-                  context.read<AuthCubit>().logout();
+                  context.read<AuthCubit>().logout(null);
                   Navigator.of(context).pushAndRemoveUntil(
                     MaterialPageRoute(builder: (context) => const Entering()),
                     (route) => false,

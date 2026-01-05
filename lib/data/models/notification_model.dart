@@ -62,3 +62,4 @@ class NotificationModel extends Equatable {
 }
 
 
+

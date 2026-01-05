@@ -6,6 +6,12 @@
 .DS_Store
 .atom/
 .build/
+
+# Python virtual environments
+venv/
+env/
+ENV/
+.venv
 .buildlog/
 .history
 .svn/
