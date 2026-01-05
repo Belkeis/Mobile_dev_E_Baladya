@@ -1,0 +1,32 @@
+﻿00:00 +0: loading C:/Mobile_dev_E_Baladya-main (2)/Mobile_dev_E_Baladya-main/test/logic/cubit/document_cubit_test.dart
+00:00 +0: DocumentCubit updateDocument emits [DocumentUpdating, DocumentUpdated, DocumentsFetching, DocumentsLoaded] when document is updated successfully
+00:00 +0 -1: DocumentCubit updateDocument emits [DocumentUpdating, DocumentUpdated, DocumentsFetching, DocumentsLoaded] when document is updated successfully [E]
+  Expected: [
+              <<Instance of 'DocumentUpdating'> with `documentId`: <1>>,
+              <<Instance of 'DocumentUpdated'> with `documentId`: <1> and `message`: contains 'Ï¿┘åÏ¼ÏºÏ¡'>,
+              <<Instance of 'DocumentsFetching'>>,
+              <<Instance of 'DocumentsLoaded'>>
+            ]
+    Actual: [
+              DocumentUpdated:DocumentUpdated(1, Ï¬┘à Ï¬Ï¡Ï»┘èÏ½ Ïº┘ä┘êÏ½┘è┘éÏ® Ï¿┘åÏ¼ÏºÏ¡),
+              DocumentsFetching:DocumentsFetching(),
+              DocumentsLoaded:DocumentsLoaded([{document: DigitalDocumentModel(1, 1, 1, /path/to/document.pdf, 2024-01-01, null, 1), service: {id: 1, name: Test Service}}], null)
+            ]
+     Which: at location [0] is DocumentUpdated:<DocumentUpdated(1, Ï¬┘à Ï¬Ï¡Ï»┘èÏ½ Ïº┘ä┘êÏ½┘è┘éÏ® Ï¿┘åÏ¼ÏºÏ¡)> which is not an instance of 'DocumentUpdating'
+  
+  package:matcher                              expect
+  package:bloc_test/src/bloc_test.dart 220:16  testBloc.<fn>
+  ===== asynchronous gap ===========================
+  dart:async                                   _Completer.completeError
+  package:bloc_test/src/bloc_test.dart 257:43  _runZonedGuarded.<fn>
+  ===== asynchronous gap ===========================
+  dart:async                                   _CustomZone.registerBinaryCallback
+  package:bloc_test/src/bloc_test.dart 254:5   _runZonedGuarded.<fn>
+  dart:async                                   runZonedGuarded
+  package:bloc_test/src/bloc_test.dart 253:3   _runZonedGuarded
+  package:bloc_test/src/bloc_test.dart 200:11  testBloc
+  package:bloc_test/src/bloc_test.dart 156:13  blocTest.<fn>
+  
+00:00 +0 -1: DocumentCubit updateDocument emits [DocumentUpdateError] when document id is null
+00:00 +1 -1: DocumentCubit updateDocument emits [DocumentUpdating, DocumentUpdateError] when update fails
+00:00 +2 -1: Some tests failed.
