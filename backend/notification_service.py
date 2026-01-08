@@ -22,11 +22,16 @@ app = Flask(__name__)
 CORS(app)
 
 # Initialize Firebase Admin SDK
-firebase_credentials_path = os.getenv('FIREBASE_CREDENTIALS_PATH', 'firebase_credentials.json')
+# Look for credentials in parent directory (project root) or use env var
+firebase_credentials_path = os.getenv('FIREBASE_CREDENTIALS_PATH')
+if not firebase_credentials_path:
+    parent_dir = os.path.dirname(os.path.abspath(__file__))
+    firebase_credentials_path = os.path.join(parent_dir, '..', 'firebase_credentials.json')
+
 try:
     cred = credentials.Certificate(firebase_credentials_path)
     firebase_admin.initialize_app(cred)
-    print("Firebase initialized successfully")
+    print(f"Firebase initialized successfully from {firebase_credentials_path}")
 except Exception as e:
     print(f"Error initializing Firebase: {e}")
 

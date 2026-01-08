@@ -84,7 +84,7 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
 
     setState(() => _isLoading = true);
     
-    // In a real app, you would validate these credentials with your backend
+    // mock data
     if (_emailController.text == 'admin@example.com' && 
         _passwordController.text == 'admin123') {
       // Navigate to admin home

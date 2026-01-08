@@ -44,6 +44,7 @@ dependencies:
   firebase_core: ^3.8.1
   firebase_messaging: ^15.1.5
   http: ^1.2.0
+  
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -52,13 +53,21 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
+  bloc_test: ^9.1.0
+  mocktail: ^0.3.0
+  flutter_launcher_icons: "^0.13.1"
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^5.0.0
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/icons/icon_blue.png"  # Your 1024x1024 PNG
+
+
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

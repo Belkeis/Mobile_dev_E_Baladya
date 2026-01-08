@@ -20,7 +20,7 @@ Files you will need
 cd C:\Users\DELL\Documents\GitHub\Mobile_dev_E_Baladya
 python -m venv venv
 venv\Scripts\activate
-pip install -r requirements.txt
+pip install -r backend/requirements.txt
 ```
 
 - Place Firebase Admin JSON in project root as `firebase_credentials.json` (download from Firebase Console → Project Settings → Service accounts)
@@ -28,7 +28,7 @@ pip install -r requirements.txt
 - Run the backend:
 
 ```powershell
-python notification_service.py
+python backend/notification_service.py
 ```
 
 The backend will run on `http://localhost:5000` by default.
@@ -43,19 +43,19 @@ flutter run
 
 - The seeded user (id=1) exists in local DB. When logged in, the app subscribes to topic `user_1`.
 
-3) Send a test notification (example: topic broadcast)
+3) Send a test notification (example: user)
 - From PowerShell (example uses topic `announcements`):
 
 ```powershell
 Invoke-RestMethod `
-  -Uri "http://localhost:5000/api/notify/topic" `
+  -Uri "http://localhost:5000/api/notify/user" `
   -Method POST `
   -ContentType "application/json" `
   -Body ( @{
-      topic = "announcements"
-      title = "Important Notice"
-      body  = "Please read this"
-      type  = "general"
+      user_id = 1
+      title   = "Booking Reminder"
+      body    = "Your booking is tomorrow at 10:00 AM"
+      type    = "booking"
   } | ConvertTo-Json -Depth 3 )
 ```
 
