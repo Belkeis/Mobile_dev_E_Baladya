@@ -10,93 +10,97 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 }
 
 class FCMService {
-  static final FCMService _instance = FCMService._internal();
-  final FirebaseMessaging _messaging = FirebaseMessaging.instance;
-  late NotificationRepository _notificationRepository;
-  
-  // Callback for notification tap
+  static FCMService? _instance;
+  FirebaseMessaging? _messaging;
+  NotificationRepository? _notificationRepository;
+  bool _initialized = false;
+
   Function(String? notificationType, int? userId)? onNotificationTap;
 
+  // Factory constructor that allows injection for testing
   factory FCMService() {
-    return _instance;
+    _instance ??= FCMService._internal();
+    return _instance!;
   }
 
   FCMService._internal();
 
+  // Allow resetting instance for tests
+  static void resetInstance() {
+    _instance = null;
+  }
+
   /// Initialize FCM service
   Future<void> initialize(NotificationRepository notificationRepository) async {
+    if (_initialized) return;
+
     _notificationRepository = notificationRepository;
-    
-    // Register background message handler
-    FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
 
-    // Request user notification permissions
-    NotificationSettings settings = await _messaging.requestPermission(
-      alert: true,
-      announcement: false,
-      badge: true,
-      criticalAlert: false,
-      provisional: false,
-      sound: true,
-    );
+    try {
+      _messaging = FirebaseMessaging.instance;
 
-    print('User granted permission: ${settings.authorizationStatus}');
+      FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
 
-    // Get FCM token
-    String? token = await _messaging.getToken();
-    print('FCM Token: $token');
+      NotificationSettings settings = await _messaging!.requestPermission(
+        alert: true,
+        announcement: false,
+        badge: true,
+        criticalAlert: false,
+        provisional: false,
+        sound: true,
+      );
 
-    // Handle foreground messages
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      print('Foreground message received: ${message.messageId}');
-      _handleMessage(message);
-    });
+      print('User granted permission: ${settings.authorizationStatus}');
 
-    // Handle notification tap when app is in background or closed
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      print('Message clicked from background/closed: ${message.messageId}');
-      _handleMessageClick(message);
-    });
+      String? token = await _messaging!.getToken();
+      print('FCM Token: $token');
 
-    // Check if app was opened from notification
-    RemoteMessage? initialMessage = await _messaging.getInitialMessage();
-    if (initialMessage != null) {
-      print('App opened from notification: ${initialMessage.messageId}');
-      _handleMessageClick(initialMessage);
+      FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+        print('Foreground message received: ${message.messageId}');
+        _handleMessage(message);
+      });
+
+      FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+        print('Message clicked from background/closed: ${message.messageId}');
+        _handleMessageClick(message);
+      });
+
+      RemoteMessage? initialMessage = await _messaging!.getInitialMessage();
+      if (initialMessage != null) {
+        print('App opened from notification: ${initialMessage.messageId}');
+        _handleMessageClick(initialMessage);
+      }
+
+      _initialized = true;
+    } catch (e) {
+      print('FCM initialization failed: $e');
+      // Don't throw, just log - allows app to work without FCM
     }
   }
 
-  /// Handle incoming message (foreground)
   void _handleMessage(RemoteMessage message) {
     print('Message title: ${message.notification?.title}');
     print('Message body: ${message.notification?.body}');
     print('Message data: ${message.data}');
-
-    // Save notification to local database
     _saveNotificationLocally(message);
-
-    // Show notification (you can customize this part)
-    // For foreground notifications, you might want to use a local notifications package
-    // or show a custom dialog/snackbar
   }
 
-  /// Handle notification tap
   void _handleMessageClick(RemoteMessage message) {
     print('Handling message click: ${message.messageId}');
-
-    // Extract notification type and user ID from message data
     String? notificationType = message.data['type'] ?? 'general';
     int? userId = int.tryParse(message.data['user_id'] ?? '');
-
-    // Call the callback if set
     onNotificationTap?.call(notificationType, userId);
   }
 
-  /// Save notification to local database
   Future<void> _saveNotificationLocally(RemoteMessage message) async {
     try {
+      if (_notificationRepository == null) {
+        print('Notification repository not initialized');
+        return;
+      }
+
       final int userId = int.tryParse(message.data['user_id'] ?? '0') ?? 0;
-      
+
       if (userId == 0) {
         print('Invalid user_id in notification');
         return;
@@ -104,46 +108,61 @@ class FCMService {
 
       final notification = NotificationModel(
         userId: userId,
-        message: message.notification?.body ?? message.data['message'] ?? 'No message',
+        message: message.notification?.body ??
+            message.data['message'] ??
+            'No message',
         type: message.data['type'] ?? 'general',
         timestamp: DateTime.now().toIso8601String(),
         read: 0,
       );
 
-      await _notificationRepository.createNotification(notification);
+      await _notificationRepository!.createNotification(notification);
       print('Notification saved to local database');
     } catch (e) {
       print('Error saving notification: $e');
     }
   }
 
-  /// Get FCM token
   Future<String?> getFCMToken() async {
-    return await _messaging.getToken();
+    if (_messaging == null) {
+      print('FCM not initialized');
+      return null;
+    }
+    return await _messaging!.getToken();
   }
 
-  /// Subscribe to topic (for targeted messaging)
   Future<void> subscribeToTopic(String topic) async {
+    if (_messaging == null) {
+      print('FCM not initialized, skipping topic subscription: $topic');
+      return;
+    }
     try {
-      await _messaging.subscribeToTopic(topic);
+      await _messaging!.subscribeToTopic(topic);
       print('Subscribed to topic: $topic');
     } catch (e) {
       print('Error subscribing to topic: $e');
     }
   }
 
-  /// Unsubscribe from topic
   Future<void> unsubscribeFromTopic(String topic) async {
+    if (_messaging == null) {
+      print('FCM not initialized, skipping topic unsubscription: $topic');
+      return;
+    }
     try {
-      await _messaging.unsubscribeFromTopic(topic);
+      await _messaging!.unsubscribeFromTopic(topic);
       print('Unsubscribed from topic: $topic');
     } catch (e) {
       print('Error unsubscribing from topic: $e');
     }
   }
 
-  /// Subscribe user to their personal topic (user_id based)
   Future<void> subscribeUserToPersonalTopic(int userId) async {
+    if (!_initialized || _messaging == null) {
+      print(
+          'FCM not initialized, skipping personal topic subscription for user $userId');
+      return;
+    }
     try {
       await subscribeToTopic('user_$userId');
       print('User subscribed to personal topic: user_$userId');
@@ -152,8 +171,12 @@ class FCMService {
     }
   }
 
-  /// Unsubscribe user from their personal topic
   Future<void> unsubscribeUserFromPersonalTopic(int userId) async {
+    if (!_initialized || _messaging == null) {
+      print(
+          'FCM not initialized, skipping personal topic unsubscription for user $userId');
+      return;
+    }
     try {
       await unsubscribeFromTopic('user_$userId');
       print('User unsubscribed from personal topic: user_$userId');
