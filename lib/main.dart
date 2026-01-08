@@ -20,6 +20,7 @@ import 'logic/cubit/booking_cubit.dart';
 import 'logic/cubit/language_cubit.dart';
 import 'i18n/app_localizations.dart';
 import 'utils/fcm_service.dart';
+import 'views/screens/auth_checker.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -81,12 +82,7 @@ class _MyAppState extends State<MyApp> {
           create: (context) => LanguageCubit(),
         ),
         BlocProvider(
-          create: (context) {
-            final authCubit = AuthCubit(userRepository);
-            // Check auth status when app starts
-            authCubit.checkAuthStatus();
-            return authCubit;
-          },
+          create: (context) => AuthCubit(userRepository),
         ),
         BlocProvider(
           create: (context) => ServiceCubit(serviceRepository),
@@ -138,7 +134,7 @@ class _MyAppState extends State<MyApp> {
                   scaffoldBackgroundColor: const Color(0xFFF9FAFB),
                   fontFamily: 'Cairo',
                 ),
-                initialRoute: AppRoutes.initialRoute,
+                home: const AuthChecker(), // Use AuthChecker as home
                 routes: AppRoutes.routes,
               ),
             ),

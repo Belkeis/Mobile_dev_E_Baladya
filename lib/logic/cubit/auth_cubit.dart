@@ -102,9 +102,12 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   Future<void> checkAuthStatus() async {
+    emit(AuthLoading()); 
     final userId = await _getSavedUserId();
     if (userId != null) {
       await loadUser(userId);
+    } else {
+      emit(AuthInitial());
     }
   }
 }
