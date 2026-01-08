@@ -3,10 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
-<<<<<<< HEAD
-=======
 import 'data/services/storage_service.dart';
->>>>>>> kaouter
 import 'commons/app_routes.dart';
 import 'data/database/database_helper.dart';
 import 'data/repo/user_repository.dart';
@@ -28,15 +25,8 @@ import 'views/screens/auth_checker.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-<<<<<<< HEAD
-
-  // Initialize Firebase
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-
-=======
   
+  // Initialize Firebase
   try {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
@@ -45,7 +35,6 @@ void main() async {
     debugPrint('Firebase initialization failed: $e');
   }
   
->>>>>>> kaouter
   // Initialize database
   await DatabaseHelper.instance.database;
 
