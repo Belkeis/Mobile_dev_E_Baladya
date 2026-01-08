@@ -207,7 +207,10 @@ void main() {
       },
       build: () => authCubit,
       act: (cubit) => cubit.checkAuthStatus(),
-      expect: () => [], // No state change when no user is saved
+      expect: () => [
+        isA<AuthLoading>(),
+        isA<AuthInitial>(),
+      ],
     );
   });
 }
