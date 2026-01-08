@@ -23,19 +23,19 @@ import 'utils/fcm_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   // Initialize Firebase
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  
+
   // Initialize database
   await DatabaseHelper.instance.database;
-  
+
   // Initialize FCM service
   final notificationRepository = NotificationRepository();
   await FCMService().initialize(notificationRepository);
-  
+
   runApp(const MyApp());
 }
 
@@ -81,7 +81,12 @@ class _MyAppState extends State<MyApp> {
           create: (context) => LanguageCubit(),
         ),
         BlocProvider(
-          create: (context) => AuthCubit(userRepository),
+          create: (context) {
+            final authCubit = AuthCubit(userRepository);
+            // Check auth status when app starts
+            authCubit.checkAuthStatus();
+            return authCubit;
+          },
         ),
         BlocProvider(
           create: (context) => ServiceCubit(serviceRepository),

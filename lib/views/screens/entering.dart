@@ -5,6 +5,8 @@ import 'sign_up.dart';
 import 'admin/admin_login_page.dart';
 import '../../i18n/app_localizations.dart';
 import '../../logic/cubit/language_cubit.dart';
+import '../../logic/cubit/auth_cubit.dart';
+import '../../commons/app_routes.dart';
 
 class Entering extends StatefulWidget {
   const Entering({super.key});
@@ -19,6 +21,19 @@ class _EnteringState extends State<Entering> {
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
+
+    return BlocListener<AuthCubit, AuthState>(
+      listener: (context, state) {
+        if (state is AuthAuthenticated) {
+          Navigator.of(context).pushReplacementNamed(AppRoutes.home);
+        }
+      },
+      child: _buildEnteringUI(context, localizations),
+    );
+  }
+
+  Widget _buildEnteringUI(
+      BuildContext context, AppLocalizations localizations) {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -34,6 +49,7 @@ class _EnteringState extends State<Entering> {
                   BlocBuilder<LanguageCubit, LanguageState>(
                     builder: (context, state) {
                       final isArabic = state.locale.languageCode == 'ar';
+
                       return GestureDetector(
                         onTap: () {
                           context.read<LanguageCubit>().toggleLanguage();
@@ -67,9 +83,11 @@ class _EnteringState extends State<Entering> {
                 ],
               ),
             ),
+
             const SizedBox(height: 60),
 
             // Centered SVG logo
+
             Expanded(
               child: Center(
                 child: SvgPicture.asset(
@@ -82,12 +100,14 @@ class _EnteringState extends State<Entering> {
             ),
 
             // Buttons column
+
             Padding(
               padding: const EdgeInsets.only(bottom: 40.0, left: 24, right: 24),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   // User sign up button
+
                   GestureDetector(
                     onTapDown: (_) {
                       setState(() => _isPressed = true);
@@ -97,7 +117,8 @@ class _EnteringState extends State<Entering> {
                     onTap: () {
                       Navigator.pushReplacement(
                         context,
-                        MaterialPageRoute(builder: (context) => const SignUpPage()),
+                        MaterialPageRoute(
+                            builder: (context) => const SignUpPage()),
                       );
                     },
                     child: Stack(
@@ -140,8 +161,11 @@ class _EnteringState extends State<Entering> {
                       ],
                     ),
                   ),
+
                   const SizedBox(height: 16),
+
                   // Admin login button
+
                   GestureDetector(
                     onTapDown: (_) {
                       setState(() => _isPressed = true);
@@ -151,7 +175,8 @@ class _EnteringState extends State<Entering> {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const AdminLoginPage()),
+                        MaterialPageRoute(
+                            builder: (context) => const AdminLoginPage()),
                       );
                     },
                     child: AnimatedContainer(
@@ -159,9 +184,7 @@ class _EnteringState extends State<Entering> {
                       width: double.infinity,
                       height: 55,
                       decoration: BoxDecoration(
-                        color: _isPressed
-                            ? Colors.grey[200]
-                            : Colors.white,
+                        color: _isPressed ? Colors.grey[200] : Colors.white,
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
                           color: const Color(0xFF2563EB),
