@@ -46,7 +46,7 @@ dependencies:
   firebase_core: ^4.3.0
   firebase_storage: ^13.0.5
   url_launcher: ^6.3.2
-  firebase_messaging: ^15.1.5
+  firebase_messaging: ^16.1.0
   http: ^1.2.0
 
   cupertino_icons: ^1.0.8

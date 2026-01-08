@@ -5,37 +5,22 @@ packages:
     dependency: transitive
     description:
       name: _fe_analyzer_shared
-<<<<<<< HEAD
       sha256: c209688d9f5a5f26b2fb47a188131a6fb9e876ae9e47af3737c0b4f58a93470d
       url: "https://pub.dev"
     source: hosted
     version: "91.0.0"
-=======
-      sha256: da0d9209ca76bde579f2da330aeb9df62b6319c834fa7baae052021b0462401f
-      url: "https://pub.dev"
-    source: hosted
-    version: "85.0.0"
->>>>>>> kaouter
   _flutterfire_internals:
     dependency: transitive
     description:
       name: _flutterfire_internals
-<<<<<<< HEAD
-      sha256: ff0a84a2734d9e1089f8aedd5c0af0061b82fb94e95260d943404e0ef2134b11
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.3.59"
-=======
       sha256: e4a1b612fd2955908e26116075b3a4baf10c353418ca645b4deae231c82bf144
       url: "https://pub.dev"
     source: hosted
     version: "1.3.65"
->>>>>>> kaouter
   analyzer:
     dependency: transitive
     description:
       name: analyzer
-<<<<<<< HEAD
       sha256: f51c8499b35f9b26820cfe914828a6a98a94efd5cc78b37bb7d03debae3a1d08
       url: "https://pub.dev"
     source: hosted
@@ -48,12 +33,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.7"
-=======
-      sha256: "974859dc0ff5f37bc4313244b3218c791810d03ab3470a579580279ba971a48d"
-      url: "https://pub.dev"
-    source: hosted
-    version: "7.7.1"
->>>>>>> kaouter
   args:
     dependency: transitive
     description:
@@ -102,7 +81,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.4.0"
-<<<<<<< HEAD
   checked_yaml:
     dependency: transitive
     description:
@@ -111,8 +89,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.4"
-=======
->>>>>>> kaouter
   cli_config:
     dependency: transitive
     description:
@@ -121,7 +97,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.2.0"
-<<<<<<< HEAD
   cli_util:
     dependency: transitive
     description:
@@ -130,8 +105,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.4.2"
-=======
->>>>>>> kaouter
   clock:
     dependency: transitive
     description:
@@ -150,41 +123,11 @@ packages:
     version: "1.19.1"
   convert:
     dependency: transitive
-<<<<<<< HEAD
     description:
       name: convert
       sha256: b30acd5944035672bc15c6b7a8b47d773e41e2f17de064350988c5d02adb1c68
       url: "https://pub.dev"
     source: hosted
-    version: "3.1.2"
-  coverage:
-    dependency: transitive
-    description:
-      name: coverage
-      sha256: "5da775aa218eaf2151c721b16c01c7676fbfdd99cebba2bf64e8b807a28ff94d"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.15.0"
-  crypto:
-    dependency: transitive
-    description:
-      name: crypto
-      sha256: c8ea0233063ba03258fbcf2ca4d6dadfefe14f02fab57702265467a19f27fadf
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.0.7"
-  cupertino_icons:
-    dependency: "direct main"
-=======
->>>>>>> kaouter
-    description:
-      name: convert
-      sha256: b30acd5944035672bc15c6b7a8b47d773e41e2f17de064350988c5d02adb1c68
-      url: "https://pub.dev"
-    source: hosted
-<<<<<<< HEAD
-    version: "1.0.8"
-=======
     version: "3.1.2"
   coverage:
     dependency: transitive
@@ -210,6 +153,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.7"
+  cupertino_icons:
+    dependency: "direct main"
+    description:
+      name: cupertino_icons
+      sha256: ba631d1c7f7bef6b729a622b7b752645a2d076dba9976925b8f25725a30e1ee6
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.8"
   dbus:
     dependency: transitive
     description:
@@ -218,7 +169,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.7.11"
->>>>>>> kaouter
   diff_match_patch:
     dependency: transitive
     description:
@@ -231,10 +181,10 @@ packages:
     dependency: "direct main"
     description:
       name: equatable
-      sha256: "567c64b3cb4cf82397aac55f4f0cbd3ca20d77c6c03bedbc4ceaddc08904aef7"
+      sha256: "3e0141505477fd8ad55d6eb4e7776d3fe8430be8e497ccb1521370c3f21a3e2b"
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.7"
+    version: "2.0.8"
   fake_async:
     dependency: transitive
     description:
@@ -247,10 +197,10 @@ packages:
     dependency: transitive
     description:
       name: ffi
-      sha256: "289279317b4b16eb2bb7e271abccd4bf84ec9bdcbe999e278a94b804f5630418"
+      sha256: d07d37192dbf97461359c1518788f203b0c9102cfd2c35a716b823741219542c
       url: "https://pub.dev"
     source: hosted
-    version: "2.1.4"
+    version: "2.1.5"
   file:
     dependency: transitive
     description:
@@ -259,8 +209,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "7.0.1"
-<<<<<<< HEAD
-=======
   file_picker:
     dependency: "direct main"
     description:
@@ -269,22 +217,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "10.3.8"
->>>>>>> kaouter
   firebase_core:
     dependency: "direct main"
     description:
       name: firebase_core
-<<<<<<< HEAD
-      sha256: "7be63a3f841fc9663342f7f3a011a42aef6a61066943c90b1c434d79d5c995c5"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.15.2"
-=======
       sha256: "29cfa93c771d8105484acac340b5ea0835be371672c91405a300303986f4eba9"
       url: "https://pub.dev"
     source: hosted
     version: "4.3.0"
->>>>>>> kaouter
   firebase_core_platform_interface:
     dependency: transitive
     description:
@@ -297,40 +237,34 @@ packages:
     dependency: transitive
     description:
       name: firebase_core_web
-<<<<<<< HEAD
-      sha256: "0ed0dc292e8f9ac50992e2394e9d336a0275b6ae400d64163fdf0a8a8b556c37"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.24.1"
-  firebase_messaging:
-    dependency: "direct main"
-    description:
-      name: firebase_messaging
-      sha256: "60be38574f8b5658e2f22b7e311ff2064bea835c248424a383783464e8e02fcc"
-      url: "https://pub.dev"
-    source: hosted
-    version: "15.2.10"
-  firebase_messaging_platform_interface:
-    dependency: transitive
-    description:
-      name: firebase_messaging_platform_interface
-      sha256: "685e1771b3d1f9c8502771ccc9f91485b376ffe16d553533f335b9183ea99754"
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.6.10"
-  firebase_messaging_web:
-    dependency: transitive
-    description:
-      name: firebase_messaging_web
-      sha256: "0d1be17bc89ed3ff5001789c92df678b2e963a51b6fa2bdb467532cc9dbed390"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.10.10"
-=======
       sha256: a631bbfbfa26963d68046aed949df80b228964020e9155b086eff94f462bbf1f
       url: "https://pub.dev"
     source: hosted
     version: "3.3.1"
+  firebase_messaging:
+    dependency: "direct main"
+    description:
+      name: firebase_messaging
+      sha256: "1ad663fbb6758acec09d7e84a2e6478265f0a517f40ef77c573efd5e0089f400"
+      url: "https://pub.dev"
+    source: hosted
+    version: "16.1.0"
+  firebase_messaging_platform_interface:
+    dependency: transitive
+    description:
+      name: firebase_messaging_platform_interface
+      sha256: ea620e841fbcec62a96984295fc628f53ef5a8da4f53238159719ed0af7db834
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.7.5"
+  firebase_messaging_web:
+    dependency: transitive
+    description:
+      name: firebase_messaging_web
+      sha256: "7d0fb6256202515bba8489a3d69c6bc9d52d69a4999bad789053b486c8e7323e"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.1.1"
   firebase_storage:
     dependency: "direct main"
     description:
@@ -355,7 +289,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.11.1"
->>>>>>> kaouter
   flutter:
     dependency: "direct main"
     description: flutter
@@ -425,25 +358,6 @@ packages:
     source: hosted
     version: "10.12.0"
   frontend_server_client:
-<<<<<<< HEAD
-=======
-    dependency: transitive
-    description:
-      name: frontend_server_client
-      sha256: f64a0333a82f30b0cca061bc3d143813a486dc086b574bfb233b7c1372427694
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.0.0"
-  glob:
-    dependency: transitive
-    description:
-      name: glob
-      sha256: c3f1ee72c96f8f78935e18aa8cecced9ab132419e8625dc187e1c2408efc20de
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.1.3"
-  http:
->>>>>>> kaouter
     dependency: transitive
     description:
       name: frontend_server_client
@@ -515,7 +429,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.7.2"
-<<<<<<< HEAD
   json_annotation:
     dependency: transitive
     description:
@@ -524,8 +437,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.9.0"
-=======
->>>>>>> kaouter
   leak_tracker:
     dependency: transitive
     description:
@@ -726,7 +637,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.5.2"
-<<<<<<< HEAD
   posix:
     dependency: transitive
     description:
@@ -735,8 +645,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.0.3"
-=======
->>>>>>> kaouter
   provider:
     dependency: transitive
     description:
@@ -757,10 +665,10 @@ packages:
     dependency: "direct main"
     description:
       name: shared_preferences
-      sha256: "6e8bf70b7fef813df4e9a36f658ac46d107db4b4cfe1048b477d4e453a8159f5"
+      sha256: "2939ae520c9024cb197fc20dee269cd8cdbf564c8b5746374ec6cacdc5169e64"
       url: "https://pub.dev"
     source: hosted
-    version: "2.5.3"
+    version: "2.5.4"
   shared_preferences_android:
     dependency: transitive
     description:
@@ -951,11 +859,7 @@ packages:
     source: hosted
     version: "1.2.2"
   test:
-<<<<<<< HEAD
     dependency: "direct dev"
-=======
-    dependency: transitive
->>>>>>> kaouter
     description:
       name: test
       sha256: "75906bf273541b676716d1ca7627a17e4c4070a3a16272b7a3dc7da3b9f3f6b7"
@@ -1094,10 +998,10 @@ packages:
     dependency: transitive
     description:
       name: watcher
-      sha256: f52385d4f73589977c80797e60fe51014f7f2b957b5e9a62c3f6ada439889249
+      sha256: "1398c9f081a753f9226febe8900fce8f7d0a67163334e1c94a2438339d79d635"
       url: "https://pub.dev"
     source: hosted
-    version: "1.2.0"
+    version: "1.2.1"
   web:
     dependency: transitive
     description:
@@ -1130,8 +1034,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.1"
-<<<<<<< HEAD
-=======
   win32:
     dependency: transitive
     description:
@@ -1140,7 +1042,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.15.0"
->>>>>>> kaouter
   xdg_directories:
     dependency: transitive
     description:

@@ -7,20 +7,14 @@
 #include "generated_plugin_registrant.h"
 
 #include <firebase_core/firebase_core_plugin_c_api.h>
-<<<<<<< HEAD
-=======
 #include <firebase_storage/firebase_storage_plugin_c_api.h>
 #include <url_launcher_windows/url_launcher_windows.h>
->>>>>>> kaouter
 
 void RegisterPlugins(flutter::PluginRegistry* registry) {
   FirebaseCorePluginCApiRegisterWithRegistrar(
       registry->GetRegistrarForPlugin("FirebaseCorePluginCApi"));
-<<<<<<< HEAD
-=======
   FirebaseStoragePluginCApiRegisterWithRegistrar(
       registry->GetRegistrarForPlugin("FirebaseStoragePluginCApi"));
   UrlLauncherWindowsRegisterWithRegistrar(
       registry->GetRegistrarForPlugin("UrlLauncherWindows"));
->>>>>>> kaouter
 }
