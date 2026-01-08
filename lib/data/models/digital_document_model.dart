@@ -3,7 +3,7 @@ import 'package:equatable/equatable.dart';
 class DigitalDocumentModel extends Equatable {
   final int? id;
   final int userId;
-  final int serviceId;
+  final int documentId;
   final String filePath;
   final String issuedDate;
   final String? expiresOn;
@@ -12,7 +12,7 @@ class DigitalDocumentModel extends Equatable {
   const DigitalDocumentModel({
     this.id,
     required this.userId,
-    required this.serviceId,
+    required this.documentId,
     required this.filePath,
     required this.issuedDate,
     this.expiresOn,
@@ -23,7 +23,7 @@ class DigitalDocumentModel extends Equatable {
     return {
       'id': id,
       'user_id': userId,
-      'service_id': serviceId,
+      'document_id': documentId,
       'file_path': filePath,
       'issued_date': issuedDate,
       'expires_on': expiresOn,
@@ -35,7 +35,7 @@ class DigitalDocumentModel extends Equatable {
     return DigitalDocumentModel(
       id: map['id'] as int?,
       userId: map['user_id'] as int,
-      serviceId: map['service_id'] as int,
+      documentId: map['document_id'] as int,
       filePath: map['file_path'] as String,
       issuedDate: map['issued_date'] as String,
       expiresOn: map['expires_on'] as String?,
@@ -44,7 +44,7 @@ class DigitalDocumentModel extends Equatable {
   }
 
   @override
-  List<Object?> get props => [id, userId, serviceId, filePath, issuedDate, expiresOn, isValid];
+  List<Object?> get props => [id, userId, documentId, filePath, issuedDate, expiresOn, isValid];
 }
 
 

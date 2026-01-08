@@ -5,22 +5,37 @@ packages:
     dependency: transitive
     description:
       name: _fe_analyzer_shared
+<<<<<<< HEAD
       sha256: c209688d9f5a5f26b2fb47a188131a6fb9e876ae9e47af3737c0b4f58a93470d
       url: "https://pub.dev"
     source: hosted
     version: "91.0.0"
+=======
+      sha256: da0d9209ca76bde579f2da330aeb9df62b6319c834fa7baae052021b0462401f
+      url: "https://pub.dev"
+    source: hosted
+    version: "85.0.0"
+>>>>>>> kaouter
   _flutterfire_internals:
     dependency: transitive
     description:
       name: _flutterfire_internals
+<<<<<<< HEAD
       sha256: ff0a84a2734d9e1089f8aedd5c0af0061b82fb94e95260d943404e0ef2134b11
       url: "https://pub.dev"
     source: hosted
     version: "1.3.59"
+=======
+      sha256: e4a1b612fd2955908e26116075b3a4baf10c353418ca645b4deae231c82bf144
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.3.65"
+>>>>>>> kaouter
   analyzer:
     dependency: transitive
     description:
       name: analyzer
+<<<<<<< HEAD
       sha256: f51c8499b35f9b26820cfe914828a6a98a94efd5cc78b37bb7d03debae3a1d08
       url: "https://pub.dev"
     source: hosted
@@ -33,6 +48,12 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.7"
+=======
+      sha256: "974859dc0ff5f37bc4313244b3218c791810d03ab3470a579580279ba971a48d"
+      url: "https://pub.dev"
+    source: hosted
+    version: "7.7.1"
+>>>>>>> kaouter
   args:
     dependency: transitive
     description:
@@ -81,6 +102,7 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.4.0"
+<<<<<<< HEAD
   checked_yaml:
     dependency: transitive
     description:
@@ -89,6 +111,8 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.4"
+=======
+>>>>>>> kaouter
   cli_config:
     dependency: transitive
     description:
@@ -97,6 +121,7 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.2.0"
+<<<<<<< HEAD
   cli_util:
     dependency: transitive
     description:
@@ -105,6 +130,8 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.4.2"
+=======
+>>>>>>> kaouter
   clock:
     dependency: transitive
     description:
@@ -123,6 +150,7 @@ packages:
     version: "1.19.1"
   convert:
     dependency: transitive
+<<<<<<< HEAD
     description:
       name: convert
       sha256: b30acd5944035672bc15c6b7a8b47d773e41e2f17de064350988c5d02adb1c68
@@ -147,12 +175,50 @@ packages:
     version: "3.0.7"
   cupertino_icons:
     dependency: "direct main"
+=======
+>>>>>>> kaouter
     description:
-      name: cupertino_icons
-      sha256: ba631d1c7f7bef6b729a622b7b752645a2d076dba9976925b8f25725a30e1ee6
+      name: convert
+      sha256: b30acd5944035672bc15c6b7a8b47d773e41e2f17de064350988c5d02adb1c68
       url: "https://pub.dev"
     source: hosted
+<<<<<<< HEAD
     version: "1.0.8"
+=======
+    version: "3.1.2"
+  coverage:
+    dependency: transitive
+    description:
+      name: coverage
+      sha256: "5da775aa218eaf2151c721b16c01c7676fbfdd99cebba2bf64e8b807a28ff94d"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.15.0"
+  cross_file:
+    dependency: transitive
+    description:
+      name: cross_file
+      sha256: "701dcfc06da0882883a2657c445103380e53e647060ad8d9dfb710c100996608"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.3.5+1"
+  crypto:
+    dependency: transitive
+    description:
+      name: crypto
+      sha256: c8ea0233063ba03258fbcf2ca4d6dadfefe14f02fab57702265467a19f27fadf
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.7"
+  dbus:
+    dependency: transitive
+    description:
+      name: dbus
+      sha256: "79e0c23480ff85dc68de79e2cd6334add97e48f7f4865d17686dd6ea81a47e8c"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.7.11"
+>>>>>>> kaouter
   diff_match_patch:
     dependency: transitive
     description:
@@ -193,14 +259,32 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "7.0.1"
+<<<<<<< HEAD
+=======
+  file_picker:
+    dependency: "direct main"
+    description:
+      name: file_picker
+      sha256: d974b6ba2606371ac71dd94254beefb6fa81185bde0b59bdc1df09885da85fde
+      url: "https://pub.dev"
+    source: hosted
+    version: "10.3.8"
+>>>>>>> kaouter
   firebase_core:
     dependency: "direct main"
     description:
       name: firebase_core
+<<<<<<< HEAD
       sha256: "7be63a3f841fc9663342f7f3a011a42aef6a61066943c90b1c434d79d5c995c5"
       url: "https://pub.dev"
     source: hosted
     version: "3.15.2"
+=======
+      sha256: "29cfa93c771d8105484acac340b5ea0835be371672c91405a300303986f4eba9"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.3.0"
+>>>>>>> kaouter
   firebase_core_platform_interface:
     dependency: transitive
     description:
@@ -213,6 +297,7 @@ packages:
     dependency: transitive
     description:
       name: firebase_core_web
+<<<<<<< HEAD
       sha256: "0ed0dc292e8f9ac50992e2394e9d336a0275b6ae400d64163fdf0a8a8b556c37"
       url: "https://pub.dev"
     source: hosted
@@ -241,6 +326,36 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.10.10"
+=======
+      sha256: a631bbfbfa26963d68046aed949df80b228964020e9155b086eff94f462bbf1f
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.3.1"
+  firebase_storage:
+    dependency: "direct main"
+    description:
+      name: firebase_storage
+      sha256: "5321a88518d992d03f8482bc48ede9cfb315b465bd59f1587468bc2f4a809d08"
+      url: "https://pub.dev"
+    source: hosted
+    version: "13.0.5"
+  firebase_storage_platform_interface:
+    dependency: transitive
+    description:
+      name: firebase_storage_platform_interface
+      sha256: dbcd5363a6b2edf2d1238fc22f10f4a39f0ea991a432b4fc43871ea31647cf5a
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.2.16"
+  firebase_storage_web:
+    dependency: transitive
+    description:
+      name: firebase_storage_web
+      sha256: "141ada1185fbd4a982d7cdd4486d1e42fe616db6024e22f7fcb3e9df388be8b4"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.11.1"
+>>>>>>> kaouter
   flutter:
     dependency: "direct main"
     description: flutter
@@ -275,6 +390,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_plugin_android_lifecycle:
+    dependency: transitive
+    description:
+      name: flutter_plugin_android_lifecycle
+      sha256: ee8068e0e1cd16c4a82714119918efdeed33b3ba7772c54b5d094ab53f9b7fd1
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.33"
   flutter_svg:
     dependency: "direct main"
     description:
@@ -302,6 +425,25 @@ packages:
     source: hosted
     version: "10.12.0"
   frontend_server_client:
+<<<<<<< HEAD
+=======
+    dependency: transitive
+    description:
+      name: frontend_server_client
+      sha256: f64a0333a82f30b0cca061bc3d143813a486dc086b574bfb233b7c1372427694
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.0.0"
+  glob:
+    dependency: transitive
+    description:
+      name: glob
+      sha256: c3f1ee72c96f8f78935e18aa8cecced9ab132419e8625dc187e1c2408efc20de
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.1.3"
+  http:
+>>>>>>> kaouter
     dependency: transitive
     description:
       name: frontend_server_client
@@ -373,6 +515,7 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.7.2"
+<<<<<<< HEAD
   json_annotation:
     dependency: transitive
     description:
@@ -381,6 +524,8 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.9.0"
+=======
+>>>>>>> kaouter
   leak_tracker:
     dependency: transitive
     description:
@@ -581,6 +726,7 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.5.2"
+<<<<<<< HEAD
   posix:
     dependency: transitive
     description:
@@ -589,6 +735,8 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.0.3"
+=======
+>>>>>>> kaouter
   provider:
     dependency: transitive
     description:
@@ -803,7 +951,11 @@ packages:
     source: hosted
     version: "1.2.2"
   test:
+<<<<<<< HEAD
     dependency: "direct dev"
+=======
+    dependency: transitive
+>>>>>>> kaouter
     description:
       name: test
       sha256: "75906bf273541b676716d1ca7627a17e4c4070a3a16272b7a3dc7da3b9f3f6b7"
@@ -834,6 +986,70 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.4.0"
+  url_launcher:
+    dependency: "direct main"
+    description:
+      name: url_launcher
+      sha256: f6a7e5c4835bb4e3026a04793a4199ca2d14c739ec378fdfe23fc8075d0439f8
+      url: "https://pub.dev"
+    source: hosted
+    version: "6.3.2"
+  url_launcher_android:
+    dependency: transitive
+    description:
+      name: url_launcher_android
+      sha256: "767344bf3063897b5cf0db830e94f904528e6dd50a6dfaf839f0abf509009611"
+      url: "https://pub.dev"
+    source: hosted
+    version: "6.3.28"
+  url_launcher_ios:
+    dependency: transitive
+    description:
+      name: url_launcher_ios
+      sha256: cfde38aa257dae62ffe79c87fab20165dfdf6988c1d31b58ebf59b9106062aad
+      url: "https://pub.dev"
+    source: hosted
+    version: "6.3.6"
+  url_launcher_linux:
+    dependency: transitive
+    description:
+      name: url_launcher_linux
+      sha256: d5e14138b3bc193a0f63c10a53c94b91d399df0512b1f29b94a043db7482384a
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.2.2"
+  url_launcher_macos:
+    dependency: transitive
+    description:
+      name: url_launcher_macos
+      sha256: "368adf46f71ad3c21b8f06614adb38346f193f3a59ba8fe9a2fd74133070ba18"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.2.5"
+  url_launcher_platform_interface:
+    dependency: transitive
+    description:
+      name: url_launcher_platform_interface
+      sha256: "552f8a1e663569be95a8190206a38187b531910283c3e982193e4f2733f01029"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.3.2"
+  url_launcher_web:
+    dependency: transitive
+    description:
+      name: url_launcher_web
+      sha256: "4bd2b7b4dc4d4d0b94e5babfffbca8eac1a126c7f3d6ecbc1a11013faa3abba2"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.4.1"
+  url_launcher_windows:
+    dependency: transitive
+    description:
+      name: url_launcher_windows
+      sha256: "712c70ab1b99744ff066053cbe3e80c73332b38d46e5e945c98689b2e66fc15f"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.1.5"
   vector_graphics:
     dependency: transitive
     description:
@@ -914,6 +1130,17 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.1"
+<<<<<<< HEAD
+=======
+  win32:
+    dependency: transitive
+    description:
+      name: win32
+      sha256: d7cb55e04cd34096cd3a79b3330245f54cb96a370a1c27adb3c84b917de8b08e
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.15.0"
+>>>>>>> kaouter
   xdg_directories:
     dependency: transitive
     description:

@@ -3,6 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
+<<<<<<< HEAD
+=======
+import 'data/services/storage_service.dart';
+>>>>>>> kaouter
 import 'commons/app_routes.dart';
 import 'data/database/database_helper.dart';
 import 'data/repo/user_repository.dart';
@@ -24,12 +28,24 @@ import 'views/screens/auth_checker.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+<<<<<<< HEAD
 
   // Initialize Firebase
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
+=======
+  
+  try {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+  } catch (e) {
+    debugPrint('Firebase initialization failed: $e');
+  }
+  
+>>>>>>> kaouter
   // Initialize database
   await DatabaseHelper.instance.database;
 
@@ -73,6 +89,7 @@ class _MyAppState extends State<MyApp> {
     final serviceRepository = ServiceRepository();
     final requestRepository = RequestRepository();
     final documentRepository = DocumentRepository();
+    final storageService = StorageService();
     final notificationRepository = NotificationRepository();
     final bookingRepository = BookingRepository();
 
@@ -88,10 +105,19 @@ class _MyAppState extends State<MyApp> {
           create: (context) => ServiceCubit(serviceRepository),
         ),
         BlocProvider(
-          create: (context) => RequestCubit(requestRepository),
+          create: (context) => RequestCubit(
+            requestRepository: requestRepository,
+            documentRepository: documentRepository,
+            serviceRepository: serviceRepository,
+          ),
         ),
         BlocProvider(
-          create: (context) => DocumentCubit(documentRepository),
+          create: (context) => DocumentCubit(
+            documentRepository,
+            storageService,
+            requestRepository,
+            serviceRepository,
+          ),
         ),
         BlocProvider(
           create: (context) => NotificationCubit(notificationRepository),

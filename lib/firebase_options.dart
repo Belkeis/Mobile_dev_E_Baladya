@@ -40,30 +40,22 @@ class DefaultFirebaseOptions {
     }
   }
 
-  static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyBF9up1vn2kwuGasjy7OuceF4t9qFSqq5o',
-    appId: '1:1062422767346:web:8a38e5e314b529ed37926b',
-    messagingSenderId: '1062422767346',
-    projectId: 'e-baladya-2026',
-    authDomain: 'e-baladya-2026.firebaseapp.com',
-    storageBucket: 'e-baladya-2026.firebasestorage.app',
-  );
-
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyBi9uvFXcXhVHYhC1R4nqoNV_EgFqZB4ns',
-    appId: '1:1062422767346:android:9d773a7f1e51016937926b',
+    appId: '1:1062422767346:android:3789e37fb5f7d5d137926b',
     messagingSenderId: '1062422767346',
     projectId: 'e-baladya-2026',
     storageBucket: 'e-baladya-2026.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
+  static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyDD7KpBmfNSPREPRLWNQBrYCaqYBv5CISQ',
-    appId: '1:1062422767346:ios:5b85592c89a3e76b37926b',
+    appId: '1:1062422767346:ios:a18a989a1310264337926b',
     messagingSenderId: '1062422767346',
     projectId: 'e-baladya-2026',
     storageBucket: 'e-baladya-2026.firebasestorage.app',
-    iosBundleId: 'com.example.eBaladya',
+    iosBundleId: 'com.eBaladya.eBaladya',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
@@ -78,6 +70,15 @@ class DefaultFirebaseOptions {
   static const FirebaseOptions windows = FirebaseOptions(
     apiKey: 'AIzaSyBF9up1vn2kwuGasjy7OuceF4t9qFSqq5o',
     appId: '1:1062422767346:web:f7737b9d30f7999637926b',
+    messagingSenderId: '1062422767346',
+    projectId: 'e-baladya-2026',
+    authDomain: 'e-baladya-2026.firebaseapp.com',
+    storageBucket: 'e-baladya-2026.firebasestorage.app',
+  );
+
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyBF9up1vn2kwuGasjy7OuceF4t9qFSqq5o',
+    appId: '1:1062422767346:web:8a38e5e314b529ed37926b',
     messagingSenderId: '1062422767346',
     projectId: 'e-baladya-2026',
     authDomain: 'e-baladya-2026.firebaseapp.com',

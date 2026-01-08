@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
+import 'package:intl/intl.dart' hide TextDirection;
 import '../../logic/cubit/request_cubit.dart';
 import '../../logic/cubit/auth_cubit.dart';
 import '../../data/models/request_model.dart';
 import '../../data/models/service_model.dart';
 import '../widgets/custom_app_bar.dart';
 import '../../i18n/app_localizations.dart';
+import '../../data/models/request_document_model.dart';
 
 class RequestTrackingScreen extends StatelessWidget {
   const RequestTrackingScreen({super.key});
@@ -38,120 +39,124 @@ class RequestTrackingScreen extends StatelessWidget {
           );
         }
 
-        return Scaffold(
-          backgroundColor: const Color(0xFFF9FAFB),
-          appBar: CustomAppBar(
-            onArrowTap: () {
-              Navigator.pop(context);
-            },
-          ),
-          body: BlocBuilder<RequestCubit, RequestState>(
-            builder: (context, state) {
-              if (state is RequestLoading) {
-                return const Center(child: CircularProgressIndicator());
-              }
+        final localizations = AppLocalizations.of(context)!;
+        return Directionality(
+          textDirection: localizations.isArabic ? TextDirection.rtl : TextDirection.ltr,
+          child: Scaffold(
+            backgroundColor: const Color(0xFFF9FAFB),
+            appBar: CustomAppBar(
+              onArrowTap: () {
+                Navigator.pop(context);
+              },
+            ),
+            body: BlocBuilder<RequestCubit, RequestState>(
+              builder: (context, state) {
+                if (state is RequestLoading) {
+                  return const Center(child: CircularProgressIndicator());
+                }
 
-              if (state is RequestError) {
-                return Center(
-                  child: Text(
-                    state.message,
-                    style: const TextStyle(
-                      fontFamily: 'Cairo',
-                      fontSize: 16,
-                      color: Color(0xFF6B7280),
+                if (state is RequestError) {
+                  return Center(
+                    child: Text(
+                      state.message,
+                      style: const TextStyle(
+                        fontFamily: 'Cairo',
+                        fontSize: 16,
+                        color: Color(0xFF6B7280),
+                      ),
                     ),
-                  ),
-                );
-              }
+                  );
+                }
 
-              List<Map<String, dynamic>> requestsWithService = [];
-              if (state is RequestsLoaded) {
-                requestsWithService = state.requestsWithService;
-              }
+                List<Map<String, dynamic>> requestsWithService = [];
+                if (state is RequestsLoaded) {
+                  requestsWithService = state.requestsWithService;
+                }
 
-              return Column(
-                children: [
-                  Expanded(
-                    child: SingleChildScrollView(
-                      padding: const EdgeInsets.all(25),
-                      child: Column(
-                        children: [
-                          Text(
-                            AppLocalizations.of(context)!.trackingTitle,
+                return Column(
+                  children: [
+                    Expanded(
+                      child: SingleChildScrollView(
+                        padding: const EdgeInsets.all(25),
+                        child: Column(
+                          children: [
+                            Text(
+                              AppLocalizations.of(context)!.trackingTitle,
+                              style: const TextStyle(
+                                fontFamily: 'Cairo',
+                                fontSize: 24,
+                                fontWeight: FontWeight.normal,
+                                color: Color(0xFF2563EB),
+                              ),
+                            ),
+                            const SizedBox(height: 40),
+                            if (requestsWithService.isEmpty)
+                              Padding(
+                                padding: const EdgeInsets.all(40.0),
+                                child: Text(
+                                  AppLocalizations.of(context)!.noRequests,
+                                  style: const TextStyle(
+                                    fontFamily: 'Cairo',
+                                    fontSize: 16,
+                                    color: Color(0xFF6B7280),
+                                  ),
+                                ),
+                              )
+                            else
+                              ...requestsWithService.map((item) {
+                                final request = item['request'] as RequestModel;
+                                final service = item['service'] as ServiceModel?;
+                                return Padding(
+                                  padding: const EdgeInsets.only(bottom: 20),
+                                  child: _buildRequestCard(
+                                    request: request,
+                                    service: service,
+                                    context: context,
+                                  ),
+                                );
+                              }),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Container(
+                      padding: EdgeInsets.only(
+                        left: 20,
+                        right: 20,
+                        top: 20,
+                        bottom: MediaQuery.of(context).padding.bottom + 20,
+                      ),
+                      color: Colors.transparent,
+                      child: SizedBox(
+                        width: double.infinity,
+                        height: 56,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.pushNamed(context, '/online-requests');
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF2563EB),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            elevation: 0,
+                          ),
+                          child: Text(
+                            AppLocalizations.of(context)!.newRequest,
                             style: const TextStyle(
                               fontFamily: 'Cairo',
-                              fontSize: 24,
-                              fontWeight: FontWeight.normal,
-                              color: Color(0xFF2563EB),
+                              fontSize: 18,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.white,
                             ),
                           ),
-                          const SizedBox(height: 40),
-                          if (requestsWithService.isEmpty)
-                            Padding(
-                              padding: const EdgeInsets.all(40.0),
-                              child: Text(
-                                AppLocalizations.of(context)!.noRequests,
-                                style: const TextStyle(
-                                  fontFamily: 'Cairo',
-                                  fontSize: 16,
-                                  color: Color(0xFF6B7280),
-                                ),
-                              ),
-                            )
-                          else
-                            ...requestsWithService.map((item) {
-                              final request = item['request'] as RequestModel;
-                              final service = item['service'] as ServiceModel?;
-                              return Padding(
-                                padding: const EdgeInsets.only(bottom: 20),
-                                child: _buildRequestCard(
-                                  request: request,
-                                  service: service,
-                                  context: context,
-                                ),
-                              );
-                            }),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.only(
-                      left: 20,
-                      right: 20,
-                      top: 20,
-                      bottom: MediaQuery.of(context).padding.bottom + 20,
-                    ),
-                    color: Colors.transparent,
-                    child: SizedBox(
-                      width: double.infinity,
-                      height: 56,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.pushNamed(context, '/online-requests');
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF2563EB),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          elevation: 0,
-                        ),
-                        child: Text(
-                          AppLocalizations.of(context)!.newRequest,
-                          style: const TextStyle(
-                            fontFamily: 'Cairo',
-                            fontSize: 18,
-                            fontWeight: FontWeight.w400,
-                            color: Colors.white,
-                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
-              );
-            },
+                  ],
+                );
+              },
+            ),
           ),
         );
       },
@@ -164,7 +169,7 @@ class RequestTrackingScreen extends StatelessWidget {
     required BuildContext context,
   }) {
     final localizations = AppLocalizations.of(context)!;
-    
+
     // Determine status colors
     Color statusColor;
     Color statusTextColor;
@@ -315,6 +320,7 @@ class RequestTrackingScreen extends StatelessWidget {
                   ),
                   textAlign: TextAlign.right,
                 ),
+                const SizedBox(height: 12),
               ],
             ),
           ),
@@ -322,4 +328,5 @@ class RequestTrackingScreen extends StatelessWidget {
       ),
     );
   }
+
 }
