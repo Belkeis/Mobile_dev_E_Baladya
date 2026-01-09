@@ -23,7 +23,7 @@ import 'i18n/app_localizations.dart';
 import 'utils/fcm_service.dart';
 import 'views/screens/auth_checker.dart';
 
-void main() async {
+Future<void> main({bool isTest = false}) async {
   WidgetsFlutterBinding.ensureInitialized();
   
   // Initialize Firebase
@@ -38,9 +38,11 @@ void main() async {
   // Initialize database
   await DatabaseHelper.instance.database;
 
-  // Initialize FCM service
-  final notificationRepository = NotificationRepository();
-  await FCMService().initialize(notificationRepository);
+  // Initialize FCM service (Skip in tests to avoid native permission dialogs)
+  if (!isTest) {
+    final notificationRepository = NotificationRepository();
+    await FCMService().initialize(notificationRepository);
+  }
 
   runApp(const MyApp());
 }

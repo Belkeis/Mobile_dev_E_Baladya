@@ -160,6 +160,7 @@ class _GenericListPageState extends State<GenericListPage> {
                           ],
                         ),
                         child: ListTile(
+                          key: Key('list_item_$index'),
                           onTap: item.onTap,
                           contentPadding: const EdgeInsets.symmetric(
                             horizontal: 20,

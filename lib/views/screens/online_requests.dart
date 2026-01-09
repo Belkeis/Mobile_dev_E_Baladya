@@ -135,6 +135,7 @@ class MyOnlineRequestsPage extends StatelessWidget {
 }) {
   final localizations = AppLocalizations.of(context)!;
   return GestureDetector(
+    key: Key('service_card_${service.id}'),
     onTap: onTap,
     child: Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),

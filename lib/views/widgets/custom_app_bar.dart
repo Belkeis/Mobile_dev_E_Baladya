@@ -140,6 +140,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   const SizedBox(width: 12),
                 ],
                 InkWell(
+                  key: const Key('app_bar_back_button'),
                   onTap: onArrowTap ??
                       () {
                         Navigator.pop(context);
