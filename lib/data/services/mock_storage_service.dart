@@ -11,4 +11,13 @@ class MockStorageService implements StorageService {
     // In a real app, this would be the Firebase/Cloud storage URL
     return 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf';
   }
+
+  @override
+  Future<void> deleteFile(String path) async {
+    // Simulate network delay
+    await Future.delayed(const Duration(milliseconds: 500));
+
+    // Mock implementation - in real app this would delete from Firebase Storage
+    // For testing, we just simulate the operation without actual deletion
+  }
 }
