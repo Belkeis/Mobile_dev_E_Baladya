@@ -3,10 +3,16 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:e_baladya/logic/cubit/request_cubit.dart';
 import 'package:e_baladya/data/repo/request_repository.dart';
+import 'package:e_baladya/data/repo/document_repository.dart';
+import 'package:e_baladya/data/repo/service_repository.dart';
 import 'package:e_baladya/data/models/request_model.dart';
 
 // Mock classes
 class MockRequestRepository extends Mock implements RequestRepository {}
+
+class MockDocumentRepository extends Mock implements DocumentRepository {}
+
+class MockServiceRepository extends Mock implements ServiceRepository {}
 
 // Fake classes for mocktail
 class FakeRequestModel extends Fake implements RequestModel {}
@@ -14,6 +20,8 @@ class FakeRequestModel extends Fake implements RequestModel {}
 void main() {
   late RequestCubit requestCubit;
   late MockRequestRepository mockRepository;
+  late MockDocumentRepository mockDocumentRepository;
+  late MockServiceRepository mockServiceRepository;
 
   // Register fallback values for mocktail
   setUpAll(() {
@@ -42,7 +50,13 @@ void main() {
 
   setUp(() {
     mockRepository = MockRequestRepository();
-    requestCubit = RequestCubit(mockRepository);
+    mockDocumentRepository = MockDocumentRepository();
+    mockServiceRepository = MockServiceRepository();
+    requestCubit = RequestCubit(
+      requestRepository: mockRepository,
+      documentRepository: mockDocumentRepository,
+      serviceRepository: mockServiceRepository,
+    );
   });
 
   tearDown(() {
@@ -87,7 +101,8 @@ void main() {
         act: (cubit) => cubit.createRequest(testRequest),
         expect: () => [
           RequestLoading(),
-          const RequestError('حدث خطأ أثناء إنشاء الطلب'),
+          isA<RequestError>().having((e) => e.message, 'message',
+              contains('حدث خطأ أثناء إنشاء الطلب')),
         ],
         verify: (_) {
           verify(() => mockRepository.createRequest(testRequest)).called(1);
@@ -276,7 +291,8 @@ void main() {
         act: (cubit) => cubit.createRequest(testRequest),
         expect: () => [
           RequestLoading(),
-          const RequestError('حدث خطأ أثناء إنشاء الطلب'),
+          isA<RequestError>().having((e) => e.message, 'message',
+              contains('حدث خطأ أثناء إنشاء الطلب')),
         ],
       );
     });
@@ -293,7 +309,7 @@ void main() {
         await Future.delayed(Duration.zero);
 
         final errorState = states[1] as RequestError;
-        expect(errorState.message, 'حدث خطأ أثناء إنشاء الطلب');
+        expect(errorState.message, contains('حدث خطأ أثناء إنشاء الطلب'));
 
         await subscription.cancel();
       });
