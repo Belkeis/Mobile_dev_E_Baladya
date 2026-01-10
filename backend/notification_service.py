@@ -72,7 +72,7 @@ def send_notification_to_user():
 # ---------------------------------------------------------------------------
 SCHEDULER_ENABLED = os.getenv('SCHEDULER_ENABLED', 'True').lower() in ('1', 'true', 'yes')
 SCHEDULER_INTERVAL = int(os.getenv('SCHEDULER_INTERVAL', '60'))
-SCHEDULER_UNIT = os.getenv('SCHEDULER_UNIT', 'munits')  # seconds/minutes/hours
+SCHEDULER_UNIT = os.getenv('SCHEDULER_UNIT', 'minutes')  # seconds/minutes/hours
 
 
 def send_scheduled_tasks():
