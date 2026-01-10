@@ -15,7 +15,45 @@ class MyRequiredDocumentsPage extends StatefulWidget {
       _MyRequiredDocumentsPageState();
 }
 
-class _MyRequiredDocumentsPageState extends State<MyRequiredDocumentsPage> {
+class _MyRequiredDocumentsPageState extends State<MyRequiredDocumentsPage>
+    with RouteAware {
+  RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
+  bool _firstLoad = true;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final route = ModalRoute.of(context);
+    if (route is PageRoute) {
+      routeObserver.subscribe(this, route);
+    }
+  }
+
+  @override
+  void dispose() {
+    routeObserver.unsubscribe(this);
+    super.dispose();
+  }
+
+  @override
+  void didPush() {
+    // Called when the route is pushed onto the stack
+    _loadServices();
+  }
+
+  @override
+  void didPopNext() {
+    // Called when a route is popped and this route becomes the top route
+    _loadServices();
+  }
+
+  void _loadServices() {
+    // Debounce to prevent multiple calls
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<ServiceCubit>().loadServices();
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -28,13 +66,8 @@ class _MyRequiredDocumentsPageState extends State<MyRequiredDocumentsPage> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ServiceCubit, ServiceState>(
-      buildWhen: (previous, current) {
-        // Only rebuild on ServiceLoaded; ignore RequiredDocumentsLoaded to prevent cross-screen interference
-        return current is ServiceLoading ||
-            current is ServiceLoaded ||
-            current is ServiceError;
-      },
       builder: (context, state) {
+        // ... rest of your build method remains the same
         if (state is ServiceLoading) {
           return const Scaffold(
             body: Center(child: CircularProgressIndicator()),

@@ -41,7 +41,7 @@ def send_notification_to_user():
             return jsonify({'error': 'user_id is required'}), 400
 
         title = data.get('title', 'E-Baladya')
-        body = data.get('body', 'You have a new notification')
+        body = data.get('body', 'لديك إشعار جديد')
         extra = data.get('data', {})
 
         message_data = {
@@ -72,7 +72,7 @@ def send_notification_to_user():
 # ---------------------------------------------------------------------------
 SCHEDULER_ENABLED = os.getenv('SCHEDULER_ENABLED', 'True').lower() in ('1', 'true', 'yes')
 SCHEDULER_INTERVAL = int(os.getenv('SCHEDULER_INTERVAL', '60'))
-SCHEDULER_UNIT = os.getenv('SCHEDULER_UNIT', 'seconds')  # seconds/minutes/hours
+SCHEDULER_UNIT = os.getenv('SCHEDULER_UNIT', 'munits')  # seconds/minutes/hours
 
 
 def send_scheduled_tasks():
@@ -83,18 +83,17 @@ def send_scheduled_tasks():
         message_data = {
             'user_id': '1',
             'timestamp': datetime.now().isoformat(),
-            'message': 'Scheduled reminder from E-Baladya',
+            'message': 'تذكير مجدول من تطبيق البلدية الإلكترونية',
         }
 
         message = messaging.Message(
             notification=messaging.Notification(
-                title='Scheduled Reminder',
-                body='This is an automated scheduled notification',
+                title='تذكير مجدول',
+                body='هذا إشعار تلقائي مجدول',
             ),
             data=message_data,
             topic='user_1',
         )
-
         response = messaging.send(message)
         print(f"Scheduled message sent, id: {response}")
 
